@@ -18,7 +18,7 @@ const initialState: TopMenuState = {
   menu: [
     {
       icon: "Car",
-      pathname: "/",
+      pathname: "/Autos",
       title: "Autos",
     },
     {
@@ -28,7 +28,7 @@ const initialState: TopMenuState = {
     },
     {
       icon: "ShoppingCart",
-      pathname: "/Indycom",
+      pathname: "/",
       title: "Industria y Comercio",
     },        
   ],
