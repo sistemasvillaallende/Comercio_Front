@@ -1,0 +1,54 @@
+.new_topbar {
+    background-image: linear-gradient(to bottom, #b6b6b6 0%, rgba(230, 238, 240, 0) 100%);
+    position: relative;
+    top: 0px;
+    width: 100%;
+    height: 120px;
+}
+
+.logo_topbar {
+    width: 240px;
+    height: 64px;
+    position: absolute;
+    left: 60px;
+    top: 60px;
+}
+
+.logo_topbar img {
+    width: 100%;
+}
+
+.menu_topbar {
+    position: absolute;
+    right: 1em;
+    top: 25%;
+}
+
+.app-title h1 {
+    font-family: 'Encode Sans', sans-serif;
+    font-size: 44px;
+    color: #6F6F6E;
+}
+
+@media (max-width: 768px) {
+    .menu_topbar {
+        display: none;
+    }
+
+    .new_topbar {
+        display: none;
+    }
+}
+
+h1 {
+    font-family: 'Encode Sans', sans-serif;
+    font-size: 44px;
+    color: #6F6F6E;
+    margin-right: 50px;
+}
+
+@media (max-width: 1124px) {
+    h1 {
+        display: none;
+    }
+}

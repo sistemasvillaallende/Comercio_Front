@@ -1,0 +1,69 @@
+:root {
+    --coolor-aprobado: #2BB728;
+    --coolor-pendiente: #F8B114;
+    --coolor-rechazado: #D32525;
+}
+
+.resumenPedidos {
+    background-color: #fffcfc;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    width: 100%;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+}
+
+.resumenPedidos {
+    padding: 16px;
+}
+
+.resumenContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.resumenItem {
+    flex: 1;
+    margin-right: 16px;
+    padding-left: 8px;
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: 400;
+}
+
+.aprobado {
+    border-left: 4px solid var(--coolor-aprobado);
+}
+
+.pendiente {
+    border-left: 4px solid var(--coolor-pendiente);
+}
+
+.rechazado {
+    border-left: 4px solid var(--coolor-rechazado);
+}
+
+.resumenItem:last-child {
+    margin-right: 0;
+}
+
+.tablaPedidos {
+    font-weight: 100;
+}
+
+.aprobadoTable {
+    color: var(--coolor-aprobado);
+}
+
+.pendienteTable {
+    color: var(--coolor-pendiente);
+}
+
+.rechazadoTable {
+    color: var(--coolor-rechazado);
+}
+
+.resumenPedidos {
+    margin-top: 40px;
+}
