@@ -92,8 +92,6 @@ const Router = () => {
                 <Route path="/autos/:pagina/" element={<Autos />} />
                 <Route path="/CtasCtes/:dominio/" element={<CuentaCorriente />} />
                 <Route path="/Cedulones/" element={<Cedulones />} />
-                {/**<Route path="/Informes/" element={<Informes />} />
-                <Route path="/MyDocument/" element={<MyDocument />} />*/}
               </Route>
               <Route path="/login" element={<Login />} />
               <Route path="/*" element={<NotFound />} />
