@@ -162,7 +162,7 @@ const index = () => {
   };
 
   const handleNueoElemento = () => {
-    navigate(`/nuevoElemento`);
+    navigate(`/iyc/nuevo`);
   };
 
   const handleBuscar = (e: any) => {

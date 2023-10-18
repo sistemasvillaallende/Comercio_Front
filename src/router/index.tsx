@@ -13,6 +13,7 @@ import { IndustriaComercioProvider } from "../context/IndustriaComercioProvider"
 import Inicio from "../pages/IndustriaComercio";
 import Ver from "../pages/IndustriaComercio/Ver";
 import Editar from "../pages/IndustriaComercio/Editar";
+import Nuevo from "../pages/IndustriaComercio/Nuevo";
 
 import ResumenCuenta from "../pages/Informes/ResumenCuenta";
 import CedulonAuto from "../pages/Cedulones/CedulonAuto";
@@ -35,6 +36,7 @@ const Router = () => {
                 <Route path="/" element={<Inicio />} />
                 <Route path="/iyc/:legajo/ver" element={<Ver />} />
                 <Route path="/iyc/:legajo/editar" element={<Editar />} />
+                <Route path="/iyc/nuevo" element={<Nuevo />} />
               </Route>
               <Route path="/login" element={<Login />} />
               <Route path="/*" element={<NotFound />} />
