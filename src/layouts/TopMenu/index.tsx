@@ -4,12 +4,11 @@ import { selectTopMenu } from "../../stores/topMenuSlice";
 import { useAppSelector } from "../../stores/hooks";
 import _ from "lodash";
 import { FormattedMenu, linkTo, nestedMenu } from "./top-menu";
-import MenuAutos from "../../layouts/menuAutos/MenuAutos";
+import MenuElemento from "../MenuElemento/MenuElemento";
 import Lucide from "../../base-components/Lucide";
 import clsx from "clsx";
 import TopBar from "../../components/TopBar";
 import MobileMenu from "../../components/MobileMenu";
-import { useAutoContext } from "../../context/AutoProvider";
 
 function Main() {
   const location = useLocation();
@@ -162,7 +161,7 @@ function Main() {
                 marginLeft: "20px",
               }}
             >
-              <MenuAutos />
+              <MenuElemento />
             </div>
             <div
               className="col-span-12 intro-y lg:col-span-10 box content"

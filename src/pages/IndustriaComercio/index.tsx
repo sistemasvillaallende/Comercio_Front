@@ -6,23 +6,22 @@ import classNames from "classnames";
 import { FormSelect, FormInput, FormLabel } from "../../base-components/Form";
 import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
-import { useAutoContext } from "../../context/AutoProvider";
 import Swal from "sweetalert2";
 import { Vehiculo } from "../../interfaces/Vehiculo";
 import Cargando from "../Recursos/Cargando";
-import { getSituacion, getUltimoPeriodo } from "../../utils/AutosUtils";
+import { ElementoIndustriaComercio } from "../../interfaces/IndustriaComercio";
+import { useIndustriaComercioContext } from "../../context/IndustriaComercioProvider";
 
-const Autos = () => {
-  const [autos, setAutos] = useState<Vehiculo[]>([]);
+
+const index = () => {
+  const [elementoIyC, setElementoIyC] = useState<ElementoIndustriaComercio>();
   const [cantPaginas, setCantPaginas] = useState<number>(0);
   const [paginaActual, setPaginaActual] = useState<number>(1);
-  const { pagina } = useParams();
   const navigate = useNavigate();
   const [strParametro, setStrParametro] = useState<string>("");
   const [buscarPor, setBuscarPor] = useState<string>("0");
-  const [activos, setActivos] = useState<string>("1");
   const [verTabla, setVerTabla] = useState<boolean>(false);
-  const { traerAuto } = useAutoContext();
+  const { elementoIndCom, setElementoIndCom, traerElemento } = useIndustriaComercioContext();
 
   const handlePageChange = (newPage: number) => {
     const paginaNum = newPage;
@@ -31,7 +30,7 @@ const Autos = () => {
     if (buscarPor && strParametro) {
       const fetchData = async () => {
         const registrosPorPagina = 10;
-        const URL = `${import.meta.env.VITE_URL_AUTO}GetVehiculosPaginado?buscarPor=${buscarPor}&strParametro=${strParametro}&activo=${activos}&pagina=${paginaNum}&registros_por_pagina=${registrosPorPagina}`;
+        const URL = `${import.meta.env.VITE_URL_API_IYC}GetIndycomPaginado?buscarPor=${buscarPor}&strParametro=${strParametro}&pagina=${paginaNum}&registros_por_pagina=${registrosPorPagina}`;
         const response = await axios.get(URL);
         if (response.data === "") {
           Swal.fire({
@@ -46,10 +45,9 @@ const Autos = () => {
         }
 
         setCantPaginas(response.data.totalPaginas);
-        setAutos(response.data.resultado);
+        setElementoIyC(response.data.resultado);
         setCantPaginas(response.data.totalPaginas);
         setVerTabla(true);
-        console.log('URL PAGINA', URL);
       };
 
       fetchData();
@@ -148,46 +146,29 @@ const Autos = () => {
     return paginationItems;
   };
 
-  const modificarAuto = (vehiculo: Vehiculo) => {
-    const dominioSinEspacios = vehiculo.dominio.trim();
-    if (dominioSinEspacios === "") {
+  const handleVerElemento = (dato: ElementoIndustriaComercio) => {
+    if (!dato.legajo) {
       Swal.fire({
         title: "Error",
-        text: "El vehículo NO contiene dominio.",
-        icon: "error",
-        confirmButtonText: "Aceptar",
-        confirmButtonColor: "#27a3cf",
-      });
-      return;
-    }
-    traerAuto(dominioSinEspacios);
-    navigate(`/auto/${dominioSinEspacios}/editar`);
-  };
-
-  const handleVerAuto = (vehiculo: Vehiculo) => {
-    const dominioSinEspacios = vehiculo.dominio.trim();
-    if (!dominioSinEspacios) {
-      Swal.fire({
-        title: "Error",
-        text: "El vehículo no contiene dominio.",
+        text: "El Elemento no contiene legajo.",
         icon: "error",
         confirmButtonColor: "#27a3cf",
         confirmButtonText: "Aceptar",
       });
       return;
     }
-    traerAuto(dominioSinEspacios);
-    navigate(`/auto/${dominioSinEspacios}/ver`);
+    traerElemento(dato.legajo.toString());
+    navigate(`/iyc/${dato.legajo}/ver`);
   };
 
-  const handleNuevoVehiculo = () => {
-    navigate(`/nuevoVehiculo`);
+  const handleNueoElemento = () => {
+    navigate(`/nuevoElemento`);
   };
 
   const handleBuscar = (e: any) => {
     e.preventDefault();
 
-    if (!buscarPor || !strParametro || buscarPor === "0") {
+    if (!buscarPor || !strParametro) {
       Swal.fire({
         title: "Faltan parámetros o criterios de búsqueda",
         text: "Por favor, ingrese criterios de búsqueda válidos.",
@@ -201,10 +182,10 @@ const Autos = () => {
       const registrosPorPagina = 10;
       const paginaNum = 1;
       setPaginaActual(paginaNum);
-      const URL = `${import.meta.env.VITE_URL_AUTO}GetVehiculosPaginado?buscarPor=${buscarPor}&strParametro=${strParametro}&activo=${activos}&pagina=${paginaNum}&registros_por_pagina=${registrosPorPagina}`;
+      const URL = `${import.meta.env.VITE_URL_API_IYC}GetIndycomPaginado?buscarPor=${buscarPor}&strParametro=${strParametro}&pagina=${paginaNum}&registros_por_pagina=${registrosPorPagina}`;
       const response = await axios.get(URL);
       setCantPaginas(response.data.totalPaginas);
-      setAutos(response.data.resultado);
+      setElementoIyC(response.data.resultado);
       setCantPaginas(response.data.totalPaginas);
       setVerTabla(true);
       if (response.status === 204) {
@@ -217,7 +198,6 @@ const Autos = () => {
         setVerTabla(false);
         return;
       }
-      console.log("Buscar", URL)
     };
     fetchData();
   };
@@ -234,21 +214,6 @@ const Autos = () => {
       minimumFractionDigits: 2,
     });
   };
-
-  const handleVerMultas = (vehiculo: Vehiculo) => {
-    const dominioSinEspacios = vehiculo.dominio.trim();
-    if (!dominioSinEspacios) {
-      Swal.fire({
-        title: "Error",
-        text: "El vehículo no contiene dominio.",
-        icon: "error",
-        confirmButtonColor: "#27a3cf",
-        confirmButtonText: "Aceptar",
-      });
-      return;
-    }
-    window.open(`https://vecino.villaallende.gov.ar/Cedulones/Multa.aspx?dominio=${dominioSinEspacios}`, '_blank');
-  }
 
   return (
     <>
@@ -268,21 +233,11 @@ const Autos = () => {
                         value={buscarPor}
                         onChange={(e) => setBuscarPor(e.target.value)}
                       >
-                        <option value="">- Parametro -</option>
-                        <option value="dominio">Dominio</option>
+                        <option value="0">- Parametro -</option>
+                        <option value="legajo">Legajo</option>
                         <option value="cuit">CUIT</option>
+                        <option value="nom_fantasia">Nom Fantasía</option>
                         <option value="titular">Titular</option>
-                      </FormSelect>
-                      <FormLabel htmlFor="vertical-form-1">y ver</FormLabel>
-                      <FormSelect
-                        className="ml-3 mt-2 sm:mr-2 w-100"
-                        name="activos"
-                        id="activos"
-                        value={activos}
-                        onChange={(e) => setActivos(e.target.value)}
-                      >
-                        <option value="1">activos</option>
-                        <option value="0">inactivos</option>
                       </FormSelect>
                       <FormInput
                         type="text"
@@ -305,100 +260,64 @@ const Autos = () => {
                 <Button
                   variant="primary"
                   className="ml-4 mt-2 mb-3 mr-3"
-                  onClick={handleNuevoVehiculo}
+                  onClick={handleNueoElemento}
                 >
                   <Lucide icon="PlusSquare" className="w-4 h-4 mr-2" />
-                  Vehículo
+                  Elemento
                 </Button>
               </div>
             </div>
           </div>
           {verTabla &&
             <div className="overflow-x-auto">
-              {!autos && (
+              {!elementoIyC && (
                 <Cargando mensaje="Buscando vehículos" />
               )}
               <Table className="border-spacing-y-[10px] border-separate -mt-2">
                 <Table.Thead>
                   <Table.Tr>
-                    <Table.Th className="border-b-0 whitespace-nowrap">
-                      Vehículo
-                    </Table.Th>
-                    <Table.Th className="border-b-0 whitespace-nowrap">
-                      Propietario
-                    </Table.Th>
-                    <Table.Th className="border-b-0 whitespace-nowrap text-center">
-                      Estado
-                    </Table.Th>
-                    <Table.Th className="border-b-0 whitespace-nowrap text-center">
-                      Ultimo Periodo <br />
-                      de Liquidación
-                    </Table.Th>
-                    <Table.Th className="border-b-0 whitespace-nowrap text-center">
-                      Situación
-                    </Table.Th>
-                    <Table.Th className="border-b-0 whitespace-nowrap text-center">
-                      Saldo
-                    </Table.Th>
-                    <Table.Th className="border-b-0 whitespace-nowrap text-center">
-                      Multas
-                    </Table.Th>
-                    <Table.Th className="border-b-0 whitespace-nowrap text-right">
-                      Acciones
-                    </Table.Th>
+                    <Table.Th className="border-b-0 whitespace-nowrap">Legajo</Table.Th>
+                    <Table.Th className="border-b-0 whitespace-nowrap">Contribuyente</Table.Th>
+                    <Table.Th className="border-b-0 whitespace-nowrap">Desc. Comercial</Table.Th>
+                    <Table.Th className="border-b-0 whitespace-nowrap">Nombre de Fantasía</Table.Th>
+                    <Table.Th className="border-b-0 whitespace-nowrap">CUIT</Table.Th>
+                    <Table.Th className="border-b-0 whitespace-nowrap">Dirección</Table.Th>
+                    <Table.Th className="border-b-0 whitespace-nowrap text-center">Acciones</Table.Th>
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
-                  {autos.map((auto, index) => (
+                  {Array.isArray(elementoIyC) && elementoIyC.map((data: any, index: number) => (
                     <Table.Tr key={index}>
                       <Table.Td className="first:rounded-l-md last:rounded-r-md bg-white border-b-0 dark:bg-darkmode-600 shadow-[20px_3px_20px_#0000000b]">
-                        Dominio: <strong>{auto.dominio} </strong> <br />
-                        Marca: {auto.marca} <br />
-                        Año: {auto.anio}
+                        {data.legajo}
                       </Table.Td>
                       <Table.Td className="first:rounded-l-md last:rounded-r-md bg-white border-b-0 dark:bg-darkmode-600 shadow-[20px_3px_20px_#0000000b]">
-                        CUIT: {auto.cuit} <br />
-                        Nombre y Apellido: <br /> {auto.nombre}
-                      </Table.Td>
-                      <Table.Td
-                        className={classNames({
-                          "text-success first:rounded-l-md last:rounded-r-md bg-white border-b-0 dark:bg-darkmode-600 shadow-[20px_3px_20px_#0000000b]":
-                            !auto.baja,
-                          "text-danger first:rounded-l-md last:rounded-r-md bg-white border-b-0 dark:bg-darkmode-600 shadow-[20px_3px_20px_#0000000b]":
-                            auto.baja,
-                        })}
-                      >
-                        {auto.baja ? "BAJA" : "ACTIVO"}
-                      </Table.Td>
-                      <Table.Td className="first:rounded-l-md last:rounded-r-md bg-white border-b-0 dark:bg-darkmode-600 shadow-[20px_3px_20px_#0000000b] text-center">
-                        {getUltimoPeriodo(auto.per_ult)}
+                        {data.nro_contrib}
                       </Table.Td>
                       <Table.Td className="first:rounded-l-md last:rounded-r-md bg-white border-b-0 dark:bg-darkmode-600 shadow-[20px_3px_20px_#0000000b]">
-                        {getSituacion(auto.cod_situacion_judicial)}
+                        {data.des_com}
                       </Table.Td>
-                      <Table.Td className="text-danger text-right first:rounded-l-md last:rounded-r-md bg-white border-b-0 dark:bg-darkmode-600 shadow-[20px_3px_20px_#0000000b]">
-                        <div className={classNames({
-                          "text-danger": auto.saldo_adeudado,
-                          "text-success": !auto.saldo_adeudado
-                        })}>
-                          {transformarDinero(auto.saldo_adeudado)}
-                        </div>
+                      <Table.Td className="first:rounded-l-md last:rounded-r-md bg-white border-b-0 dark:bg-darkmode-600 shadow-[20px_3px_20px_#0000000b]">
+                        {data.nom_fantasia}
                       </Table.Td>
-                      <Table.Td className="text-danger text-right first:rounded-l-md last:rounded-r-md bg-white border-b-0 dark:bg-darkmode-600 shadow-[20px_3px_20px_#0000000b]">
-                        {auto.multas > 0 && (
-                          <Button
-                            variant="soft-danger"
-                            onClick={() => handleVerMultas(auto)}
-                            style={{ cursor: "pointer" }}
+                      <Table.Td className="first:rounded-l-md last:rounded-r-md bg-white border-b-0 dark:bg-darkmode-600 shadow-[20px_3px_20px_#0000000b]">
+                        {data.nro_cuit}
+                      </Table.Td>
+                      <Table.Td className="first:rounded-l-md last:rounded-r-md bg-white border-b-0 dark:bg-darkmode-600 shadow-[20px_3px_20px_#0000000b]">
+                        <p>{data.nom_calle}, {data.nom_barrio}</p>
+                        <p>
+                          <a href={`https://maps.google.com/?q=${data.nom_calle_dom_esp} ${data.nro_dom_esp}, ${data.ciudad_dom_esp.trim()}, ${data.provincia_dom_esp.trim()}`}
+                            target="_new"
                           >
-                            <Lucide icon="AlertTriangle" className="w-5 h-5" />{auto.multas}
-                          </Button>)}
+                            {data.nom_calle_dom_esp} {data.nro_dom_esp && "Nro."} {data.nro_dom_esp} {data.nom_barrio_dom_esp === "" && ","} {data.nom_barrio_dom_esp}
+                          </a>
+                        </p>
                       </Table.Td>
-                      <Table.Td className="first:rounded-l-md last:rounded-r-md bg-white border-b-0 dark:bg-darkmode-600 shadow-[20px_3px_20px_#0000000b]">
+                      <Table.Td className="text-danger text-right first:rounded-l-md last:rounded-r-md bg-white border-b-0 dark:bg-darkmode-600 shadow-[20px_3px_20px_#0000000b]">
                         <Button
                           variant="primary"
-                          onClick={() => handleVerAuto(auto)}
                           style={{ cursor: "pointer" }}
+                          onClick={() => handleVerElemento(data)}
                         >
                           <Lucide icon="Eye" className="w-5 h-5" />
                         </Button>
@@ -407,13 +326,15 @@ const Autos = () => {
                   ))}
                 </Table.Tbody>
               </Table>
-              <div className="w-full text-center">{renderPagination()}</div>
+              <div className="w-full text-center">
+                {Array.isArray(elementoIyC) && elementoIyC.length >= 10 && renderPagination()}
+              </div>
             </div>
           }
         </div>
       </div>
     </>
   );
-};
+}
 
-export default Autos;
+export default index
