@@ -114,4 +114,10 @@ export interface TipoDeEntidad {
   campo_enlace: string;
 }
 
+export interface Zonas {
+  "value": string;
+  "text": string;
+  "campo_enlace": string;
+}
+
 

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useIndustriaComercioContext } from "../../context/IndustriaComercioProvider";
 import { ElementoIndustriaComercio } from "../../interfaces/IndustriaComercio";
 import { convertirFecha, fechaActual } from "../../utils/GeneralUtils";
-import { set } from "lodash";
+import { cond, set } from "lodash";
 import axios from "axios";
 import Swal from "sweetalert2";
 import {
@@ -15,6 +15,7 @@ import {
 import Lucide from "../../base-components/Lucide";
 import Button from "../../base-components/Button";
 import { useNavigate } from "react-router-dom";
+import { useUserContext } from "../../context/UserProvider";
 
 const Editar = () => {
   const {
@@ -26,9 +27,12 @@ const Editar = () => {
     listadoTipoLiquidacion,
     listadoTipoDeEntidad,
     listadoTipoCondicionIVA,
-    listadoSituacionJudicial
+    listadoSituacionJudicial,
+    listadoZonas
   } = useIndustriaComercioContext();
   const [elementoIndustriaComercio, setElementoIndustriaComercio] = useState<ElementoIndustriaComercio>();
+
+  const { user } = useUserContext();
 
   const navigate = useNavigate();
 
@@ -61,7 +65,7 @@ const Editar = () => {
   const [codZonaLiquidacion, setCodZonaLiquidacion] = useState<string>("");
   const [fechaDdjjAnual, setFechaDdjjAnual] = useState<string>("");
   const [codCaracter, setCodCaracter] = useState<number | null>(null);
-  const [categoriaIva, setCategoriaIva] = useState<string>("");
+  const [categoriaIva, setCategoriaIva] = useState<number>(0);
   const [cuitVecinoDigital, setCuitVecinoDigital] = useState<string>("");
   const [vtoInscripcion, setVtoInscripcion] = useState<string>("");
   const [observacionesAuditoria, setObservacionesAuditoria] = useState<string>("");
@@ -104,7 +108,7 @@ const Editar = () => {
       setTransporte(elementoIndCom.transporte);
       setExento(elementoIndCom.exento);
       setCodCaracter(elementoIndCom.cod_caracter);
-      setCategoriaIva(elementoIndCom.categoria_iva);
+      setCategoriaIva(elementoIndCom.cod_cond_ante_iva);
       setNroIngBruto(elementoIndCom.nro_ing_bruto);
       setFechaInicio(elementoIndCom.fecha_inicio);
       setFechaHab(elementoIndCom.fecha_hab);
@@ -149,7 +153,7 @@ const Editar = () => {
       "des_com": desCom,
       "nom_fantasia": nomFantasia,
       "cod_calle": 421,
-      "nro_dom": nroDom,
+      "nro_dom": 241,
       "cod_barrio": 10,
       "cod_tipo_per": 1,
       "cod_zona": "1 ",
@@ -163,14 +167,14 @@ const Editar = () => {
       "fecha_inicio": fechaInicio,
       "fecha_hab": fechaHab,
       "nro_res": "",
-      "nro_exp_mesa_ent": "123372022      ",
+      "nro_exp_mesa_ent": nroExpMesaEnt,
       "nro_ing_bruto": nroIngBruto,
       "nro_cuit": nroCuit,
       "transporte": transporte,
-      "fecha_alta": fechaActual,
+      "fecha_alta": fechaAlta,
       "nom_calle": nomCalle,
-      "nom_barrio": "CENTRO                                  ",
-      "ciudad": "VILLA ALLENDE                           ",
+      "nom_barrio": nomBarrioDomEsp,
+      "ciudad": ciudad,
       "provincia": "CORDOBA                                 ",
       "pais": "ARGENTINA                               ",
       "cod_postal": "5105",
@@ -187,7 +191,7 @@ const Editar = () => {
       "cod_postal_dom_esp": "5105",
       "fecha_cambio_domicilio": "2022-07-15T09:21:39",
       "emite_cedulon": emiteCedulon,
-      "cod_situacion_judicial": situacionJudicial,
+      "cod_situacion_judicial": codSituacionJudicial?.toString(),
       "telefono1": "",
       "telefono2": "",
       "celular1": "",
@@ -209,31 +213,30 @@ const Editar = () => {
       "fecha_empadronado": "2023-10-11T14:49:04.2638926-03:00",
       "es_agencia": 0,
       "clave_gestion": "OS5034AD",
-      "nro_local": "",
+      "nro_local": localEsp,
       "cedulon_digital": 0,
-      "piso_dpto": "",
+      "piso_dpto": pisoDptoEsp,
       "cod_cond_ante_iva": categoriaIva,
-      "cod_caracter": 1,
+      "cod_caracter": codCaracter,
       "categoria_iva": "I",
-      "otra_entidad": tipoDeEntidad?.text,
+      "otra_entidad": "",
       "convenio_uni": 0,
       "cod_nueva_zona": "1 ",
       "fecha_vecino_digital": "2023-10-11T14:49:04.2638929-03:00",
-      "cuit_vecino_digital": cuitVecinoDigital,
+      "cuit_vecino_digital": nroCuit,
       "vto_inscripcion": vtoInscripcion,
       "titular": "",
       "objAuditoria": {
         "id_auditoria": 0,
-        "fecha": fechaActual,
+        "fecha": "11/10/2023 14:49",
         "usuario": "",
         "proceso": "",
         "identificacion": "",
         "autorizaciones": "",
-        "observaciones": observacionesAuditoria,
+        "observaciones": "",
         "detalle": "",
         "ip": ""
       }
-
     };
     console.log(requestBody);
     axios
@@ -241,16 +244,17 @@ const Editar = () => {
       .then((response) => {
         if (response.data) {
           Swal.fire({
-            title: "Vehículo actualizado",
-            text: "El vehículo se actualizó correctamente",
+            title: "Actualizado",
+            text: "Se actualizó correctamente",
             icon: "success",
             confirmButtonText: "Aceptar",
             confirmButtonColor: "#27a3cf",
           });
+          navigate(`/iyc/${legajo}/ver`);
         } else {
           Swal.fire({
             title: "Error al actualizar",
-            text: "El vehículo no se pudo actualizar",
+            text: "No se pudo actualizar",
             icon: "error",
             confirmButtonText: "Aceptar",
             confirmButtonColor: "#27a3cf",
@@ -274,7 +278,7 @@ const Editar = () => {
 
   return (
     <>
-      <div className="conScroll grid grid-cols-12 gap-6 mt-2 ml-3 mr-4">
+      <div className="conScroll grid grid-cols-12 gap-6 mt-2 ml-3 mr-4 p-4">
         <div className="col-span-12 intro-y lg:col-span-12">
           <div className="flex w-full justify-between col-span-12 intro-y lg:col-span-12">
             <h2>Datos del Comercio o Industria</h2>
@@ -298,6 +302,7 @@ const Editar = () => {
                 type="text"
                 value={nroExpMesaEnt}
                 onChange={(e) => setNroExpMesaEnt(e.target.value)}
+                disabled
               />
             </div>
 
@@ -308,6 +313,7 @@ const Editar = () => {
                 id="formFechaDeAlta"
                 value={fechaAlta.slice(0, 10)}
                 onChange={(e) => setFechaAlta(e.target.value)}
+                disabled
               />
             </div>
 
@@ -397,12 +403,17 @@ const Editar = () => {
 
             <div className="col-span-12 intro-y lg:col-span-2">
               <FormLabel htmlFor="formMarca">Zona</FormLabel>
-              <FormInput
-                id="formZona"
-                type="text"
+              <FormSelect
+                id="formTipoLiquidacion"
                 value={codZona}
                 onChange={(e) => setCodZona(e.target.value)}
-              />
+              >
+                {listadoZonas?.map((tipo) => (
+                  <option key={tipo.value} value={tipo.value}>
+                    {tipo.value}
+                  </option>
+                ))}
+              </FormSelect>
             </div>
 
             <div className="col-span-12 intro-y lg:col-span-2">
@@ -520,7 +531,7 @@ const Editar = () => {
               <FormSelect
                 id="formTipoLiquidacion"
                 value={categoriaIva}
-                onChange={(e) => setCategoriaIva(e.target.value)}
+                onChange={(e) => setCategoriaIva(parseInt(e.target.value))}
               >
                 <option value="">Seleccione una Condición Frente al IVA</option>
                 {listadoTipoCondicionIVA?.map((tipo) => (
@@ -598,7 +609,7 @@ const Editar = () => {
               <FormSelect
                 id="formSituacionJudicial"
                 value={codSituacionJudicial?.toString() ?? ''}
-                onChange={(e) => setCategoriaIva(e.target.value)}
+                onChange={(e) => setCodSituacionJudicial(parseInt(e.target.value))}
               >
                 <option value="">Seleccione una Situación Comercio</option>
                 {listadoSituacionJudicial?.map((tipo) => (
@@ -650,6 +661,9 @@ const Editar = () => {
           </div>
 
           <div className="flex w-full justify-between col-span-12 intro-y lg:col-span-12 mt-5 mb-5">
+            <div className="col-span-12 intro-y lg:col-span-6">
+              Usuario: {user?.userName}
+            </div>
             <div className="col-span-12 intro-y lg:col-span-6">
               <Button
                 variant="primary"

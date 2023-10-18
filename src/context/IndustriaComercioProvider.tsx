@@ -6,7 +6,8 @@ import {
   TiposLiqIyc,
   CondicionesDeIVA,
   SituacionesJudiciales,
-  TipoDeEntidad
+  TipoDeEntidad,
+  Zonas
 } from "../interfaces/IndustriaComercio";
 
 type IndustriaComercioContextType = {
@@ -21,6 +22,7 @@ type IndustriaComercioContextType = {
   listadoTipoDeEntidad: TipoDeEntidad[];
   listadoTipoCondicionIVA: CondicionesDeIVA[];
   listadoSituacionJudicial: SituacionesJudiciales[];
+  listadoZonas: Zonas[];
 };
 
 const IndustriaComercioContext = createContext<IndustriaComercioContextType>({
@@ -34,7 +36,8 @@ const IndustriaComercioContext = createContext<IndustriaComercioContextType>({
   listadoTipoLiquidacion: [],
   listadoTipoDeEntidad: [],
   listadoTipoCondicionIVA: [],
-  listadoSituacionJudicial: []
+  listadoSituacionJudicial: [],
+  listadoZonas: []
 });
 
 export function useIndustriaComercioContext() {
@@ -51,6 +54,7 @@ export function IndustriaComercioProvider({ children }: any) {
   const [tipoDeEntidad, setTipoDeEntidad] = useState<TipoDeEntidad>();
   const [listadoTipoLiquidacion, setListadoTipoLiquidacion] = useState<TiposLiqIyc[]>([]);
   const [listadoTipoDeEntidad, setListadoTipoDeEntidad] = useState<TipoDeEntidad[]>([]);
+  const [listadoZonas, setListadoZonas] = useState<Zonas[]>([]);
 
   const traerElemento = async (legajo: string) => {
     try {
@@ -63,6 +67,7 @@ export function IndustriaComercioProvider({ children }: any) {
         traerTipoCondicionIVA(response.data.resultado[0].tipo_cond_iva);
         traerSituacionJudicial(response.data.resultado[0].cod_situacion_judicial);
         traerCaracterDeLaEntidad(response.data.resultado[0].cod_caracter);
+        traerListaDeZonzas();
       } else {
         setElementoIndCom(null);
       }
@@ -105,7 +110,6 @@ export function IndustriaComercioProvider({ children }: any) {
 
   const traerSituacionJudicial = async (codigo: number) => {
     try {
-      const codigoString = codigo.toString();
       const response = await axios.get(
         `${import.meta.env.VITE_URL_API_IYC}Situacion_judicial`
       );
@@ -131,6 +135,17 @@ export function IndustriaComercioProvider({ children }: any) {
     }
   };
 
+  const traerListaDeZonzas = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_URL_API_IYC}Zonasiyc`
+      );
+      setListadoZonas(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
 
 
   return (
@@ -146,7 +161,8 @@ export function IndustriaComercioProvider({ children }: any) {
         listadoTipoLiquidacion,
         listadoTipoDeEntidad,
         listadoTipoCondicionIVA,
-        listadoSituacionJudicial
+        listadoSituacionJudicial,
+        listadoZonas
       }}>
       {children}
     </IndustriaComercioContext.Provider>
