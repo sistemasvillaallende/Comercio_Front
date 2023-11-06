@@ -144,7 +144,7 @@ const Editar = () => {
   }
 
   const actualizarIyC = (auditoria: String) => {
-    const urlApi = `${import.meta.env.VITE_URL_API_IYC}UpdateDatosGenerales`;
+    const urlApi = `${import.meta.env.VITE_URL_API_IYC}Indycom/UpdateDatosGenerales`;
     const fechaActual = new Date();
     const requestBody = {
       "legajo": legajo,

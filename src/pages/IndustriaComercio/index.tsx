@@ -7,7 +7,6 @@ import { FormSelect, FormInput, FormLabel } from "../../base-components/Form";
 import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
 import Swal from "sweetalert2";
-import { Vehiculo } from "../../interfaces/Vehiculo";
 import Cargando from "../Recursos/Cargando";
 import { ElementoIndustriaComercio } from "../../interfaces/IndustriaComercio";
 import { useIndustriaComercioContext } from "../../context/IndustriaComercioProvider";
@@ -30,7 +29,7 @@ const index = () => {
     if (buscarPor && strParametro) {
       const fetchData = async () => {
         const registrosPorPagina = 10;
-        const URL = `${import.meta.env.VITE_URL_API_IYC}GetIndycomPaginado?buscarPor=${buscarPor}&strParametro=${strParametro}&pagina=${paginaNum}&registros_por_pagina=${registrosPorPagina}`;
+        const URL = `${import.meta.env.VITE_URL_API_IYC}Indycom/GetIndycomPaginado?buscarPor=${buscarPor}&strParametro=${strParametro}&pagina=${paginaNum}&registros_por_pagina=${registrosPorPagina}`;
         const response = await axios.get(URL);
         if (response.data === "") {
           Swal.fire({
@@ -158,11 +157,7 @@ const index = () => {
       return;
     }
     traerElemento(dato.legajo.toString());
-    navigate(`/iyc/${dato.legajo}/ver`);
-  };
-
-  const handleNueoElemento = () => {
-    navigate(`/iyc/nuevo`);
+    navigate(`/${dato.legajo}/ver`);
   };
 
   const handleBuscar = (e: any) => {
@@ -182,7 +177,7 @@ const index = () => {
       const registrosPorPagina = 10;
       const paginaNum = 1;
       setPaginaActual(paginaNum);
-      const URL = `${import.meta.env.VITE_URL_API_IYC}GetIndycomPaginado?buscarPor=${buscarPor}&strParametro=${strParametro}&pagina=${paginaNum}&registros_por_pagina=${registrosPorPagina}`;
+      const URL = `${import.meta.env.VITE_URL_API_IYC}Indycom/GetIndycomPaginado?buscarPor=${buscarPor}&strParametro=${strParametro}&pagina=${paginaNum}&registros_por_pagina=${registrosPorPagina}`;
       const response = await axios.get(URL);
       setCantPaginas(response.data.totalPaginas);
       setElementoIyC(response.data.resultado);
@@ -256,15 +251,27 @@ const index = () => {
                   <Button variant="secondary" className="mt-2 mb-3 mr-3" onClick={handleLimpiar}>
                     Limpiar
                   </Button>
+
+                  <Button
+                    variant="primary"
+                    className="ml-5 mt-2 mb-3 mr-3"
+                    onClick={() => navigate(`nuevo`)}
+                  >
+                    <Lucide icon="PlusSquare" className="w-4 h-4 mr-2" />
+                    Nuevo
+                  </Button>
+
                 </div>
+
                 <Button
                   variant="primary"
                   className="ml-4 mt-2 mb-3 mr-3"
-                  onClick={handleNueoElemento}
+                  onClick={() => navigate(`ComerciosPorCalle`)}
                 >
-                  <Lucide icon="PlusSquare" className="w-4 h-4 mr-2" />
-                  Elemento
+                  <Lucide icon="Home" className="w-4 h-4 mr-2" />
+                  Por Calle
                 </Button>
+
               </div>
             </div>
           </div>
@@ -277,7 +284,7 @@ const index = () => {
                 <Table.Thead>
                   <Table.Tr>
                     <Table.Th className="border-b-0 whitespace-nowrap">Legajo</Table.Th>
-                    <Table.Th className="border-b-0 whitespace-nowrap">Contribuyente</Table.Th>
+                    <Table.Th className="border-b-0 whitespace-nowrap">Nro. Contribuyente</Table.Th>
                     <Table.Th className="border-b-0 whitespace-nowrap">Desc. Comercial</Table.Th>
                     <Table.Th className="border-b-0 whitespace-nowrap">Nombre de Fantasía</Table.Th>
                     <Table.Th className="border-b-0 whitespace-nowrap">CUIT</Table.Th>

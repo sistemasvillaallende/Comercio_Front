@@ -6,9 +6,86 @@ import Barcode from "react-barcode";
 import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
 import "../../assets/css/style.css";
+import { useParams } from 'react-router-dom';
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { CabeceraDeCedulon, DetalleCedulon, CedulonImpresion } from "../../interfaces/IndustriaComercio";
+import { convertirFecha, fechaActual } from "../../utils/GeneralUtils";
+import { set } from "lodash";
+import { Planes_Cobro } from "../../interfaces/Planes_Cobro";
+import { CheckOut } from "../../interfaces/CheckOut";
+import { currencyFormat, selectCalculaMontos } from "../../utils/helper";
+import { useCedulonesContext } from "../../context/CedulonesProviders";
+
 // Crear un componente que representa el documento PDF
 
-const CeduloAuto = () => {
+const Cedulon = () => {
+  const { cedulonParaImpresion } = useCedulonesContext();
+
+  const { nrocedulon } = useParams();
+  const [cabecera, setCabecera] = useState<CabeceraDeCedulon>();
+  const [detalle, setDetalle] = useState<DetalleCedulon[]>([]);
+  const [subTotal, setSubTotal] = useState<number>(0);
+  const [interesMoraTotal, setInteresMoraTotal] = useState<number>(0);
+  const [descuentoTotal, setDescuentoTotal] = useState<number>(0);
+  const [costoFinancieroTotal, setCostoFinancieroTotal] = useState<number>(0);
+
+  const [checkout, setCheckout] = useState<CheckOut>();
+
+  useEffect(() => {
+    if (nrocedulon) {
+      obtenerCabecera(parseInt(nrocedulon));
+      obtenerDetalle(parseInt(nrocedulon));
+    }
+    console.log(cedulonParaImpresion)
+  }, [nrocedulon]);
+
+
+  const obtenerCabecera = (nrocedulon: number) => {
+    const urlApi = `${import.meta.env.VITE_URL_CEDULONES}getCabeceraPrintCedulonAuto?nroCedulon=${nrocedulon}`;
+    axios
+      .get(urlApi)
+      .then((response) => {
+        setCabecera(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  const obtenerDetalle = (nrocedulon: number) => {
+    const urlApi = `${import.meta.env.VITE_URL_CEDULONES}getDetallePrintCedulonAuto?nroCedulon=${nrocedulon}`;
+    axios
+      .get(urlApi)
+      .then((response) => {
+        setDetalle(response.data);
+        calcularTotales(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+
+  const calcularTotales = (detalles: DetalleCedulon[]) => {
+    let subTotal = 0;
+    let interesPorMora = 0;
+    let montoOriginal = 0;
+    let montoPagado = 0;
+    let descuentos = 0;
+    detalles.forEach((detalle: DetalleCedulon) => {
+      subTotal += detalle.montoOriginal;
+      interesPorMora += detalle.recargo;
+      montoOriginal += detalle.montoOriginal;
+      montoPagado += detalle.montoPagado;
+      descuentos += detalle.descInteres;
+    });
+    setSubTotal(subTotal);
+    setInteresMoraTotal(interesPorMora);
+    setDescuentoTotal(descuentos);
+
+  }
+
   const divRef = useRef(null);
   const barcodeData = "05490000000000000072080590007574010092023000000103";
   const barcodeData2 = "*C07208059*";
@@ -32,6 +109,7 @@ const CeduloAuto = () => {
       });
     }
   };
+
 
   return (
     <>
@@ -70,20 +148,20 @@ const CeduloAuto = () => {
                   <div className="tm_invoice_info_left tm_mb20_md">
                     <p className="tm_mb0">
                       Nro. Comprobante:{" "}
-                      <b className="tm_primary_color">7208059</b>
+                      <b className="tm_primary_color">{cabecera?.nroCedulon}</b>
                       <br />
                       Fecha Emisión:{" "}
-                      <b className="tm_primary_color">05/09/2023</b>
+                      <b className="tm_primary_color">{fechaActual()}</b>
                       <br />
                       Fecha Vencimiento:{" "}
-                      <b className="tm_primary_color">10/09/2023</b>
+                      <b className="tm_primary_color">{cabecera?.vencimiento ? convertirFecha(cabecera.vencimiento) : ""}</b>
                     </p>
                   </div>
                   <div className="tm_invoice_info_right">
                     <div className="tm_border tm_accent_border_20 tm_radius_0 tm_accent_bg_10 tm_curve_35 tm_text_center">
                       <div>
                         <b className="tm_accent_color tm_f26 tm_medium tm_body_lineheight">
-                          Total: $757,40
+                          Total: $ {cabecera?.montoPagar}
                         </b>
                       </div>
                     </div>
@@ -104,13 +182,13 @@ const CeduloAuto = () => {
                               <b className="tm_primary_color tm_medium">
                                 Contribuyente:{" "}
                               </b>
-                              VELEZ SPITALE IGNACIO MARTIN
+                              {cabecera?.nombre}
                             </td>
                             <td className="tm_width_6 tm_border_top_0 tm_border_left tm_accent_border_20">
                               <b className="tm_primary_color tm_medium">
                                 Vehiculo:{" "}
                               </b>{" "}
-                              PEUGEOT 307 XS 1.6
+                              {cabecera?.detalle}
                             </td>
                           </tr>
                           <tr>
@@ -118,13 +196,13 @@ const CeduloAuto = () => {
                               <b className="tm_primary_color tm_medium">
                                 CUIT:{" "}
                               </b>
-                              23-27173499-9
+                              {cabecera?.cuit}
                             </td>
                             <td className="tm_width_6 tm_border_left tm_accent_border_20">
                               <b className="tm_primary_color tm_medium">
                                 Dominio:{" "}
                               </b>
-                              FKQ208
+                              {cabecera?.denominacion}
                             </td>
                           </tr>
                         </tbody>
@@ -150,50 +228,21 @@ const CeduloAuto = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <td className="tm_width_1 tm_accent_border_20">
-                              2022/01
-                            </td>
-                            <td className="tm_width_3 tm_accent_border_20">
-                              IMPUESTO AL AUTOMOTOR
-                            </td>
-                            <td className="tm_width_1 tm_accent_border_20 tm_text_right">
-                              $ 757,40
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className="tm_width_1 tm_accent_border_20">
-                              2022/02
-                            </td>
-                            <td className="tm_width_3 tm_accent_border_20">
-                              IMPUESTO AL AUTOMOTOR
-                            </td>
-                            <td className="tm_width_1 tm_accent_border_20 tm_text_right">
-                              $600
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className="tm_width_1 tm_accent_border_20">
-                              2022/03
-                            </td>
-                            <td className="tm_width_3 tm_accent_border_20">
-                              IMPUESTO AL AUTOMOTOR
-                            </td>
-                            <td className="tm_width_1 tm_accent_border_20 tm_text_right">
-                              $200
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className="tm_width_1 tm_accent_border_20">
-                              2022/03
-                            </td>
-                            <td className="tm_width_3 tm_accent_border_20">
-                              IMPUESTO AL AUTOMOTOR
-                            </td>
-                            <td className="tm_width_1 tm_accent_border_20 tm_text_right">
-                              $100
-                            </td>
-                          </tr>
+                          {detalle.map((item, index) => {
+                            return (
+                              <tr key={index}>
+                                <td className="tm_width_1 tm_accent_border_20">
+                                  {item.periodo}
+                                </td>
+                                <td className="tm_width_3 tm_accent_border_20">
+                                  {item.concepto}
+                                </td>
+                                <td className="tm_width_1 tm_accent_border_20 tm_text_right">
+                                  {currencyFormat(item.montoPagado)}
+                                </td>
+                              </tr>
+                            );
+                          })}
                         </tbody>
                       </table>
                     </div>
@@ -213,9 +262,9 @@ const CeduloAuto = () => {
                         style={{ fontSize: "14px", marginTop: "10px" }}
                       >
                         Medio de Pago <br />
-                        Tarjeta de Credito - Mastercad Cordobesa
+                        {cedulonParaImpresion?.tarjetaDeCredito}
                         <br />
-                        en 6 Cuotas de $ 219,50
+                        en {cedulonParaImpresion?.cantCuotas} Cuotas de {currencyFormat(cedulonParaImpresion?.montoCuota || 0)}
                       </p>
                     </div>
                     <div className="tm_right_footer">
@@ -226,7 +275,7 @@ const CeduloAuto = () => {
                               Sub total
                             </td>
                             <td className="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_medium">
-                              $350.00
+                              {currencyFormat(cedulonParaImpresion?.montoOriginal || 0)}
                             </td>
                           </tr>
                           <tr>
@@ -234,7 +283,7 @@ const CeduloAuto = () => {
                               Interes Mora
                             </td>
                             <td className="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_pt0">
-                              $ 574,00
+                              {currencyFormat(cedulonParaImpresion?.interesMora || 0)}
                             </td>
                           </tr>
                           <tr>
@@ -242,7 +291,7 @@ const CeduloAuto = () => {
                               Descuento
                             </td>
                             <td className="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_pt0">
-                              $ 114,80
+                              {currencyFormat(cedulonParaImpresion?.descuento || 0)}
                             </td>
                           </tr>
                           <tr>
@@ -250,7 +299,7 @@ const CeduloAuto = () => {
                               Costo financiero:
                             </td>
                             <td className="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_pt0">
-                              $ 444,82
+                              $ {currencyFormat(cedulonParaImpresion?.costoFinanciero || 0)}
                             </td>
                           </tr>
                           <tr className="tm_accent_border_20 tm_border">
@@ -258,7 +307,7 @@ const CeduloAuto = () => {
                               Total{" "}
                             </td>
                             <td className="tm_width_3 tm_bold tm_f16 tm_border_top_0 tm_accent_color tm_text_right tm_accent_bg_10">
-                              $ 1.317,02
+                              {currencyFormat(cedulonParaImpresion?.total || 0)}
                             </td>
                           </tr>
                         </tbody>
@@ -303,16 +352,16 @@ const CeduloAuto = () => {
                       </tr>
                       <tr>
                         <td className="tm_width_3 tm_border_left tm_accent_border_20">
-                          VELEZ SPITALE IGNACIO MARTIN
+                          {cabecera?.nombre}
                         </td>
                         <td className="tm_width_3 tm_border_left tm_accent_border_20">
-                          PEUGEOT 307 XS 1.6
+                          {cabecera?.detalle}
                         </td>
                         <td className="tm_width_3 tm_border_left tm_accent_border_20">
-                          VELEZ SPITALE IGNACIO MARTIN
+                          {cabecera?.nombre}
                         </td>
                         <td className="tm_width_3 tm_border_right tm_border_left tm_accent_border_20">
-                          PEUGEOT 307 XS 1.6
+                          {cabecera?.detalle}
                         </td>
                       </tr>
                       <tr>
@@ -320,40 +369,40 @@ const CeduloAuto = () => {
                           style={{ paddingTop: "0" }}
                           className="tm_width_3 tm_border_left tm_border_top_0"
                         >
-                          CUIT: 23-27.173.499-9
+                          CUIT: {cabecera?.cuit}
                         </td>
                         <td
                           style={{ paddingTop: "0" }}
                           className="tm_width_3 tm_border_left tm_border_top_0"
                         >
-                          Dominio: FKQ208
+                          Dominio: {cabecera?.denominacion}
                         </td>
                         <td
                           style={{ paddingTop: "0" }}
                           className="tm_width_3 tm_border_top_0 tm_border_left tm_accent_border_20"
                         >
-                          CUIT: 23-27.173.499-9
+                          CUIT: {cabecera?.cuit}
                         </td>
                         <td
                           style={{ paddingTop: "0" }}
                           className="tm_width_3 tm_border_top_0 tm_border_left tm_border_right tm_accent_border_20"
                         >
-                          Dominio: FKQ208
+                          Dominio: {cabecera?.denominacion}
                         </td>
                       </tr>
                       <tr>
                         <td className="tm_width_3 tm_border_left tm_border_top_0">
-                          VENC.: 10/09/2023
+                          VENC.: {cabecera?.vencimiento ? convertirFecha(cabecera.vencimiento) : ""}
                         </td>
                         <td className="tm_width_3 tm_border_left tm_border_top_0">
-                          TOTAL: $ 1.317,02
+                          TOTAL: $ {cabecera?.montoPagar}
 
                         </td>
                         <td className="tm_width_3 tm_border_top_0 tm_border_left tm_accent_border_20">
-                          VENC.: 10/09/2023
+                          VENC.: {cabecera?.vencimiento ? convertirFecha(cabecera.vencimiento) : ""}
                         </td>
                         <td className="tm_width_3 tm_border_top_0 tm_border_left tm_border_right tm_accent_border_20">
-                          TOTAL: $ 1.317,02
+                          TOTAL: $ {cabecera?.montoPagar}
                         </td>
                       </tr>
                     </tbody>
@@ -367,4 +416,4 @@ const CeduloAuto = () => {
     </>
   );
 };
-export default CeduloAuto;
+export default Cedulon;

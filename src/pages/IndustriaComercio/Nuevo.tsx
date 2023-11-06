@@ -102,7 +102,7 @@ const Nuevo = () => {
   }
 
   const actualizarIyC = (auditoria: String) => {
-    const urlApi = `${import.meta.env.VITE_URL_API_IYC}InsertDatosGeneral`;
+    const urlApi = `${import.meta.env.VITE_URL_API_IYC}Indycom/InsertDatosGeneral`;
     const fechaActual = new Date();
     const requestBody = {
       "legajo": legajo,

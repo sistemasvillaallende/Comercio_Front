@@ -21,7 +21,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    document.title = "Bienvenido";
+    document.title = "Inustria y Comercio";
     const usuarioLogeado = sessionStorage.getItem("usuarioLogeado");
     if (usuarioLogeado) {
       window.location.href = "/";

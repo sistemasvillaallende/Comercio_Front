@@ -120,4 +120,137 @@ export interface Zonas {
   "campo_enlace": string;
 }
 
+export interface BaseImponible {
+  legajo: number;
+  periodo: string;
+  nro_transaccion: number;
+  anio: number;
+  fecha_presentacion_ddjj: string;
+  cod_rubro: number;
+  concepto: string;
+  monto_original: number;
+  debe: number;
+  cantidad: number;
+  importe: number;
+  alicuota_oim: number;
+  alicuota_sys: number;
+  minimo_oim: number;
+  minimo_sys: number;
+  incluido_en_oim: number;
+}
 
+export interface InterfaceComerciosPorCalle {
+  legajo: number;
+  nombre: string;
+  cod_rubro: number;
+  concepto: string;
+  nom_calle: string;
+  nro_dom: string;
+  nom_bario: string;
+  telefono: string;
+  celular: string;
+  email: string;
+  nom_fantasia: string;
+  des_cond_ante_iva: string;
+}
+
+export interface ReLiquidacion {
+  tipo_transaccion: number;
+  nro_transaccion: number;
+  nro_pago_parcial: number;
+  dominio: string;
+  fecha_transaccion: string;
+  periodo: string;
+  monto_original: number;
+  nro_plan: number | null;
+  pagado: boolean;
+  debe: number;
+  haber: number;
+  nro_procuracion: number;
+  pago_parcial: boolean;
+  vencimiento: string;
+  nro_cedulon: number;
+  categoria_deuda: number;
+  monto_pagado: number;
+  recargo: number;
+  honorarios: number;
+  iva_hons: number;
+  tipo_deuda: number;
+  decreto: string;
+  observaciones: string;
+  nro_cedulon_paypertic: number;
+  deuda_activa: number;
+  des_movimiento: string;
+  des_categoria: string;
+  deuda: number;
+  sel: number;
+  costo_financiero: number;
+  des_rubro: string;
+  cod_tipo_per: number;
+  sub_total: number;
+}
+
+export interface CabeceraDeCedulon {
+  nroCedulon: number;
+  denominacion: string;
+  detalle: string;
+  nombre: string;
+  vencimiento: string;
+  montoPagar: number;
+  cuit: string;
+}
+
+export interface VCedulon {
+  deudaOriginal: number;
+  intereses: number;
+  nro_cedulon_paypertic: number;
+  pago_parcial: boolean;
+  pago_a_cuenta: number;
+  nro_transaccion: number;
+  periodo: string;
+  importe: number;
+  fecha_vencimiento: string;
+  categoria_deuda: number;
+}
+
+export interface DetalleCedulon {
+  periodo: string;
+  concepto: string;
+  montoPagado: number;
+  montoOriginal: number;
+  recargo: number;
+  descInteres: number;
+  saldoFavor: number;
+  nro_transaccion: number;
+}
+
+export interface CedulonImpresion {
+  tarjetaDeCredito: string;
+  cantCuotas: number;
+  montoCuota: number;
+  montoOriginal: number;
+  credito: number;
+  interesMora: number;
+  descuento: number;
+  costoFinanciero: number;
+  total: number;
+}
+
+export interface InformeCompleto {
+  vencimiento: Date;
+  nro_transaccion: number;
+  tipo_transaccion: number;
+  des_transaccion: string;
+  categoria: string;
+  periodo: string;
+  debe: number;
+  haber: number;
+  nro_plan: number;
+  nro_procuracion: number;
+}
+
+export interface CategoriasDeuda {
+  value: string;
+  text: string;
+  campo_enlace: string;
+}

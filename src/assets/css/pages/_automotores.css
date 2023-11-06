@@ -161,3 +161,10 @@
     box-shadow: 0px 2px 30px rgba(0, 0, 0, 0.2);
     border: 1px solid #d1d1d1;
 }
+
+.superposicion {
+    z-index: 9999;
+    /* Puedes ajustar el valor según tus necesidades */
+    position: relative;
+    /* Asegura que la posición sea relativa o absoluta para que z-index funcione */
+}

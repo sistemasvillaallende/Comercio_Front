@@ -99,17 +99,19 @@ function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
               className="menu_topbar"
               style={{ justifyContent: "right", backgroundColor: "inherit" }}
             >
-              <Menu.Button>
-                <div className="col-span-6 sm:col-span-3 lg:col-span-2 xl:col-span-1">
-                  <Lucide icon="User" className="block mx-auto" />
-                  <div className="mt-2 text-xs text-center">{user ? `${user.userName}` : `cargando...`}</div>
-                </div>
-              </Menu.Button>
-              <Menu.Items className="w-56 mt-px relative bg-primary/80 before:block before:absolute before:bg-black before:inset-0 before:rounded-md before:z-[-1] text-white">
-                <Menu.Item className="hover:bg-white/5" onClick={handleLogout}>
-                  <Lucide icon="ToggleRight" className="w-4 h-4 mr-2" /> Salir
-                </Menu.Item>
-              </Menu.Items>
+              <div className="superposicion">
+                <Menu.Button>
+                  <div className="col-span-6 sm:col-span-3 lg:col-span-2 xl:col-span-1">
+                    <Lucide icon="User" className="block mx-auto" />
+                    <div className="mt-2 text-xs text-center">{user ? `${user.userName}` : `cargando...`}</div>
+                  </div>
+                </Menu.Button>
+                <Menu.Items className="w-56 mt-px relative bg-primary/80 before:block before:absolute before:bg-black before:inset-0 before:rounded-md before:z-[-1] text-white">
+                  <Menu.Item className="hover:bg-white/5" onClick={handleLogout}>
+                    <Lucide icon="ToggleRight" className="w-4 h-4 mr-2" /> Salir
+                  </Menu.Item>
+                </Menu.Items>
+              </div>
             </Menu>
             {/* END: Account Menu */}
           </div>

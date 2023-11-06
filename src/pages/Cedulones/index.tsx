@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+
 import axios from "axios";
 import Table from "../../base-components/Table";
 import { FormSelect, FormSwitch } from "../../base-components/Form";
-import { useAutoContext } from "../../context/AutoProvider";
+import { useIndustriaComercioContext } from "../../context/IndustriaComercioProvider";
 import { currencyFormat, selectCalculaMontos } from "../../utils/helper";
+import Swal from "sweetalert2";
 
 import { LstDeuda } from "../../interfaces/LstDeuda";
 import { Tarjetas } from "../../interfaces/Tarjetas";
@@ -15,6 +17,10 @@ import { Interface } from "readline";
 import { VCtasctes } from "../../interfaces/VCtasctes";
 import { CreateCedulones } from "../../interfaces/CreateCedulones";
 import { DateTime } from "litepicker/dist/types/datetime";
+import { useNavigate } from "react-router-dom";
+import { useCedulonesContext } from "../../context/CedulonesProviders";
+import { CedulonImpresion } from "../../interfaces/IndustriaComercio";
+
 
 interface LstProcuraciones {
   nroProc: number;
@@ -22,16 +28,24 @@ interface LstProcuraciones {
 }
 
 const Autos = () => {
+
+  const navigate = useNavigate();
+
+  const { cedulonParaImpresion, setCedulonParaImpresion } = useCedulonesContext();
   const [proc, setProc] = useState<number[] | null>([]);
   const [tarjetas, setTarjetas] = useState<Tarjetas[]>([]);
   const [PlanesCobro, setPlanesCobro] = useState<Planes_Cobro[] | null>(null);
 
   const [spinner, setSpinner] = useState<boolean>();
   const [PlanCobro, setPlanCobro] = useState<Planes_Cobro>();
-  const { vehiculo } = useAutoContext();
+  const { elementoIndCom } = useIndustriaComercioContext();
   const [deuda, setDeuda] = useState<LstDeuda[]>([]);
   const [deudaSeleccionada, setDeudaSeleccionada] = useState<LstDeuda[]>([]);
   const [checkout, setCheckout] = useState<CheckOut>();
+
+  const [formSwitchState, setFormSwitchState] = useState<{ [key: string]: boolean }>({});
+
+
 
   function setDescripcionPlanes(planes_con_descripcion: Planes_Cobro[]) {
     planes_con_descripcion?.forEach((element) => {
@@ -93,71 +107,81 @@ const Autos = () => {
   }
   const handleCedulonClick = () => {
 
-    var lstDeuda: VCtasctes[] = [];
-    var objDeuda: VCtasctes = {
-      categoria_deuda: 0,
-      deudaOriginal: 0,
-      intereses: 0,
-      nro_cedulon_paypertic: 0,
-      pago_parcial: false,
-      pago_a_cuenta: 0,
-      nro_transaccion: 0,
-      periodo: "",
-      importe: 0,
-      fecha_vencimiento: ""
-    };
-    var cedulon: CreateCedulones = {
-      dominio: "",
-      vencimiento: "",
-      monto_cedulon: 0,
-      nroProc: 0,
-      listaDeuda: [],
-      nroCedulon: 0,
-    };
-    cedulon.dominio = vehiculo?.dominio ? vehiculo?.dominio : "";
-    cedulon.nroProc = proc ? proc[0] : 0;
-    var montocedulon: number = 0;
-    
-    deudaSeleccionada.map(
-      (deu, index) => (
-        
-        (objDeuda.categoria_deuda = deu.categoriaDeuda),
-        (objDeuda.deudaOriginal = deu.monto_original),
-        (objDeuda.fecha_vencimiento = deu.vencimiento),
-        (objDeuda.importe = deu.debe),
-        (objDeuda.intereses = deu.recargo),
-        (objDeuda.nro_cedulon_paypertic = deu.nro_cedulon_paypertic),
-        (objDeuda.nro_transaccion = deu.nroTtransaccion),
-        (objDeuda.pago_a_cuenta = deu.pago_a_cuenta),
-        (objDeuda.pago_parcial = deu.pago_parcial),
-        (objDeuda.periodo = deu.periodo),
-        (montocedulon += deu.debe),
+    const cedulonParaImpresion: CedulonImpresion = {
+      tarjetaDeCredito: tarjetas.find((tarjeta) => tarjeta.cod_tarjeta == PlanCobro?.cod_tarjeta)?.des_tarjeta || '',
+      cantCuotas: checkout?.cantidad_cuota || 0,
+      montoCuota: checkout?.monto_cuota || 0,
+      montoOriginal: checkout?.monto_original || 0,
+      credito: checkout?.credito || 0,
+      interesMora: checkout?.interes_mora || 0,
+      descuento: checkout?.descuento || 0,
+      costoFinanciero: checkout?.costo_financiero || 0,
+      total: checkout?.total || 0,
+    }
 
-        lstDeuda.push(objDeuda)
-      )
-    );
-    cedulon.monto_cedulon = montocedulon;
-    cedulon.listaDeuda = lstDeuda;
+    setCedulonParaImpresion(cedulonParaImpresion);
+
+    const urlApi = `${import.meta.env.VITE_URL_CEDULONES}EmitoCedulonAuto`;
+
+    const listaVCtasctes = deudaSeleccionada.map((deuda) => {
+      return {
+        deudaOriginal: deuda.monto_original,
+        intereses: 0,
+        nro_cedulon_paypertic: deuda.nro_cedulon_paypertic,
+        pago_parcial: deuda.pago_parcial,
+        pago_a_cuenta: deuda.pago_a_cuenta,
+        nro_transaccion: deuda.nroTtransaccion,
+        periodo: deuda.periodo,
+        importe: deuda.debe,
+        fecha_vencimiento: deuda.vencimiento,
+        categoria_deuda: deuda.categoriaDeuda,
+      };
+    });
     const fecha = new Date();
     const hoy = fecha.getDate();
-    cedulon.vencimiento = fecha.toLocaleDateString();
-    alert(cedulon.vencimiento);
-    const urlApi = `${import.meta.env.VITE_URL_CEDULONES}EmitoCedulonVehiculo`;
-    const requestBody = { cedulon };
+    const requestBody = {
+      legajo: elementoIndCom?.legajo,
+      vencimiento: fecha.toLocaleDateString(),
+      monto_cedulon: checkout?.total,
+      listadeuda: listaVCtasctes,
+      nroProc: 0
+    };
+
     axios
-      .post(urlApi, cedulon)
+      .post(urlApi, requestBody)
       .then((response) => {
-        if (response.data) {
-          console.log(response.data);
+        if (response) {
+          Swal.fire({
+            title: "Cedulón generado",
+            text: `Se ha generado el cedulón Nro. ${response.data}`,
+            icon: "success",
+            confirmButtonText: "Imprimir Cedulón",
+            cancelButtonText: "Cancelar",
+            showCancelButton: true,
+            confirmButtonColor: "#27a3cf",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              navigate(`/CedulonAuto/${response.data}`);
+            }
+          });
         }
       })
-      .catch((error) => {});
+      .catch((error) => {
+        Swal.fire({
+          title: error.code,
+          text: error.message,
+          icon: "error",
+          confirmButtonText: "Aceptar",
+          confirmButtonColor: "#27a3cf",
+        });
+      });
   }
+
   useEffect(() => {
     const fetchData2 = async () => {
       const response = await axios.get(
         `${import.meta.env.VITE_URL_CTACTE}getListDeudaAuto?dominio=` +
-          vehiculo?.dominio
+        elementoIndCom?.legajo
       );
       setDeuda(response.data);
     };
@@ -169,8 +193,7 @@ const Autos = () => {
       .then((data) => {
         setTarjetas(data);
         let url2 =
-          `${
-            import.meta.env.VITE_URL_TARJETAS
+          `${import.meta.env.VITE_URL_TARJETAS
           }getPlanBySubsistema?subsistema=` +
           4 +
           `&deuda=0&cod_tarjeta=` +
@@ -184,13 +207,14 @@ const Autos = () => {
       })
       .catch((error) => console.error(error));
   }, []);
+
   function handleSelectChange(event: React.ChangeEvent<HTMLSelectElement>) {
     const value = event.target.value;
     if (value == "1") {
       const fetchData2 = async () => {
         const response = await axios.get(
           `${import.meta.env.VITE_URL_CTACTE}getListDeudaAuto?dominio=` +
-            vehiculo?.dominio
+          elementoIndCom?.legajo
         );
         setDeuda(response.data);
         setProc(null);
@@ -200,9 +224,8 @@ const Autos = () => {
     if (value == "2") {
       const fetchData2 = async () => {
         const response = await axios.get(
-          `${
-            import.meta.env.VITE_URL_CTACTE
-          }getListDeudaAutoNoVencida?dominio=` + vehiculo?.dominio
+          `${import.meta.env.VITE_URL_CTACTE
+          }getListDeudaAutoNoVencida?dominio=` + elementoIndCom?.legajo
         );
         setDeuda(response.data);
         setProc(null);
@@ -212,9 +235,8 @@ const Autos = () => {
     if (value == "3") {
       const fetchData2 = async () => {
         const response = await axios.get(
-          `${
-            import.meta.env.VITE_URL_CTACTE
-          }getListDeudaAutoProcurada?dominio=` + vehiculo?.dominio
+          `${import.meta.env.VITE_URL_CTACTE
+          }getListDeudaAutoProcurada?dominio=` + elementoIndCom?.legajo
         );
         setDeuda(response.data);
         setProc(
@@ -227,37 +249,32 @@ const Autos = () => {
         );
       };
       fetchData2();
-      var anula: LstDeuda[] =[]
+      var anula: LstDeuda[] = []
       setDeudaSeleccionada(anula);
     }
   }
-  function handleChangeSelectCheckAll(
-    event: React.ChangeEvent<HTMLInputElement>
-  ) {
-    const obj = deuda?.find(
-      (d: { nroTtransaccion: number }) =>
-        d.nroTtransaccion == Number.parseInt(event.target.name)
-    );
-    if (event.target.checked) {
-      if (obj != null && deudaSeleccionada != null) {
-        const newArray = [...deudaSeleccionada, obj];
-        setDeudaSeleccionada(newArray);
-        if (PlanCobro != undefined && PlanCobro) {
-          setCheckout(selectCalculaMontos(newArray, PlanCobro));
-        }
-      }
-    } else {
-      const result = deudaSeleccionada?.findIndex(
-        (o) => o.nroTtransaccion == Number.parseInt(event.target.name)
-      );
-      const deuda_nueva = deudaSeleccionada.splice(result, 1);
-      setDeudaSeleccionada(deudaSeleccionada);
-      if (PlanCobro != undefined && PlanCobro) {
-        setCheckout(selectCalculaMontos(deudaSeleccionada, PlanCobro));
-      }
+
+
+  const handleChangeSelectCheckAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = event.target.checked;
+    const updatedFormSwitchState = { ...formSwitchState };
+    const updatedDeudaSeleccionada = checked ? [...deuda] : [];
+
+    deuda.forEach((deudaItem) => {
+      updatedFormSwitchState[deudaItem.nroTtransaccion.toString()] = checked;
+    });
+
+    setFormSwitchState(updatedFormSwitchState);
+    setDeudaSeleccionada(updatedDeudaSeleccionada);
+
+    if (PlanCobro !== undefined && PlanCobro) {
+      setCheckout(selectCalculaMontos(updatedDeudaSeleccionada, PlanCobro));
     }
   }
+
+
   function handleChangeSelectCheck(event: React.ChangeEvent<HTMLInputElement>) {
+
     const obj = deuda?.find(
       (d: { nroTtransaccion: number }) =>
         d.nroTtransaccion == Number.parseInt(event.target.name)
@@ -280,7 +297,99 @@ const Autos = () => {
         setCheckout(selectCalculaMontos(deudaSeleccionada, PlanCobro));
       }
     }
+    //modifico el estado del switch 
+    const updatedFormSwitchState = { ...formSwitchState };
+    updatedFormSwitchState[event.target.name] = event.target.checked;
+    setFormSwitchState(updatedFormSwitchState);
+
   }
+
+  const construirTabla = (deuda: LstDeuda[]) => {
+    return (
+      <>
+        <Table.Tbody style={{ marginBottom: "10px" }}>
+          {deuda?.map((auto, index) => (
+            <Table.Tr key={index}>
+              <Table.Td
+                style={{
+                  paddingTop: "6px",
+                  paddingBottom: "0px",
+                  fontSize: "15px",
+                }}
+              >
+                <div
+                  style={{
+                    maxWidth: "90%",
+                    marginBottom: "7px",
+                    marginTop: "7px",
+                  }}
+                >
+                  <div
+                    className="px-2 py-1 text-xs font-medium text-white rounded-full cursor-pointer bg-danger"
+                    style={{ display: "inline" }}
+                  >
+                    En mora
+                  </div>
+                  <span
+                    style={{
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      color: "#164e63",
+                      paddingLeft: "5px",
+                      display: "inline-grid",
+                    }}
+                  >
+                    {auto.desCategoria} - {auto.periodo}
+                    <br />
+                    <p
+                      style={{
+                        fontSize: "14px",
+                        paddingTop: "10px",
+                        fontWeight: "400",
+                      }}
+                    >
+                      Venció el: {auto.vencimiento}
+                    </p>
+                  </span>
+                </div>
+              </Table.Td>
+              <Table.Td
+                style={{
+                  paddingTop: "6px",
+                  paddingBottom: "0px",
+                  fontSize: "15px",
+                  fontWeight: "600",
+                }}
+              >
+                {currencyFormat(auto.debe)}
+              </Table.Td>
+              <Table.Td
+                style={{
+                  paddingTop: "6px",
+                  paddingBottom: "0px",
+                  fontSize: "15px",
+                }}
+              >
+                <div className="mt-2">
+                  <FormSwitch>
+                    <FormSwitch.Input
+                      id="checkbox-switch-7"
+                      type="checkbox"
+                      name={auto.nroTtransaccion.toString()}
+                      onChange={handleChangeSelectCheck}
+                      checked={formSwitchState[auto.nroTtransaccion.toString()] || false}
+                    />
+                    <FormSwitch.Label htmlFor="checkbox-switch-7"></FormSwitch.Label>
+                  </FormSwitch>
+                </div>
+              </Table.Td>
+            </Table.Tr>
+          ))}
+        </Table.Tbody>
+      </>
+    )
+  }
+
   return (
     <>
       <div style={{ padding: "25px" }}>
@@ -309,10 +418,10 @@ const Autos = () => {
                     onChange={handleSelectChange}
                     aria-label="Default select example"
                   >
-                    <option value="1">Periodos vencidos</option>
-                    <option value="2">Periodos no vencidos</option>
-                    <option value="3">Periodos procurados</option>
-                    <option value="4">Periodo anual</option>
+                    <option key="1" value="1">Periodos vencidos</option>
+                    <option key="2" value="2">Periodos no vencidos</option>
+                    <option key="3" value="3">Periodos procurados</option>
+                    <option key="4" value="4">Periodo anual</option>
                   </FormSelect>
                 </div>
                 <div className="col-span-12 lg:col-span-6 2xl:col-span-6">
@@ -358,91 +467,16 @@ const Autos = () => {
                             <FormSwitch.Input
                               id="checkbox-switch-7"
                               type="checkbox"
+                              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                handleChangeSelectCheckAll(event);
+                              }}
                             />
                             <FormSwitch.Label htmlFor="checkbox-switch-7"></FormSwitch.Label>
                           </FormSwitch>
                         </Table.Th>
                       </Table.Tr>
                     </Table.Thead>
-
-                    <Table.Tbody style={{ marginBottom: "10px" }}>
-                      {deuda?.map((auto, index) => (
-                        <Table.Tr key={index}>
-                          <Table.Td
-                            style={{
-                              paddingTop: "6px",
-                              paddingBottom: "0px",
-                              fontSize: "15px",
-                            }}
-                          >
-                            <div
-                              style={{
-                                maxWidth: "90%",
-                                marginBottom: "7px",
-                                marginTop: "7px",
-                              }}
-                            >
-                              <div
-                                className="px-2 py-1 text-xs font-medium text-white rounded-full cursor-pointer bg-danger"
-                                style={{ display: "inline" }}
-                              >
-                                En mora
-                              </div>
-                              <span
-                                style={{
-                                  fontSize: "14px",
-                                  fontWeight: "600",
-                                  color: "#164e63",
-                                  paddingLeft: "5px",
-                                  display: "inline-grid",
-                                }}
-                              >
-                                {auto.desCategoria} - {auto.periodo}
-                                <br />
-                                <p
-                                  style={{
-                                    fontSize: "14px",
-                                    paddingTop: "10px",
-                                    fontWeight: "400",
-                                  }}
-                                >
-                                  Venció el: {auto.vencimiento}
-                                </p>
-                              </span>
-                            </div>
-                          </Table.Td>
-                          <Table.Td
-                            style={{
-                              paddingTop: "6px",
-                              paddingBottom: "0px",
-                              fontSize: "15px",
-                              fontWeight: "600",
-                            }}
-                          >
-                            {currencyFormat(auto.debe)}
-                          </Table.Td>
-                          <Table.Td
-                            style={{
-                              paddingTop: "6px",
-                              paddingBottom: "0px",
-                              fontSize: "15px",
-                            }}
-                          >
-                            <div className="mt-2">
-                              <FormSwitch>
-                                <FormSwitch.Input
-                                  id="checkbox-switch-7"
-                                  type="checkbox"
-                                  name={auto.nroTtransaccion.toString()}
-                                  onChange={handleChangeSelectCheck}
-                                />
-                                <FormSwitch.Label htmlFor="checkbox-switch-7"></FormSwitch.Label>
-                              </FormSwitch>
-                            </div>
-                          </Table.Td>
-                        </Table.Tr>
-                      ))}
-                    </Table.Tbody>
+                    {construirTabla(deuda)}
                   </Table>
                 </div>
               </div>
@@ -467,7 +501,7 @@ const Autos = () => {
                     onChange={handleTarjetaChange}
                   >
                     {tarjetas.map((cate, index) => (
-                      <option value={cate.cod_tarjeta}>
+                      <option value={cate.cod_tarjeta} key={index}>
                         {cate.des_tarjeta}
                       </option>
                     ))}

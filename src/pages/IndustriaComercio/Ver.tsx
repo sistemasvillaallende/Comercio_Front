@@ -2,16 +2,43 @@ import { useEffect, useState } from "react";
 import { useIndustriaComercioContext } from "../../context/IndustriaComercioProvider";
 import { ElementoIndustriaComercio } from "../../interfaces/IndustriaComercio";
 import { convertirFecha } from "../../utils/GeneralUtils";
+import { useParams } from "react-router-dom";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const ver = () => {
-  const { elementoIndCom, tipoLiquidacion, tipoCondicionIVA, situacionJudicial, tipoDeEntidad } = useIndustriaComercioContext();
+  const { elementoIndCom, tipoLiquidacion, tipoCondicionIVA, situacionJudicial, tipoDeEntidad, traerElemento } = useIndustriaComercioContext();
   const [elementoIndustriaComercio, setElementoIndustriaComercio] = useState<ElementoIndustriaComercio>();
+  const { legajo } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (elementoIndCom) {
-      setElementoIndustriaComercio(elementoIndCom);
+    if (legajo !== elementoIndCom?.legajo.toString()) {
+      buscarElemento(legajo || "");
+    } else {
+      setElementoIndustriaComercio(elementoIndCom || undefined);
     }
-  }, [elementoIndCom, tipoLiquidacion]);
+  }, [elementoIndCom, legajo]);
+
+  const buscarElemento = async (legajo: string) => {
+    const URL = `${import.meta.env.VITE_URL_API_IYC}Indycom/GetIndycomPaginado?buscarPor=legajo&strParametro=${legajo}&pagina=1&registros_por_pagina=10`;
+    const response = await fetch(URL);
+    const data = await response.json();
+    setElementoIndustriaComercio(data.resultado[0]);
+    traerElemento(legajo.toString());
+    console.log(data)
+    if (data.resultado.length === 0) {
+      Swal.fire({
+        title: 'Error',
+        text: 'Al parecer no hay datos para mostrar, por favor intente con otros parámetros.',
+        icon: 'warning',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#27a3cf',
+      });
+      navigate(`/`);
+    }
+  }
+
 
   return (
     <>

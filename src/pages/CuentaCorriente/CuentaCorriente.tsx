@@ -7,7 +7,7 @@ import { FormSelect, FormInput, FormLabel } from "../../base-components/Form";
 import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
 import Menu from "../../base-components/Headless/Menu";
-import { useAutoContext } from "../../context/AutoProvider";
+import { useIndustriaComercioContext } from "../../context/IndustriaComercioProvider";
 import ModalDetTransaccion from "./ModalDetTransaccion";
 import ModalDetPago from "./ModalDetPago";
 import ModalDetDeuda from "./ModalDetDeuda";
@@ -31,7 +31,7 @@ import {
 
 const CuentaCorriente = () => {
   const divRef = useRef(null);
-  const { vehiculo } = useAutoContext();
+  const { elementoIndCom } = useIndustriaComercioContext();
   const [autos, setAutos] = useState<Ctasctes[]>([]);
   const [cate_deuda, setCate_deuda] = useState<Combo[]>([]);
   const { dominio } = useParams();
@@ -56,15 +56,15 @@ const CuentaCorriente = () => {
     setShowModal(false);
     const fetchData = async () => {
       const response = await axios.get(
-        `${import.meta.env.VITE_URL_CTACTE}ListarCtacte?dominio=` +
-        vehiculo?.dominio +
+        `${import.meta.env.VITE_URL_API_IYC}ListarCtacte?dominio=` +
+        elementoIndCom?.legajo +
         `&tipo_consulta=1&cate_deuda_desde=1&cate_deuda_hasta=20`
       );
 
       setAutos(response.data);
 
       const response2 = await axios.get(
-        `${import.meta.env.VITE_URL_AUTO}ListarCategoriasAuto`
+        `${import.meta.env.VITE_URL_API_IYC}Indycom/ListarCategoriasIyc`
       );
       setCate_deuda(response2.data);
     };
@@ -95,8 +95,8 @@ const CuentaCorriente = () => {
       hasta = cateDeuda;
     }
     let url =
-      `${import.meta.env.VITE_URL_CTACTE}ListarCtacte?dominio=` +
-      vehiculo?.dominio +
+      `${import.meta.env.VITE_URL_API_IYC}ListarCtacte?legajo=` +
+      elementoIndCom?.legajo +
       `&tipo_consulta=` +
       value +
       `&cate_deuda_desde=` +
@@ -169,6 +169,7 @@ const CuentaCorriente = () => {
     setShowModalProcuracion(true);
   }
   function handledetPlan(nro_plan: number) {
+    console.log(nro_plan);
     let url =
       `${import.meta.env.VITE_URL_CTACTE}DetallePlan?nro_plan=` + nro_plan;
     fetch(url)
@@ -188,8 +189,8 @@ const CuentaCorriente = () => {
       hasta = Number.parseInt(value);
     }
     let url =
-      `${import.meta.env.VITE_URL_CTACTE}ListarCtacte?dominio=` +
-      vehiculo?.dominio +
+      `${import.meta.env.VITE_URL_API_IYC}ListarCtacte?legajo=` +
+      elementoIndCom?.legajo +
       `&tipo_consulta=` +
       filtro +
       `&cate_deuda_desde=` +
@@ -638,7 +639,7 @@ const CuentaCorriente = () => {
                                 </Button>
                               </Menu.Item>
                             )}
-                            {auto.nro_plan != 0 && (
+                            {auto.nro_plan != null && (
                               <Menu.Item>
                                 <Button
                                   style={{

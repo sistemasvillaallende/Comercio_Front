@@ -14,9 +14,18 @@ import Inicio from "../pages/IndustriaComercio";
 import Ver from "../pages/IndustriaComercio/Ver";
 import Editar from "../pages/IndustriaComercio/Editar";
 import Nuevo from "../pages/IndustriaComercio/Nuevo";
-
+import BasesImponibles from "../pages/BaseImponible";
+import ComerciosPorCalle from "../pages/ComerciosPorCalle";
+import IniciarCtaCorriente from "../pages/CuentaCorriente/IniciarCtaCorriente";
+import CuentaCorriente from "../pages/CuentaCorriente/CuentaCorriente";
+import Cedulones from "../pages/Cedulones";
+import Informes from "../pages/Informes";
+import Deudas from "../pages/Deudas";
+import Contacto from "../pages/Contacto";
 import ResumenCuenta from "../pages/Informes/ResumenCuenta";
-import CedulonAuto from "../pages/Cedulones/CedulonAuto";
+import Cedulon from "../pages/Cedulones/Cedulon";
+import CancelarCtaCte from "../pages/CuentaCorriente/CancelarCtaCte";
+import EliminarCancelacion from "../pages/CuentaCorriente/EliminarCancelacion";
 
 const Router = () => {
   const usuarioLogeado = sessionStorage.getItem("usuarioLogeado");
@@ -34,15 +43,27 @@ const Router = () => {
             <Routes>
               <Route path="/" element={<TopMenu />}>
                 <Route path="/" element={<Inicio />} />
-                <Route path="/iyc/:legajo/ver" element={<Ver />} />
-                <Route path="/iyc/:legajo/editar" element={<Editar />} />
-                <Route path="/iyc/nuevo" element={<Nuevo />} />
+                <Route path="/nuevo" element={<Nuevo />} />
+                <Route path="/:legajo/ver" element={<Ver />} />
+                <Route path="/:legajo/editar" element={<Editar />} />
+                <Route path="/:legajo/baseimponible" element={<BasesImponibles />} />
+
+                <Route path="/:legajo/iniciarctacte" element={<IniciarCtaCorriente />} />
+                <Route path="/:legajo/ctacte" element={<CuentaCorriente />} />
+                <Route path="/:legajo/cancelarctacte" element={<CancelarCtaCte />} />
+                <Route path="/:legajo/eliminarCancelacion" element={<EliminarCancelacion />} />
+
+                <Route path="/Cedulones/" element={<Cedulones />} />
+                <Route path="/:legajo/informes" element={<Informes />} />
+                <Route path="/:legajo/deudas" element={<Deudas />} />
+                <Route path="/:legajo/Contacto" element={<Contacto />} />
+                <Route path="/ComerciosPorCalle" element={<ComerciosPorCalle />} />
+
               </Route>
               <Route path="/login" element={<Login />} />
               <Route path="/*" element={<NotFound />} />
-              <Route path="/CedulonAuto" element={<CedulonAuto />} />
+              <Route path="/Cedulon" element={<Cedulon />} />
               <Route path="/ResumenCuenta" element={<ResumenCuenta />} />
-
             </Routes>
           )}
         </IndustriaComercioProvider>

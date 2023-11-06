@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { useAutoContext } from "../../context/AutoProvider";
+import { useIndustriaComercioContext } from "../../context/IndustriaComercioProvider";
 import Table from "../../base-components/Table";
-import { ReLiquidacion } from '../../interfaces/Vehiculo';
+import { ReLiquidacion } from '../../interfaces/IndustriaComercio';
 import axios from "axios";
 import Swal from "sweetalert2";
 import Button from "../../base-components/Button";
@@ -15,8 +15,8 @@ import {
   FormInline,
 } from "../../base-components/Form";
 
-const CancelarCtaCte = () => {
-  const { vehiculo } = useAutoContext();
+const EliminarCancelacion = () => {
+  const { elementoIndCom } = useIndustriaComercioContext();
   const [reLiquidaciones, setReLiquidaciones] = useState<ReLiquidacion[]>([]);
   const [reLiquidacionesSeleccionadas, setReLiquidacionesSeleccionadas] = useState<ReLiquidacion[]>([]);
   const [motivo, setMotivo] = useState<number>(0);
@@ -24,8 +24,7 @@ const CancelarCtaCte = () => {
   const { user } = useUserContext();
 
   useEffect(() => {
-    const dominioSinEspacios = vehiculo?.dominio.trim();
-    const apiUrl = `${import.meta.env.VITE_URL_CTACTE}Listar_periodos_a_cancelar?dominio=${dominioSinEspacios}`
+    const apiUrl = `${import.meta.env.VITE_URL_CTACTE}Listar_Periodos_cancelados?legajo=${elementoIndCom?.legajo}`
     axios.get(apiUrl).then((response) => {
       setReLiquidaciones(response.data);
     }).catch((error) => {
@@ -71,9 +70,8 @@ const CancelarCtaCte = () => {
 
   const handleCancelarCtaCte = (auditoria: String) => {
     console.log(reLiquidacionesSeleccionadas)
-    const dominioSinEspacios = vehiculo?.dominio.trim();
     const consulta = {
-      "dominio": dominioSinEspacios,
+      "legajo": elementoIndCom?.legajo,
       "lstCtasTes": reLiquidacionesSeleccionadas,
       "auditoria": {
         "id_auditoria": 0,
@@ -88,18 +86,17 @@ const CancelarCtaCte = () => {
       }
     }
     console.log(consulta)
-    const apiUrl = `${import.meta.env.VITE_URL_CTACTE}Confirma_cancelacion_ctasctes?tipo_transaccion=${motivo}`;
+    const apiUrl = `${import.meta.env.VITE_URL_CTACTE}Confirma_elimina_cancelacion`;
     axios.post(apiUrl, consulta).then((response) => {
       Swal.fire({
-        title: 'Cancelación realizada',
-        text: "Se ha cancelado correctamente los periodos seleccionados.",
+        title: 'Eliminación de Cancelación',
+        text: "Se ha eliminado las cancelaciones de los periodos seleccionados.",
         icon: 'success',
         confirmButtonText: 'Aceptar',
         confirmButtonColor: '#27a3cf',
       });
       setReLiquidacionesSeleccionadas([]);
-      const dominioSinEspacios = vehiculo?.dominio.trim();
-      navigate(`/auto/${dominioSinEspacios}/ver`);
+      navigate(`/${elementoIndCom?.legajo}/ver`);
     }).catch((error) => {
       Swal.fire({
         title: `${error.response.status}: ${error.response.statusText}`,
@@ -135,8 +132,7 @@ const CancelarCtaCte = () => {
 
   const handleCancelar = () => {
     setReLiquidacionesSeleccionadas([]);
-    const dominioSinEspacios = vehiculo?.dominio.trim();
-    navigate(`/auto/${dominioSinEspacios}/ver`);
+    navigate(`/${elementoIndCom?.legajo}/ver`);
   }
 
   const sumarMontosSeleccionados = () => {
@@ -152,13 +148,13 @@ const CancelarCtaCte = () => {
       <div className="conScroll grid grid-cols-12 gap-6 mt-5 ml-5 mr-4 sinAnimaciones">
         <div className="col-span-12 intro-y lg:col-span-12">
           <div className="flex w-full justify-between col-span-12 intro-y lg:col-span-12">
-            <h2> Cancelación especial de periodos de Cuenta Corriente </h2>
+            <h2> Revertir Cancelación Especial de Periodos en la Cuanta Corriente </h2>
           </div>
           <div className="grid grid-cols-12 gap-6 mt-3">
             {/** INICIO TABLA 1 */}
-            <div className="col-span-12 intro-y lg:col-span-4">
+            <div className="col-span-12 intro-y lg:col-span-5">
               <div className="text-lg font-medium text-primary">
-                Periodos disponibles
+                Periodos Cancelados
               </div>
               <div className="cabeceraTable">
                 <Table>
@@ -173,7 +169,8 @@ const CancelarCtaCte = () => {
                         />
                       </Table.Th>
                       <Table.Th>Periodo</Table.Th>
-                      <Table.Th className='text-center'>Monto</Table.Th>
+                      <Table.Th className='text-center'>Debe</Table.Th>
+                      <Table.Th className='text-center'>Nro Trans</Table.Th>
                     </Table.Tr>
                   </Table.Thead>
                 </Table>
@@ -193,7 +190,8 @@ const CancelarCtaCte = () => {
                           </label>
                         </Table.Td>
                         <Table.Td>{liquidacion?.periodo}</Table.Td>
-                        <Table.Td className='text-right'>{formatNumberToARS(liquidacion?.monto_original)}</Table.Td>
+                        <Table.Td className='text-right'>{formatNumberToARS(liquidacion?.debe)}</Table.Td>
+                        <Table.Td className='text-right'>{liquidacion?.nro_transaccion}</Table.Td>
                       </Table.Tr>
                     ))}
                   </Table.Tbody>
@@ -203,9 +201,9 @@ const CancelarCtaCte = () => {
             {/** FIN TABLA 1 */}
 
             {/** INICIO TABLA 2 */}
-            <div className="col-span-12 intro-y lg:col-span-4 mr-2">
+            <div className="col-span-12 intro-y lg:col-span-5 mr-2">
               <div className="text-lg font-medium text-primary">
-                Periodos a Cancelar
+                Periodos a Revertir
               </div>
               <div className="cabeceraTable">
                 <Table>
@@ -213,7 +211,8 @@ const CancelarCtaCte = () => {
                     <Table.Tr>
                       <Table.Th></Table.Th>
                       <Table.Th>Periodo</Table.Th>
-                      <Table.Th className='text-center'>Monto</Table.Th>
+                      <Table.Th className='text-center'>Debe</Table.Th>
+                      <Table.Th className='text-center'>Nro Trans</Table.Th>
                     </Table.Tr>
                   </Table.Thead>
                 </Table>
@@ -234,35 +233,14 @@ const CancelarCtaCte = () => {
                         </Table.Td>
                         <Table.Td>{liquidacion?.periodo}</Table.Td>
                         <Table.Td className='text-right'>{formatNumberToARS(liquidacion?.monto_original)}</Table.Td>
+                        <Table.Td className='text-right'>{liquidacion?.nro_transaccion}</Table.Td>
                       </Table.Tr>
                     ))}
                   </Table.Tbody>
                 </Table>
               </div>
-              <div className="mt-3 flex w-full justify-between text-lg font-medium text-primary text-right">
-                <span>Total:</span>
-                <span>{formatNumberToARS(sumarMontosSeleccionados())}</span>
-              </div>
             </div>
             {/** FIN TABLA 1 */}
-            <div className="col-span-12 intro-y lg:col-span-3"></div>
-            <div className="col-span-12 intro-y lg:col-span-4">
-              <FormInline>
-                <FormLabel
-                  htmlFor="horizontal-form-1"
-                >
-                  Motivo:
-                </FormLabel>
-                <FormSelect
-                  className="sm:mt-2 sm:mr-2"
-                  aria-label=".form-select-lg example"
-                  onChange={(e) => setMotivo(Number(e.target.value))}
-                >
-                  <option value={7}>Cancelación Operativa</option>
-                  <option value={8}>Decreto/Resolución</option>
-                </FormSelect>
-              </FormInline>
-            </div>
             <div className="col-span-12 intro-y lg:col-span-6 mr-2 mt-2">
               <Button
                 variant="primary"
@@ -286,4 +264,4 @@ const CancelarCtaCte = () => {
   )
 }
 
-export default CancelarCtaCte
+export default EliminarCancelacion
