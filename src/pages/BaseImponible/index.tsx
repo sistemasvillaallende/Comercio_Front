@@ -40,14 +40,15 @@ const BasesImponibles = () => {
         const response = await axios.get(URL);
         console.log(response);
         setListaBasesImponibles(response.data);
-      } catch (error) {
+      } catch (error: any) {
         Swal.fire({
-          title: "Error",
-          text: `${error}`,
+          title: `ERROR: ${error.response.statusText}`,
+          text: `${error.response.data.message}`,
           icon: "error",
           confirmButtonText: 'Aceptar',
           confirmButtonColor: '#27a3cf',
         });
+        console.log(error);
       }
     };
     fetchData();

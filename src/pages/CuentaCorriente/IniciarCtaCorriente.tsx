@@ -117,7 +117,7 @@ const IniciarCtaCorriente = () => {
     const fechaActual = new Date();
     const lstCtasTes = periodosIncluidos.map((periodo) => {
       return {
-        "tipo_transaccion": 0,
+        "tipo_transaccion": 7,
         "nro_transaccion": 0,
         "nro_pago_parcial": 0,
         "legajo": 0,
@@ -241,7 +241,7 @@ const IniciarCtaCorriente = () => {
                 <div className="flex w-full justify-between col-span-12 intro-y lg:col-span-6">
                   <div className="col-span-12 intro-y lg:col-span-2">
                     <div className="col-span-12 intro-y lg:col-span-4">
-                      <FormLabel htmlFor="dominio-input" className="sm:w-50">
+                      <FormLabel htmlFor="dominio-input" className="sm:w-0">
                         Periodos Existentes
                       </FormLabel>
                       <div className="col-span-12 intro-y lg:col-span-2">

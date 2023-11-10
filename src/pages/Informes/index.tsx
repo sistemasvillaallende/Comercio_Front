@@ -14,7 +14,7 @@ const Informes = () => {
         <div className="col-span-12 intro-y lg:col-span-12">
 
           <div className="flex w-full justify-between col-span-12 intro-y lg:col-span-12">
-            <h2>Informe del Vehículo</h2>
+            <h2>Informe</h2>
           </div>
           <InformeDeDeuda />
         </div>

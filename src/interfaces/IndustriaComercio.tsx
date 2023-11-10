@@ -247,10 +247,50 @@ export interface InformeCompleto {
   haber: number;
   nro_plan: number;
   nro_procuracion: number;
+  des_categoria: string;
 }
 
 export interface CategoriasDeuda {
   value: string;
   text: string;
   campo_enlace: string;
+}
+
+export interface Badec {
+  nro_bad: number;
+  interno: boolean;
+  persona: boolean;
+  contribuyente: boolean;
+  tipo_instit: string;
+  nombre: string;
+  tip_doc: string;
+  nro_doc: string;
+  cod_calle: number;
+  nro_dom: number;
+  cod_barrio: number;
+  cod_postal: number;
+  localidad: string;
+  provincia: string;
+  pais: string;
+  cod_nivel_vida: number;
+  cod_vip: number;
+  codigo_actividad: number;
+  telefono: string;
+  e_mail: string;
+  nro_contrib: number;
+  piso_dpto: string;
+  nombre_calle: string;
+  nombre_barrio: string;
+  titulo: string;
+  cuit: string;
+  sexo: string;
+  fecha_alta: string;
+  id_tip_doc: number;
+  cod_postal_arg: string;
+  celular: string;
+  usuario: string;
+  subsistema: string;
+  cuit_afip: number;
+  ciudadano_digital: boolean;
+  fecha_nacimiento: string;
 }

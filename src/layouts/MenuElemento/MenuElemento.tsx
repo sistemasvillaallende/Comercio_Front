@@ -40,7 +40,8 @@ const MenuElemento = () => {
             </h2>
             <hr />
             <p style={{ color: "white", marginTop: "10px" }}>
-              CUIT: {elementoIndCom?.nro_cuit}
+              CUIT: {elementoIndCom?.nro_cuit} <br />
+              LEGAJO: <strong>{elementoIndCom?.legajo}</strong>
             </p>
             <div className="pt-1 mt-2 text-white border-t border-white/10 dark:border-darkmode-400">
 

@@ -84,8 +84,8 @@ const InformeDeDeuda = () => {
     }
   }
 
-  const handleInformeCompleto = async (dominio: any, periodo: string, categoriaDeuda: string, observaciones: string) => {
-    dominio = dominio.replace(/\s/g, '');
+  const handleInformeCompleto = async (legajo: any, periodo: string, categoriaDeuda: string, observaciones: string) => {
+
     try {
       setCargando(true);
       const bodyConsulta = {
@@ -123,14 +123,14 @@ const InformeDeDeuda = () => {
         deudaHasta = '50';
       }
 
-      const URL = `${import.meta.env.VITE_URL_AUTO}Resumendeuda?dominio=${dominio}&tipo_consulta=${tipoDeInforme}&periodo=${periodo}&cate_deuda_desde=${deudaDesde}&cate_deuda_hasta=${deudaHasta}`;
-      console.log(URL)
+      const URL = `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/ListarCtacte?legajo=${legajo}&tipo_consulta=${tipoDeInforme}&cate_deuda_desde=${deudaDesde}&cate_deuda_hasta=${deudaHasta}`
 
-      const response = await axios.post(URL, bodyConsulta);
+      const response = await axios.get(URL);
       setInformeCompleto(response.data);
       setMostrarTabla(true);
       setCargando(false);
       setBtnImprimir(true);
+      console.log(response)
       if (response.data === "") {
         Swal.fire({
           title: 'Error',
@@ -167,7 +167,7 @@ const InformeDeDeuda = () => {
 
   const conseguirListaCategoriasDeudaAuto = async () => {
     try {
-      const URL = `${import.meta.env.VITE_URL_AUTO}ListarCategoriasAuto`;
+      const URL = `${import.meta.env.VITE_URL_API_IYC}Indycom/ListarCategoriasIyc`;
       const response = await axios.get(URL);
       setCategoriasDeudaAuto(response.data);
     } catch (error) {
@@ -318,7 +318,7 @@ const InformeDeDeuda = () => {
             <Table.Thead>
               <Table.Tr>
                 <Table.Th className="whitespace-nowrap border-b-0 whitespace-nowrap text-center">
-                  #
+                  Nro. Transac.
                 </Table.Th>
                 <Table.Th className="whitespace-nowrap border-b-0 whitespace-nowrap text-center">
                   Concepto
@@ -347,10 +347,10 @@ const InformeDeDeuda = () => {
               {informeCompleto.map((item, index) => (
                 <Table.Tr key={index}>
                   <Table.Td className="border-b-0 whitespace-nowrap text-center">
-                    {index + 1}
+                    {item.nro_transaccion}
                   </Table.Td>
                   <Table.Td className="border-b-0 whitespace-nowrap text-center">
-                    {item.des_transaccion}
+                    {item.des_categoria}
                   </Table.Td>
                   <Table.Td className="border-b-0 whitespace-nowrap text-center">
                     {item.categoria}

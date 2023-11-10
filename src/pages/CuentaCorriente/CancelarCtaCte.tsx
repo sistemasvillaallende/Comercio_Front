@@ -255,7 +255,7 @@ const CancelarCtaCte = () => {
                   aria-label=".form-select-lg example"
                   onChange={(e) => setMotivo(Number(e.target.value))}
                 >
-                  <option value={0}>Seleccione un motivo</option>
+                  <option>Seleccione un motivo</option>
                   <option value={7}>Cancelación Operativa</option>
                   <option value={8}>Decreto/Resolución</option>
                 </FormSelect>
