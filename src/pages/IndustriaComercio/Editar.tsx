@@ -71,9 +71,11 @@ const Editar = () => {
   const [observacionesAuditoria, setObservacionesAuditoria] = useState<string>("");
   const [fechaAuditoria, setFechaAuditoria] = useState<string>("");
   const [ciudad, setCiudad] = useState<string>("");
+  const [codCalle, setCodCalle] = useState<number>(0);
 
   useEffect(() => {
     if (elementoIndCom) {
+      setCodCalle(elementoIndCom.cod_calle);
       setElementoIndustriaComercio(elementoIndCom);
       setLegajo(elementoIndCom.legajo);
       setNroExpMesaEnt(elementoIndCom.nro_exp_mesa_ent);
@@ -152,8 +154,8 @@ const Editar = () => {
       "nro_contrib": 0,
       "des_com": desCom,
       "nom_fantasia": nomFantasia,
-      "cod_calle": 421,
-      "nro_dom": 241,
+      "cod_calle": codCalle,
+      "nro_dom": nroDom,
       "cod_barrio": 10,
       "cod_tipo_per": 1,
       "cod_zona": "1 ",
@@ -228,8 +230,8 @@ const Editar = () => {
       "titular": "",
       "objAuditoria": {
         "id_auditoria": 0,
-        "fecha": "11/10/2023 14:49",
-        "usuario": "",
+        "fecha": fechaActual,
+        "usuario": user?.userName,
         "proceso": "",
         "identificacion": "",
         "autorizaciones": "",
@@ -239,6 +241,7 @@ const Editar = () => {
       }
     };
     console.log(requestBody);
+
     axios
       .post(urlApi, requestBody)
       .then((response) => {
@@ -250,7 +253,7 @@ const Editar = () => {
             confirmButtonText: "Aceptar",
             confirmButtonColor: "#27a3cf",
           });
-          navigate(`/iyc/${legajo}/ver`);
+          navigate(`/`);
         } else {
           Swal.fire({
             title: "Error al actualizar",
@@ -273,7 +276,7 @@ const Editar = () => {
   };
 
   const cancelar = () => {
-    navigate(`/iyc/${legajo}/ver`);
+    navigate(`/`);
   };
 
   return (

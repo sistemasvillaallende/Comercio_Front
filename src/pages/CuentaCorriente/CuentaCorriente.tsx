@@ -59,7 +59,7 @@ const CuentaCorriente = () => {
         `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/ListarCtacte?legajo= ${elementoIndCom?.legajo}&tipo_consulta=1&cate_deuda_desde=1&cate_deuda_hasta=20`);
 
       setAutos(response.data);
-
+      console.log(response.data)
       const response2 = await axios.get(
         `${import.meta.env.VITE_URL_API_IYC}Indycom/ListarCategoriasIyc`
       );

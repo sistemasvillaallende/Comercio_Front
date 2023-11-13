@@ -186,8 +186,8 @@ const Nuevo = () => {
       "titular": "",
       "objAuditoria": {
         "id_auditoria": 0,
-        "fecha": "11/10/2023 14:49",
-        "usuario": "",
+        "fecha": fechaActual,
+        "usuario": user?.userName,
         "proceso": "",
         "identificacion": "",
         "autorizaciones": "",

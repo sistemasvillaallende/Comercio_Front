@@ -249,6 +249,7 @@ export interface InformeCompleto {
   nro_plan: number;
   nro_procuracion: number;
   des_categoria: string;
+  des_movimiento: string;
 }
 
 export interface CategoriasDeuda {

@@ -1,7 +1,6 @@
 import React from 'react'
 import Table from "../../base-components/Table";
 import { currencyFormat } from '../../utils/helper';
-import { InformeCompleto } from '../../interfaces/Vehiculo';
 
 const TablaInforme = (props: any) => {
   const informeCompleto = props;
@@ -38,7 +37,7 @@ const TablaInforme = (props: any) => {
             <Table.Tr key={index}>
               <Table.Td>{index + 1}</Table.Td>
               <Table.Td className="border-b-0 whitespace-nowrap text-center">
-                {item.des_transaccion}
+                {item.des_categoria} -
               </Table.Td>
               <Table.Td className="border-b-0 whitespace-nowrap text-center">
                 {item.periodo}

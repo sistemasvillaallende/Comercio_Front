@@ -106,32 +106,46 @@ const IniciarCtaCorriente = () => {
     return fechaActualString;
   }
 
-  const devolverVencimiento = (fecha: string) => {
-    const fechaFormateada = formatearFecha(fecha)
-    const dia = fechaFormateada.split('/')[0];
-    const mes = fechaFormateada.split('/')[1];
-    const anio = fechaFormateada.split('/')[2];
-    return `${anio}-${mes}-${dia}T00:00:00.000Z`
+  const transformarFechaNuevoFormato = (cadenaFecha: string) => {
+    const partes = cadenaFecha.split(' ');
+    // Tomar la primera parte que contiene la fecha
+    const fechaParte = partes[0];
+    // Dividir la fecha en día, mes y año
+    const [dia, mes, anio] = fechaParte.split('/');
+    // Formatear la fecha como AAAA-MM-DD
+    const fechaFormateada = `${anio}-${mes}-${dia}T00:00:00.000Z`;
+    return fechaFormateada;
+
   }
+
+  // Ejemplo de uso
+  const cadenaFecha = "30/04/2021 12:00:00 a.m.";
+  const fechaTransformada = transformarFechaNuevoFormato(cadenaFecha);
+
+  if (fechaTransformada) {
+    console.log(fechaTransformada);
+  }
+
+
 
   const iniciarCtaCte = () => {
     const fechaActual = new Date();
     const lstCtasTes = periodosIncluidos.map((periodo) => {
       return {
-        "tipo_transaccion": periodo.tipo_transaccion,
-        "nro_transaccion": periodo.nro_transaccion,
+        "tipo_transaccion": 1,
+        "nro_transaccion": 1234,
         "nro_pago_parcial": 0,
         "legajo": 0,
         "fecha_transaccion": formatDateToISOStringWithMilliseconds(fechaActual),
         "periodo": periodo.periodo,
-        "monto_original": periodo.monto_original,
+        "monto_original": 0,
         "nro_plan": 0,
         "pagado": true,
         "debe": 0,
         "haber": 0,
         "nro_procuracion": 0,
         "pago_parcial": true,
-        "vencimiento": devolverVencimiento(periodo.vencimiento),
+        "vencimiento": transformarFechaNuevoFormato(periodo.vencimiento),
         "nro_cedulon": 0,
         "declaracion_jurada": true,
         "liquidacion_especial": true,

@@ -15,6 +15,7 @@ const ver = () => {
   useEffect(() => {
     if (legajo !== elementoIndCom?.legajo.toString()) {
       buscarElemento(legajo || "");
+      console.log(elementoIndCom)
     } else {
       setElementoIndustriaComercio(elementoIndCom || undefined);
     }
@@ -88,7 +89,7 @@ const ver = () => {
                 <p>Piso: {elementoIndustriaComercio?.piso_dpto_esp}</p>
               </div>
               <div className="col-span-12 intro-y lg:col-span-2">
-                <p>Nro. Local: <strong>{elementoIndustriaComercio?.local_esp}</strong></p>
+                <p>Nro. Local: <strong>{elementoIndustriaComercio?.nro_local}</strong></p>
               </div>
             </div>
 

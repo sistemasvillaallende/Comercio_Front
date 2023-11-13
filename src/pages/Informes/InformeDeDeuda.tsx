@@ -188,8 +188,8 @@ const InformeDeDeuda = () => {
     const columns = ['#', 'Concepto', 'Categoria', 'Periodo', 'Debe', 'Haber', 'Plan de Pago', 'Nro. Proc.'];
     const body = informeCompleto.map((item, index) => [
       index + 1,
-      item.des_transaccion,
-      item.categoria,
+      item.des_movimiento,
+      item.des_categoria,
       item.periodo,
       currencyFormat(item.debe),
       currencyFormat(item.haber),
@@ -320,10 +320,10 @@ const InformeDeDeuda = () => {
                 <Table.Th className="whitespace-nowrap border-b-0 whitespace-nowrap text-center">
                   Nro. Transac.
                 </Table.Th>
-                <Table.Th className="whitespace-nowrap border-b-0 whitespace-nowrap text-center">
+                <Table.Th className="whitespace-nowrap border-b-0 whitespace-nowrap text-left">
                   Concepto
                 </Table.Th>
-                <Table.Th className="whitespace-nowrap border-b-0 whitespace-nowrap text-center">
+                <Table.Th className="whitespace-nowrap border-b-0 whitespace-nowrap text-left">
                   Categoria
                 </Table.Th>
                 <Table.Th className="whitespace-nowrap border-b-0 whitespace-nowrap text-center">
@@ -349,11 +349,11 @@ const InformeDeDeuda = () => {
                   <Table.Td className="border-b-0 whitespace-nowrap text-center">
                     {item.nro_transaccion}
                   </Table.Td>
-                  <Table.Td className="border-b-0 whitespace-nowrap text-center">
-                    {item.des_categoria}
+                  <Table.Td className="border-b-0 whitespace-nowrap text-left">
+                    {item.des_movimiento}
                   </Table.Td>
-                  <Table.Td className="border-b-0 whitespace-nowrap text-center">
-                    {item.categoria}
+                  <Table.Td className="border-b-0 whitespace-nowrap text-left">
+                    {item.des_categoria}
                   </Table.Td>
                   <Table.Td className="border-b-0 whitespace-nowrap text-center">
                     {item.periodo}

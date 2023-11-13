@@ -160,7 +160,7 @@ const Cedulon = () => {
                     <div className="tm_border tm_accent_border_20 tm_radius_0 tm_accent_bg_10 tm_curve_35 tm_text_center">
                       <div>
                         <b className="tm_accent_color tm_f26 tm_medium tm_body_lineheight">
-                          Total: $ {cabecera?.montoPagar}
+                          Total: {currencyFormat(cabecera?.montoPagar || 0)}
                         </b>
                       </div>
                     </div>
@@ -394,14 +394,14 @@ const Cedulon = () => {
                           VENC.: {cabecera?.vencimiento ? convertirFecha(cabecera.vencimiento) : ""}
                         </td>
                         <td className="tm_width_3 tm_border_left tm_border_top_0">
-                          TOTAL: $ {cabecera?.montoPagar}
+                          TOTAL: {currencyFormat(cabecera?.montoPagar || 0)}
 
                         </td>
                         <td className="tm_width_3 tm_border_top_0 tm_border_left tm_accent_border_20">
                           VENC.: {cabecera?.vencimiento ? convertirFecha(cabecera.vencimiento) : ""}
                         </td>
                         <td className="tm_width_3 tm_border_top_0 tm_border_left tm_border_right tm_accent_border_20">
-                          TOTAL: $ {cabecera?.montoPagar}
+                          TOTAL: {currencyFormat(cabecera?.montoPagar || 0)}
                         </td>
                       </tr>
                     </tbody>
