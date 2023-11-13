@@ -26,7 +26,7 @@ const ver = () => {
     const data = await response.json();
     setElementoIndustriaComercio(data.resultado[0]);
     traerElemento(legajo.toString());
-    console.log(data)
+
     if (data.resultado.length === 0) {
       Swal.fire({
         title: 'Error',

@@ -198,6 +198,7 @@ export interface CabeceraDeCedulon {
   vencimiento: string;
   montoPagar: number;
   cuit: string;
+  codigo_barra: string;
 }
 
 export interface VCedulon {

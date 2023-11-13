@@ -69,7 +69,7 @@ const CancelarCtaCte = () => {
   }
 
   const handleCancelarCtaCte = (auditoria: String) => {
-    console.log(reLiquidacionesSeleccionadas)
+
     const consulta = {
       "legajo": elementoIndCom?.legajo,
       "lstCtasTes": reLiquidacionesSeleccionadas,
@@ -85,7 +85,7 @@ const CancelarCtaCte = () => {
         "ip": "string"
       }
     }
-    console.log(consulta)
+
     const apiUrl = `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/Confirma_cancelacion_ctasctes?tipo_transaccion=${motivo}`;
     axios.post(apiUrl, consulta).then((response) => {
       Swal.fire({

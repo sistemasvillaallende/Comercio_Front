@@ -8,6 +8,7 @@ import TopMenu from "../layouts/TopMenu";
 //Context
 import { UserProvider } from "../context/UserProvider";
 import { IndustriaComercioProvider } from "../context/IndustriaComercioProvider";
+import { CedulonesProvider } from "../context/CedulonesProviders";
 
 //Páginas de Industria y Comercio
 import Inicio from "../pages/IndustriaComercio";
@@ -34,39 +35,41 @@ const Router = () => {
   return (
     <>
       <UserProvider>
-        <IndustriaComercioProvider>
-          {!usuarioLogeado ? (
-            <Routes>
-              <Route path="/*" element={<Login />} />
-            </Routes>
-          ) : (
-            <Routes>
-              <Route path="/" element={<TopMenu />}>
-                <Route path="/" element={<Inicio />} />
-                <Route path="/nuevo" element={<Nuevo />} />
-                <Route path="/:legajo/ver" element={<Ver />} />
-                <Route path="/:legajo/editar" element={<Editar />} />
-                <Route path="/:legajo/baseimponible" element={<BasesImponibles />} />
+        <CedulonesProvider>
+          <IndustriaComercioProvider>
+            {!usuarioLogeado ? (
+              <Routes>
+                <Route path="/*" element={<Login />} />
+              </Routes>
+            ) : (
+              <Routes>
+                <Route path="/" element={<TopMenu />}>
+                  <Route path="/" element={<Inicio />} />
+                  <Route path="/nuevo" element={<Nuevo />} />
+                  <Route path="/:legajo/ver" element={<Ver />} />
+                  <Route path="/:legajo/editar" element={<Editar />} />
+                  <Route path="/:legajo/baseimponible" element={<BasesImponibles />} />
 
-                <Route path="/:legajo/iniciarctacte" element={<IniciarCtaCorriente />} />
-                <Route path="/:legajo/ctacte" element={<CuentaCorriente />} />
-                <Route path="/:legajo/cancelarctacte" element={<CancelarCtaCte />} />
-                <Route path="/:legajo/eliminarCancelacion" element={<EliminarCancelacion />} />
+                  <Route path="/:legajo/iniciarctacte" element={<IniciarCtaCorriente />} />
+                  <Route path="/:legajo/ctacte" element={<CuentaCorriente />} />
+                  <Route path="/:legajo/cancelarctacte" element={<CancelarCtaCte />} />
+                  <Route path="/:legajo/eliminarCancelacion" element={<EliminarCancelacion />} />
 
-                <Route path="/Cedulones/" element={<Cedulones />} />
-                <Route path="/:legajo/informes" element={<Informes />} />
-                <Route path="/:legajo/deudas" element={<Deudas />} />
-                <Route path="/:legajo/Contacto" element={<Contacto />} />
-                <Route path="/ComerciosPorCalle" element={<ComerciosPorCalle />} />
+                  <Route path="/Cedulones/" element={<Cedulones />} />
+                  <Route path="/:legajo/informes" element={<Informes />} />
+                  <Route path="/:legajo/deudas" element={<Deudas />} />
+                  <Route path="/:legajo/Contacto" element={<Contacto />} />
+                  <Route path="/ComerciosPorCalle" element={<ComerciosPorCalle />} />
 
-              </Route>
-              <Route path="/login" element={<Login />} />
-              <Route path="/*" element={<NotFound />} />
-              <Route path="/Cedulon" element={<Cedulon />} />
-              <Route path="/ResumenCuenta" element={<ResumenCuenta />} />
-            </Routes>
-          )}
-        </IndustriaComercioProvider>
+                </Route>
+                <Route path="/login" element={<Login />} />
+                <Route path="/*" element={<NotFound />} />
+                <Route path="/Cedulon/:nrocedulon" element={<Cedulon />} />
+                <Route path="/ResumenCuenta" element={<ResumenCuenta />} />
+              </Routes>
+            )}
+          </IndustriaComercioProvider>
+        </CedulonesProvider>
       </UserProvider>
     </>
   );

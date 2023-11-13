@@ -75,6 +75,7 @@ const IniciarCtaCorriente = () => {
       const response = await axios.get(apiUrl);
       setPeriodosExistentes(response.data);
       setCargando(true);
+      console.log(response.data)
     } catch (error) {
       Swal.fire({
         title: "Error",
@@ -117,13 +118,13 @@ const IniciarCtaCorriente = () => {
     const fechaActual = new Date();
     const lstCtasTes = periodosIncluidos.map((periodo) => {
       return {
-        "tipo_transaccion": 7,
-        "nro_transaccion": 0,
+        "tipo_transaccion": periodo.tipo_transaccion,
+        "nro_transaccion": periodo.nro_transaccion,
         "nro_pago_parcial": 0,
         "legajo": 0,
         "fecha_transaccion": formatDateToISOStringWithMilliseconds(fechaActual),
         "periodo": periodo.periodo,
-        "monto_original": 0,
+        "monto_original": periodo.monto_original,
         "nro_plan": 0,
         "pagado": true,
         "debe": 0,
@@ -161,7 +162,7 @@ const IniciarCtaCorriente = () => {
       "auditoria": {
         "id_auditoria": 0,
         "fecha": formatDateToISOStringWithMilliseconds(fechaActual),
-        "usuario": "string",
+        "usuario": user?.userName,
         "proceso": "string",
         "identificacion": "string",
         "autorizaciones": "string",
@@ -241,7 +242,7 @@ const IniciarCtaCorriente = () => {
                 <div className="flex w-full justify-between col-span-12 intro-y lg:col-span-6">
                   <div className="col-span-12 intro-y lg:col-span-2">
                     <div className="col-span-12 intro-y lg:col-span-4">
-                      <FormLabel htmlFor="dominio-input" className="sm:w-0">
+                      <FormLabel htmlFor="dominio-input" className="sm:w-50">
                         Periodos Existentes
                       </FormLabel>
                       <div className="col-span-12 intro-y lg:col-span-2">

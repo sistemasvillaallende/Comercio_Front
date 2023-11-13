@@ -3,7 +3,7 @@ import { LstDeuda } from "../interfaces/LstDeuda";
 import { Planes_Cobro } from "../interfaces/Planes_Cobro";
 import { Tarjetas } from "../interfaces/Tarjetas";
 import { CheckOut } from "../interfaces/CheckOut";
-import { CedulonImpresion } from "../interfaces/Vehiculo";
+import { CedulonImpresion } from "../interfaces/IndustriaComercio";
 
 
 type CedulonesContextType = {
@@ -20,7 +20,7 @@ type CedulonesContextType = {
   calculoMontos: () => void;
   setDescripcionPlanes: () => void;
   setCedulonParaImpresion: (cedulon: CedulonImpresion) => void;
-  cedulonParaImpresion: CedulonImpresion | null;
+  cedulonParaImpresionProvider: CedulonImpresion | null;
 };
 
 const cedulonesContext = createContext<CedulonesContextType>({
@@ -36,12 +36,13 @@ const cedulonesContext = createContext<CedulonesContextType>({
   calculoMontos: () => { },
   setDescripcionPlanes: () => { },
   setCedulonParaImpresion: () => { },
-  cedulonParaImpresion: null,
+  cedulonParaImpresionProvider: null,
 });
 
 export function useCedulonesContext() {
   return useContext(cedulonesContext);
 }
+
 
 export function CedulonesProvider({ children }: any) {
   const [deuda, setDeuda] = useState<LstDeuda[]>([]);
@@ -50,7 +51,7 @@ export function CedulonesProvider({ children }: any) {
   const [planesCobro, setPlanesCobros] = useState<Planes_Cobro[] | null>(null);
   const [checkOut, setCheckOut] = useState<CheckOut | null>(null);
   const [tarjetas, setTarjetas] = useState<Tarjetas[]>([]);
-  const [cedulonParaImpresion, setCedulonParaImpresion] = useState<CedulonImpresion | null>(null);
+  const [cedulonParaImpresionProvider, setCedulonParaImpresion] = useState<CedulonImpresion | null>(null);
 
   function calculoMontos() {
     setCheckOut({
@@ -171,7 +172,7 @@ export function CedulonesProvider({ children }: any) {
         calculoMontos,
         setDescripcionPlanes,
         setCedulonParaImpresion,
-        cedulonParaImpresion
+        cedulonParaImpresionProvider,
       }}
     >
       {children}

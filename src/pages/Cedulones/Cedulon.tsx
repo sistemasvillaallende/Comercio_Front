@@ -20,7 +20,7 @@ import { useCedulonesContext } from "../../context/CedulonesProviders";
 // Crear un componente que representa el documento PDF
 
 const Cedulon = () => {
-  const { cedulonParaImpresion } = useCedulonesContext();
+  const { cedulonParaImpresionProvider } = useCedulonesContext();
 
   const { nrocedulon } = useParams();
   const [cabecera, setCabecera] = useState<CabeceraDeCedulon>();
@@ -36,13 +36,13 @@ const Cedulon = () => {
     if (nrocedulon) {
       obtenerCabecera(parseInt(nrocedulon));
       obtenerDetalle(parseInt(nrocedulon));
+      console.log(cedulonParaImpresionProvider)
     }
-    console.log(cedulonParaImpresion)
   }, [nrocedulon]);
 
 
   const obtenerCabecera = (nrocedulon: number) => {
-    const urlApi = `${import.meta.env.VITE_URL_CEDULONES}getCabeceraPrintCedulonAuto?nroCedulon=${nrocedulon}`;
+    const urlApi = `${import.meta.env.VITE_URL_API_IYC_CEDULONES}getCabeceraPrintCedulonComercio?nroCedulon=${nrocedulon}`;
     axios
       .get(urlApi)
       .then((response) => {
@@ -54,7 +54,7 @@ const Cedulon = () => {
   }
 
   const obtenerDetalle = (nrocedulon: number) => {
-    const urlApi = `${import.meta.env.VITE_URL_CEDULONES}getDetallePrintCedulonAuto?nroCedulon=${nrocedulon}`;
+    const urlApi = `${import.meta.env.VITE_URL_API_IYC_CEDULONES}getDetallePrintCedulonComercio?nroCedulon=${nrocedulon}`;
     axios
       .get(urlApi)
       .then((response) => {
@@ -87,8 +87,7 @@ const Cedulon = () => {
   }
 
   const divRef = useRef(null);
-  const barcodeData = "05490000000000000072080590007574010092023000000103";
-  const barcodeData2 = "*C07208059*";
+  const barcodeData = cabecera?.codigo_barra || "0000";
   const generatePDF = () => {
     const doc = new jsPDF();
 
@@ -262,9 +261,9 @@ const Cedulon = () => {
                         style={{ fontSize: "14px", marginTop: "10px" }}
                       >
                         Medio de Pago <br />
-                        {cedulonParaImpresion?.tarjetaDeCredito}
+                        {cedulonParaImpresionProvider?.tarjetaDeCredito}
                         <br />
-                        en {cedulonParaImpresion?.cantCuotas} Cuotas de {currencyFormat(cedulonParaImpresion?.montoCuota || 0)}
+                        en {cedulonParaImpresionProvider?.cantCuotas} Cuotas de {currencyFormat(cedulonParaImpresionProvider?.montoCuota || 0)}
                       </p>
                     </div>
                     <div className="tm_right_footer">
@@ -275,7 +274,7 @@ const Cedulon = () => {
                               Sub total
                             </td>
                             <td className="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_medium">
-                              {currencyFormat(cedulonParaImpresion?.montoOriginal || 0)}
+                              {currencyFormat(cedulonParaImpresionProvider?.montoOriginal || 0)}
                             </td>
                           </tr>
                           <tr>
@@ -283,7 +282,7 @@ const Cedulon = () => {
                               Interes Mora
                             </td>
                             <td className="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_pt0">
-                              {currencyFormat(cedulonParaImpresion?.interesMora || 0)}
+                              {currencyFormat(cedulonParaImpresionProvider?.interesMora || 0)}
                             </td>
                           </tr>
                           <tr>
@@ -291,7 +290,7 @@ const Cedulon = () => {
                               Descuento
                             </td>
                             <td className="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_pt0">
-                              {currencyFormat(cedulonParaImpresion?.descuento || 0)}
+                              {currencyFormat(cedulonParaImpresionProvider?.descuento || 0)}
                             </td>
                           </tr>
                           <tr>
@@ -299,7 +298,7 @@ const Cedulon = () => {
                               Costo financiero:
                             </td>
                             <td className="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_pt0">
-                              $ {currencyFormat(cedulonParaImpresion?.costoFinanciero || 0)}
+                              $ {currencyFormat(cedulonParaImpresionProvider?.costoFinanciero || 0)}
                             </td>
                           </tr>
                           <tr className="tm_accent_border_20 tm_border">
@@ -307,7 +306,7 @@ const Cedulon = () => {
                               Total{" "}
                             </td>
                             <td className="tm_width_3 tm_bold tm_f16 tm_border_top_0 tm_accent_color tm_text_right tm_accent_bg_10">
-                              {currencyFormat(cedulonParaImpresion?.total || 0)}
+                              {currencyFormat(cedulonParaImpresionProvider?.total || 0)}
                             </td>
                           </tr>
                         </tbody>

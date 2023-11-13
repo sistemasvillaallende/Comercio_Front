@@ -56,10 +56,7 @@ const CuentaCorriente = () => {
     setShowModal(false);
     const fetchData = async () => {
       const response = await axios.get(
-        `${import.meta.env.VITE_URL_API_IYC}ListarCtacte?dominio=` +
-        elementoIndCom?.legajo +
-        `&tipo_consulta=1&cate_deuda_desde=1&cate_deuda_hasta=20`
-      );
+        `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/ListarCtacte?legajo= ${elementoIndCom?.legajo}&tipo_consulta=1&cate_deuda_desde=1&cate_deuda_hasta=20`);
 
       setAutos(response.data);
 
@@ -86,6 +83,7 @@ const CuentaCorriente = () => {
     return "$" + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
   }
   function handleSelectChange(event: React.ChangeEvent<HTMLSelectElement>) {
+    console.log(event.target.value)
     const value = event.target.value;
     setFiltro(Number.parseInt(value));
     var hasta = 0;
@@ -95,7 +93,7 @@ const CuentaCorriente = () => {
       hasta = cateDeuda;
     }
     let url =
-      `${import.meta.env.VITE_URL_API_IYC}ListarCtacte?legajo=` +
+      `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/ListarCtacte?legajo=` +
       elementoIndCom?.legajo +
       `&tipo_consulta=` +
       value +
@@ -114,8 +112,8 @@ const CuentaCorriente = () => {
   function handledet(tipo_transaccion: number, nro_transaccion: number) {
     const fetchData = async () => {
       const response = await axios.get(
-        `${import.meta.env.VITE_URL_CTACTE
-        }Datos_transaccion?tipo_transaccion=` +
+        `${import.meta.env.VITE_URL_API_IYC
+        }Ctasctes_indycom/Datos_transaccion=` +
         tipo_transaccion +
         `&nro_transaccion=` +
         nro_transaccion
@@ -130,7 +128,7 @@ const CuentaCorriente = () => {
   function handledetPago(nro_cedulon: number, nro_transaccion: number) {
     const fetchData = async () => {
       const response = await axios.get(
-        `${import.meta.env.VITE_URL_CTACTE}DetallePago?nro_cedulon=` +
+        `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/DetallePago?nro_cedulon=` +
         nro_cedulon +
         `&nro_transaccion=` +
         nro_transaccion
@@ -145,7 +143,7 @@ const CuentaCorriente = () => {
   function handledetDeuda(nro_transaccion: number) {
     const fetchData = async () => {
       const response = await axios.get(
-        `${import.meta.env.VITE_URL_CTACTE}DetalleDeuda?nro_transaccion=` +
+        `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/DetalleDeuda?nro_transaccion=` +
         nro_transaccion
       );
 
@@ -158,7 +156,7 @@ const CuentaCorriente = () => {
   function handledetProcuracion(nro_procuracion: number) {
     const fetchData = async () => {
       const response = await axios.get(
-        `${import.meta.env.VITE_URL_CTACTE}DetalleProcuracion?nro_proc=` +
+        `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/DetalleProcuracion?nro_proc=` +
         nro_procuracion
       );
 
@@ -169,9 +167,9 @@ const CuentaCorriente = () => {
     setShowModalProcuracion(true);
   }
   function handledetPlan(nro_plan: number) {
-    console.log(nro_plan);
+    console.log(autos)
     let url =
-      `${import.meta.env.VITE_URL_CTACTE}DetallePlan?nro_plan=` + nro_plan;
+      `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/DetallePlan?nro_plan=` + nro_plan;
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
@@ -189,7 +187,7 @@ const CuentaCorriente = () => {
       hasta = Number.parseInt(value);
     }
     let url =
-      `${import.meta.env.VITE_URL_API_IYC}ListarCtacte?legajo=` +
+      `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/ListarCtacte?legajo=` +
       elementoIndCom?.legajo +
       `&tipo_consulta=` +
       filtro +

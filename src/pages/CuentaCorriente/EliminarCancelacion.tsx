@@ -24,7 +24,8 @@ const EliminarCancelacion = () => {
   const { user } = useUserContext();
 
   useEffect(() => {
-    const apiUrl = `${import.meta.env.VITE_URL_CTACTE}Listar_Periodos_cancelados?legajo=${elementoIndCom?.legajo}`
+    const apiUrl = `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/Listar_Periodos_cancelados?legajo=${elementoIndCom?.legajo}`
+    console.log(apiUrl)
     axios.get(apiUrl).then((response) => {
       setReLiquidaciones(response.data);
     }).catch((error) => {
@@ -69,7 +70,6 @@ const EliminarCancelacion = () => {
   }
 
   const handleCancelarCtaCte = (auditoria: String) => {
-    console.log(reLiquidacionesSeleccionadas)
     const consulta = {
       "legajo": elementoIndCom?.legajo,
       "lstCtasTes": reLiquidacionesSeleccionadas,
@@ -86,7 +86,7 @@ const EliminarCancelacion = () => {
       }
     }
     console.log(consulta)
-    const apiUrl = `${import.meta.env.VITE_URL_CTACTE}Confirma_elimina_cancelacion`;
+    const apiUrl = `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/Confirma_elimina_cancelacion`;
     axios.post(apiUrl, consulta).then((response) => {
       Swal.fire({
         title: 'Eliminación de Cancelación',
@@ -96,6 +96,7 @@ const EliminarCancelacion = () => {
         confirmButtonColor: '#27a3cf',
       });
       setReLiquidacionesSeleccionadas([]);
+      console.log(response)
       navigate(`/${elementoIndCom?.legajo}/ver`);
     }).catch((error) => {
       Swal.fire({
@@ -238,6 +239,10 @@ const EliminarCancelacion = () => {
                     ))}
                   </Table.Tbody>
                 </Table>
+              </div>
+              <div className="mt-3 flex w-full justify-between text-lg font-medium text-primary text-right">
+                <span>Total:</span>
+                <span>{formatNumberToARS(sumarMontosSeleccionados())}</span>
               </div>
             </div>
             {/** FIN TABLA 1 */}

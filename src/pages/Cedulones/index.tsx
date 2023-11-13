@@ -31,7 +31,7 @@ const Autos = () => {
 
   const navigate = useNavigate();
 
-  const { cedulonParaImpresion, setCedulonParaImpresion } = useCedulonesContext();
+  const { cedulonParaImpresionProvider, setCedulonParaImpresion } = useCedulonesContext();
   const [proc, setProc] = useState<number[] | null>([]);
   const [tarjetas, setTarjetas] = useState<Tarjetas[]>([]);
   const [PlanesCobro, setPlanesCobro] = useState<Planes_Cobro[] | null>(null);
@@ -107,6 +107,7 @@ const Autos = () => {
   }
   const handleCedulonClick = () => {
 
+
     const cedulonParaImpresion: CedulonImpresion = {
       tarjetaDeCredito: tarjetas.find((tarjeta) => tarjeta.cod_tarjeta == PlanCobro?.cod_tarjeta)?.des_tarjeta || '',
       cantCuotas: checkout?.cantidad_cuota || 0,
@@ -121,7 +122,7 @@ const Autos = () => {
 
     setCedulonParaImpresion(cedulonParaImpresion);
 
-    const urlApi = `${import.meta.env.VITE_URL_CEDULONES}EmitoCedulonAuto`;
+    const urlApi = `${import.meta.env.VITE_URL_API_IYC_CEDULONES}EmitoCedulonComercio`;
 
     const listaVCtasctes = deudaSeleccionada.map((deuda) => {
       return {
@@ -161,7 +162,7 @@ const Autos = () => {
             confirmButtonColor: "#27a3cf",
           }).then((result) => {
             if (result.isConfirmed) {
-              navigate(`/CedulonAuto/${response.data}`);
+              navigate(`/Cedulon/${response.data}`);
             }
           });
         }
@@ -178,9 +179,10 @@ const Autos = () => {
   }
 
   useEffect(() => {
+
     const fetchData2 = async () => {
       const response = await axios.get(
-        `${import.meta.env.VITE_URL_CTACTE}getListDeudaAuto?dominio=` +
+        `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/getListDeudaIyC?legajo=` +
         elementoIndCom?.legajo
       );
       setDeuda(response.data);
