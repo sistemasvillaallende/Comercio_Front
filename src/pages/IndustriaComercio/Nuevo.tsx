@@ -16,8 +16,15 @@ import Lucide from "../../base-components/Lucide";
 import Button from "../../base-components/Button";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/UserProvider";
+import SeleccionadorDePropietarios from "./SeleccionadorDePropietarios";
+import { Propietario } from '../../interfaces/IndustriaComercio';
+
 
 const Nuevo = () => {
+
+  const [ventanaPropietario, setVentanaPropietario] = useState<boolean>(false);
+  const [propietarioSeleccionado, setPropietarioSeleccionado] = useState<Propietario | null>(null);
+
   const {
     elementoIndCom,
     tipoLiquidacion,
@@ -75,10 +82,11 @@ const Nuevo = () => {
     if (elementoIndCom) {
       setElementoIndustriaComercio(undefined);
     }
-  }, []);
+    setNroBad(propietarioSeleccionado?.nro_bad || 0)
+    setNroCuit(propietarioSeleccionado?.cuit || "0")
+  }, [propietarioSeleccionado]);
 
-  const handleAuditoria = async (e: any) => {
-    e.preventDevault;
+  const handleAuditoria = async () => {
     const { value } = await Swal.fire({
       title: 'Autorización',
       input: 'textarea',
@@ -136,7 +144,7 @@ const Nuevo = () => {
       "cod_calle_dom_esp": 123,
       "nom_calle_dom_esp": nomCalle,
       "nro_dom_esp": nroDom,
-      "piso_dpto_esp": "1",
+      "piso_dpto_esp": pisoDptoEsp,
       "local_esp": localEsp,
       "cod_barrio_dom_esp": 10,
       "nom_barrio_dom_esp": nomBarrioDomEsp,
@@ -211,435 +219,448 @@ const Nuevo = () => {
       });
   };
 
-
   return (
     <>
+
+      {ventanaPropietario && (
+        <SeleccionadorDePropietarios {...{ setPropietarioSeleccionado, setVentanaPropietario }} />
+      )}
+
       <div className="conScroll grid grid-cols-12 gap-6 mt-2 ml-3 mr-4 p-4">
         <div className="col-span-12 intro-y lg:col-span-12">
-          <form onSubmit={handleAuditoria}>
-            <div className="flex w-full justify-between col-span-12 intro-y lg:col-span-12">
-              <h2>Nuevo Comercio o Industria</h2>
+
+          <div className="flex w-full justify-between col-span-12 intro-y lg:col-span-12">
+            <h2>Nuevo Comercio o Industria</h2>
+          </div>
+
+          <div className="grid grid-cols-12 gap-6 mt-3">
+
+            <div className="col-span-12 intro-y lg:col-span-2 mr-2">
+              <FormLabel htmlFor="fomrDominio">Legajo</FormLabel>
+              <FormInput
+                id="forLegajo"
+                type="text"
+                value={legajo?.toString() ?? ''}
+                onChange={(e) => setLegajo(Number(e.target.value))}
+                required
+              />
             </div>
 
-            <div className="grid grid-cols-12 gap-6 mt-3">
+            <div className="col-span-12 intro-y lg:col-span-2">
+              <FormLabel htmlFor="formMarca">Nro. Expediente</FormLabel>
+              <FormInput
+                id="formExpediente"
+                type="text"
+                value={nroExpMesaEnt}
+                onChange={(e) => setNroExpMesaEnt(e.target.value)}
+                required
+              />
+            </div>
 
-              <div className="col-span-12 intro-y lg:col-span-2 mr-2">
-                <FormLabel htmlFor="fomrDominio">Legajo</FormLabel>
+            <div className="col-span-12 intro-y lg:col-span-2">
+              <FormLabel htmlFor="formFechaDeAlta">Fecha de Alta</FormLabel>
+              <FormInput
+                type="date"
+                id="formFechaDeAlta"
+                value={fechaAlta.slice(0, 10)}
+                onChange={(e) => setFechaAlta(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-2">
+              <FormLabel htmlFor="formMarca">Nombre de Fantasía</FormLabel>
+              <FormInput
+                id="formNOmbreDeFantasia"
+                type="text"
+                value={nomFantasia}
+                onChange={(e) => setNomFantasia(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-2">
+              <FormLabel htmlFor="formMarca">Descripcion</FormLabel>
+              <FormInput
+                id="formDescripcion"
+                type="text"
+                value={desCom}
+                onChange={(e) => setDesCom(e.target.value)}
+
+              />
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-2">
+              <FormLabel htmlFor="formMarca">Badec</FormLabel>
+              <InputGroup>
                 <FormInput
-                  id="forLegajo"
+                  id="formPropietario"
                   type="text"
-                  value={legajo?.toString() ?? ''}
-                  onChange={(e) => setLegajo(Number(e.target.value))}
-                  required
-                />
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-2">
-                <FormLabel htmlFor="formMarca">Nro. Expediente</FormLabel>
-                <FormInput
-                  id="formExpediente"
-                  type="text"
-                  value={nroExpMesaEnt}
-                  onChange={(e) => setNroExpMesaEnt(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-2">
-                <FormLabel htmlFor="formFechaDeAlta">Fecha de Alta</FormLabel>
-                <FormInput
-                  type="date"
-                  id="formFechaDeAlta"
-                  value={fechaAlta.slice(0, 10)}
-                  onChange={(e) => setFechaAlta(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-2">
-                <FormLabel htmlFor="formMarca">Nombre de Fantasía</FormLabel>
-                <FormInput
-                  id="formNOmbreDeFantasia"
-                  type="text"
-                  value={nomFantasia}
-                  onChange={(e) => setNomFantasia(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-2">
-                <FormLabel htmlFor="formMarca">Descripcion</FormLabel>
-                <FormInput
-                  id="formDescripcion"
-                  type="text"
-                  value={desCom}
-                  onChange={(e) => setDesCom(e.target.value)}
-
-                />
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-2">
-                <FormLabel htmlFor="formMarca">Badec</FormLabel>
-                <FormInput
-                  id="formBadec"
-                  type="number"
                   value={nroBad ?? ''}
-                  onChange={(e) => setNroBad(Number(e.target.value))}
-                  required
+                  readOnly
                 />
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-12">
-                <h2>Datos del Domicilio</h2>
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-2">
-                <FormLabel htmlFor="formMarca">Calle</FormLabel>
-                <FormInput
-                  id="formCalle"
-                  type="text"
-                  value={nomCalle}
-                  onChange={(e) => setNomCalle(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-1">
-                <FormLabel htmlFor="formMarca">Nro. Dom</FormLabel>
-                <FormInput
-                  id="formNroDom"
-                  type="number"
-                  value={nroDom ?? ''}
-                  onChange={(e) => setNroDom(Number(e.target.value))}
-                  required
-                />
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-1">
-                <FormLabel htmlFor="formMarca">Piso</FormLabel>
-                <FormInput
-                  id="formPiso"
-                  type="text"
-                  value={pisoDptoEsp}
-                  onChange={(e) => setPisoDptoEsp(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-2">
-                <FormLabel htmlFor="formMarca">Nro. Local</FormLabel>
-                <FormInput
-                  id="formNroLocal"
-                  type="text"
-                  value={localEsp}
-                  onChange={(e) => setLocalEsp(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-2">
-                <FormLabel htmlFor="formMarca">Barrio</FormLabel>
-                <FormInput
-                  id="formBarrio"
-                  type="text"
-                  value={nomBarrioDomEsp}
-                  onChange={(e) => setNomBarrioDomEsp(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-2">
-                <FormLabel htmlFor="formMarca">Zona</FormLabel>
-                <FormSelect
-                  id="formTipoLiquidacion"
-                  value={codZona}
-                  onChange={(e) => setCodZona(e.target.value)}
+                <InputGroup.Text
+                  id="input-group-price"
+                  className="cursor-pointer"
+                  onClick={() => setVentanaPropietario(true)}
                 >
-                  {listadoZonas?.map((tipo) => (
-                    <option key={tipo.value} value={tipo.value}>
-                      {tipo.value}
-                    </option>
-                  ))}
-                </FormSelect>
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-2">
-                <FormLabel htmlFor="formMarca">Ciudad</FormLabel>
-                <FormInput
-                  id="formCiudad"
-                  type="text"
-                  value={ciudad}
-                  onChange={(e) => setCiudad(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-12">
-                <h2>Datos de Liquidación</h2>
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-2">
-                <FormLabel htmlFor="formMarca">Primer Periodo</FormLabel>
-                <FormInput
-                  id="formPrimerPeriodo"
-                  type="text"
-                  value={priPeriodo}
-                  onChange={(e) => setPriPeriodo(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-2">
-                <FormLabel htmlFor="formMarca">Ultimo Periodo</FormLabel>
-                <FormInput
-                  id="formUltimoPeriodo"
-                  type="text"
-                  value={perUlt}
-                  onChange={(e) => setPerUlt(e.target.value)}
-                />
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-4">
-                <FormLabel htmlFor="formMarca">Tipo de Liquidación</FormLabel>
-                <FormSelect
-                  id="formTipoLiquidacion"
-                  value={tipoLiquidacionElemento?.toString() ?? ''}
-                  onChange={(e) => setTipoLiquidacionElemento(Number(e.target.value))}
-                >
-                  <option value="">Seleccione un tipo de liquidación</option>
-                  {listadoTipoLiquidacion?.map((tipo) => (
-                    <option key={tipo.cod_tipo_liq} value={tipo.cod_tipo_liq}>
-                      {tipo.descripcion_tipo_liq}
-                    </option>
-                  ))}
-                </FormSelect>
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-2">
-                <FormLabel htmlFor="formMarca">CUIT</FormLabel>
-                <FormInput
-                  id="formCUIT"
-                  type="text"
-                  value={nroCuit}
-                  onChange={(e) => setNroCuit(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-2">
-                <FormLabel htmlFor="formMarca">CUIT VD</FormLabel>
-                <FormInput
-                  id="formCUIT"
-                  type="text"
-                  value={nroCuit}
-                  onChange={(e) => setNroCuit(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-2">
-                <FormLabel htmlFor="formTransporte">Transporte</FormLabel>
-                <FormSwitch>
-                  <FormSwitch.Input
-                    id="formTransporte"
-                    type="checkbox"
-                    checked={transporte}
-                    onChange={(e) => setTransporte(e.target.checked)}
-                  />
-                </FormSwitch>
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-2">
-                <FormLabel htmlFor="formResponsable">Exento</FormLabel>
-                <FormSwitch>
-                  <FormSwitch.Input
-                    id="formExento"
-                    type="checkbox"
-                    checked={exento}
-                    onChange={(e) => setExento(e.target.checked)}
-
-                  />
-                </FormSwitch>
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-4">
-                <FormLabel htmlFor="formMarca">Caracter de la Entidad</FormLabel>
-                <FormSelect
-                  id="formTipoLiquidacion"
-                  value={codCaracter?.toString() ?? ''}
-                  onChange={(e) => setCodCaracter(Number(e.target.value))}
-
-                >
-                  <option value="">Seleccione un Caracter de la Entidad</option>
-                  {listadoTipoDeEntidad?.map((tipo) => (
-                    <option key={tipo.value} value={tipo.value}>
-                      {tipo.text}
-                    </option>
-                  ))}
-                </FormSelect>
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-4">
-                <FormLabel htmlFor="formMarca">Condición Frente al IVA</FormLabel>
-                <FormSelect
-                  id="formTipoLiquidacion"
-                  value={categoriaIva}
-                  onChange={(e) => setCategoriaIva(parseInt(e.target.value))}
-                >
-                  <option value="">Seleccione una Condición Frente al IVA</option>
-                  {listadoTipoCondicionIVA?.map((tipo) => (
-                    <option key={tipo.cod_cond_ante_iva} value={tipo.cod_cond_ante_iva}>
-                      {tipo.des_cond_ante_iva}
-                    </option>
-                  ))}
-                </FormSelect>
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-2">
-                <FormLabel htmlFor="formMarca">Ingresos Brutos</FormLabel>
-                <FormInput
-                  id="formIngresosBrutos"
-                  type="text"
-                  value={nroCuit}
-                  onChange={(e) => setNroCuit(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-2">
-                <FormLabel htmlFor="formFechaInicio">Fecha Inicio</FormLabel>
-                <FormInput
-                  type="date"
-                  id="formFechaInicio"
-                  value={fechaInicio.slice(0, 10)}
-                  onChange={(e) => setFechaInicio(e.target.value)}
-
-                />
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-2">
-                <FormLabel htmlFor="formFechaHabilitacion">Fecha Habilitación</FormLabel>
-                <FormInput
-                  type="date"
-                  id="formFechaHabilitacion"
-                  value={fechaHab.slice(0, 10)}
-                  onChange={(e) => setFechaHab(e.target.value)}
-
-                />
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-2">
-                <FormLabel htmlFor="formvtoInscripcion">Vto. Inscrip</FormLabel>
-                <FormInput
-                  type="date"
-                  id="formvtoInscripcion"
-                  value={vtoInscripcion.slice(0, 10)}
-                  onChange={(e) => setVtoInscripcion(e.target.value)}
-
-                />
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-2">
-                <FormLabel htmlFor="formvtofechaBaja">Fecha Baja</FormLabel>
-                <FormInput
-                  type="date"
-                  id="formvtofechaBaja"
-                  value={fechaBaja.slice(0, 10)}
-                  onChange={(e) => setFechaBaja(e.target.value)}
-
-                />
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-2">
-                <FormLabel htmlFor="formDadoBaja">Baja</FormLabel>
-                <FormSwitch>
-                  <FormSwitch.Input
-                    id="formDadoBaja"
-                    type="checkbox"
-                    checked={dadoBaja}
-                    onChange={(e) => setDadoBaja(e.target.checked)}
-
-                  />
-                </FormSwitch>
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-4">
-                <FormLabel htmlFor="formSituacionJudicial">Situación Comercio</FormLabel>
-                <FormSelect
-                  id="formSituacionJudicial"
-                  value={codSituacionJudicial?.toString() ?? ''}
-                  onChange={(e) => setCodSituacionJudicial(parseInt(e.target.value))}
-
-                >
-                  <option value="">Seleccione una Situación Comercio</option>
-                  {listadoSituacionJudicial?.map((tipo) => (
-                    <option key={tipo.value} value={tipo.value}>
-                      {tipo.text}
-                    </option>
-                  ))}
-                </FormSelect>
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-2">
-                <FormLabel htmlFor="formvtofechaDDJJ">Fecha DDJJ</FormLabel>
-                <FormInput
-                  type="date"
-                  id="formvtofechaDDJJ"
-                  value={fechaDdjjAnual.slice(0, 10)}
-                  onChange={(e) => setFechaDdjjAnual(e.target.value)}
-
-                />
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-12">
-                <h2>Entrega Cedulón</h2>
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-2">
-                <FormLabel htmlFor="formEmiteCedulon">Emite Cedulón</FormLabel>
-                <FormSwitch>
-                  <FormSwitch.Input
-                    id="formEmiteCedulon"
-                    type="checkbox"
-                    checked={emiteCedulon}
-                    onChange={(e) => setEmiteCedulon(e.target.checked)}
-
-                  />
-                </FormSwitch>
-              </div>
-
-              <div className="col-span-12 intro-y lg:col-span-2">
-                <FormLabel htmlFor="formVeredaOcupad">Vereda Ocupad</FormLabel>
-                <FormSwitch>
-                  <FormSwitch.Input
-                    id="formVeredaOcupad"
-                    type="checkbox"
-                    checked={ocupacionVereda}
-                    onChange={(e) => setOcupacionVereda(e.target.checked)}
-                  />
-                </FormSwitch>
-              </div>
-
+                  <Lucide icon="Search" className="w-4 h-4" />
+                </InputGroup.Text>
+              </InputGroup>
             </div>
 
-            <div className="flex w-full justify-between col-span-12 intro-y lg:col-span-12 mt-5 mb-5">
-              <div className="col-span-12 intro-y lg:col-span-6">
-                Usuario: {user?.userName}
-              </div>
-              <div className="col-span-12 intro-y lg:col-span-6">
-                <Button
-                  variant="primary"
-                  className="ml-3"
-                >
-                  Guardar
-                </Button>
-                <Button variant="secondary" className="ml-3" onClick={() => navigate(`/`)}>
-                  Cancelar
-                </Button>
-              </div>
-
+            <div className="col-span-12 intro-y lg:col-span-12">
+              <h2>Datos del Domicilio</h2>
             </div>
-          </form>
+
+            <div className="col-span-12 intro-y lg:col-span-2">
+              <FormLabel htmlFor="formMarca">Calle</FormLabel>
+              <FormInput
+                id="formCalle"
+                type="text"
+                value={nomCalle}
+                onChange={(e) => setNomCalle(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-1">
+              <FormLabel htmlFor="formMarca">Nro. Dom</FormLabel>
+              <FormInput
+                id="formNroDom"
+                type="number"
+                value={nroDom ?? ''}
+                onChange={(e) => setNroDom(Number(e.target.value))}
+                required
+              />
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-1">
+              <FormLabel htmlFor="formMarca">Piso</FormLabel>
+              <FormInput
+                id="formPiso"
+                type="text"
+                value={pisoDptoEsp}
+                onChange={(e) => setPisoDptoEsp(e.target.value)}
+              />
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-2">
+              <FormLabel htmlFor="formMarca">Nro. Local</FormLabel>
+              <FormInput
+                id="formNroLocal"
+                type="text"
+                value={localEsp}
+                onChange={(e) => setLocalEsp(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-2">
+              <FormLabel htmlFor="formMarca">Barrio</FormLabel>
+              <FormInput
+                id="formBarrio"
+                type="text"
+                value={nomBarrioDomEsp}
+                onChange={(e) => setNomBarrioDomEsp(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-2">
+              <FormLabel htmlFor="formMarca">Zona</FormLabel>
+              <FormSelect
+                id="formTipoLiquidacion"
+                value={codZona}
+                onChange={(e) => setCodZona(e.target.value)}
+              >
+                {listadoZonas?.map((tipo) => (
+                  <option key={tipo.value} value={tipo.value}>
+                    {tipo.value}
+                  </option>
+                ))}
+              </FormSelect>
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-2">
+              <FormLabel htmlFor="formMarca">Ciudad</FormLabel>
+              <FormInput
+                id="formCiudad"
+                type="text"
+                value={ciudad}
+                onChange={(e) => setCiudad(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-12">
+              <h2>Datos de Liquidación</h2>
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-2">
+              <FormLabel htmlFor="formMarca">Primer Periodo</FormLabel>
+              <FormInput
+                id="formPrimerPeriodo"
+                type="text"
+                value={priPeriodo}
+                onChange={(e) => setPriPeriodo(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-2">
+              <FormLabel htmlFor="formMarca">Ultimo Periodo</FormLabel>
+              <FormInput
+                id="formUltimoPeriodo"
+                type="text"
+                value={perUlt}
+                onChange={(e) => setPerUlt(e.target.value)}
+              />
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-4">
+              <FormLabel htmlFor="formMarca">Tipo de Liquidación</FormLabel>
+              <FormSelect
+                id="formTipoLiquidacion"
+                value={tipoLiquidacionElemento?.toString() ?? ''}
+                onChange={(e) => setTipoLiquidacionElemento(Number(e.target.value))}
+                required
+              >
+                <option value="">Seleccione un tipo de liquidación</option>
+                {listadoTipoLiquidacion?.map((tipo) => (
+                  <option key={tipo.cod_tipo_liq} value={tipo.cod_tipo_liq}>
+                    {tipo.descripcion_tipo_liq}
+                  </option>
+                ))}
+              </FormSelect>
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-2">
+              <FormLabel htmlFor="formMarca">CUIT</FormLabel>
+              <FormInput
+                id="formCUIT"
+                type="text"
+                value={nroCuit}
+                onChange={(e) => setNroCuit(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-2">
+              <FormLabel htmlFor="formMarca">CUIT VD</FormLabel>
+              <FormInput
+                id="formCUIT"
+                type="text"
+                value={nroCuit}
+                onChange={(e) => setNroCuit(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-2">
+              <FormLabel htmlFor="formTransporte">Transporte</FormLabel>
+              <FormSwitch>
+                <FormSwitch.Input
+                  id="formTransporte"
+                  type="checkbox"
+                  checked={transporte}
+                  onChange={(e) => setTransporte(e.target.checked)}
+                />
+              </FormSwitch>
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-2">
+              <FormLabel htmlFor="formResponsable">Exento</FormLabel>
+              <FormSwitch>
+                <FormSwitch.Input
+                  id="formExento"
+                  type="checkbox"
+                  checked={exento}
+                  onChange={(e) => setExento(e.target.checked)}
+
+                />
+              </FormSwitch>
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-4">
+              <FormLabel htmlFor="formMarca">Caracter de la Entidad</FormLabel>
+              <FormSelect
+                id="formTipoLiquidacion"
+                value={codCaracter?.toString() ?? ''}
+                onChange={(e) => setCodCaracter(Number(e.target.value))}
+                required
+              >
+                <option value="">Seleccione un Caracter de la Entidad</option>
+                {listadoTipoDeEntidad?.map((tipo) => (
+                  <option key={tipo.value} value={tipo.value}>
+                    {tipo.text}
+                  </option>
+                ))}
+              </FormSelect>
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-4">
+              <FormLabel htmlFor="formMarca">Condición Frente al IVA</FormLabel>
+              <FormSelect
+                id="formTipoLiquidacion"
+                value={categoriaIva}
+                onChange={(e) => setCategoriaIva(parseInt(e.target.value))}
+                required
+              >
+                <option value="">Seleccione una Condición Frente al IVA</option>
+                {listadoTipoCondicionIVA?.map((tipo) => (
+                  <option key={tipo.cod_cond_ante_iva} value={tipo.cod_cond_ante_iva}>
+                    {tipo.des_cond_ante_iva}
+                  </option>
+                ))}
+              </FormSelect>
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-2">
+              <FormLabel htmlFor="formMarca">Ingresos Brutos</FormLabel>
+              <FormInput
+                id="formIngresosBrutos"
+                type="text"
+                value={nroCuit}
+                onChange={(e) => setNroCuit(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-2">
+              <FormLabel htmlFor="formFechaInicio">Fecha Inicio</FormLabel>
+              <FormInput
+                type="date"
+                id="formFechaInicio"
+                value={fechaInicio.slice(0, 10)}
+                onChange={(e) => setFechaInicio(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-2">
+              <FormLabel htmlFor="formFechaHabilitacion">Fecha Habilitación</FormLabel>
+              <FormInput
+                type="date"
+                id="formFechaHabilitacion"
+                value={fechaHab.slice(0, 10)}
+                onChange={(e) => setFechaHab(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-2">
+              <FormLabel htmlFor="formvtoInscripcion">Vto. Inscrip</FormLabel>
+              <FormInput
+                type="date"
+                id="formvtoInscripcion"
+                value={vtoInscripcion.slice(0, 10)}
+                onChange={(e) => setVtoInscripcion(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-2">
+              <FormLabel htmlFor="formvtofechaBaja">Fecha Baja</FormLabel>
+              <FormInput
+                type="date"
+                id="formvtofechaBaja"
+                value={fechaBaja.slice(0, 10)}
+                onChange={(e) => setFechaBaja(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-2">
+              <FormLabel htmlFor="formDadoBaja">Baja</FormLabel>
+              <FormSwitch>
+                <FormSwitch.Input
+                  id="formDadoBaja"
+                  type="checkbox"
+                  checked={dadoBaja}
+                  onChange={(e) => setDadoBaja(e.target.checked)}
+
+                />
+              </FormSwitch>
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-4">
+              <FormLabel htmlFor="formSituacionJudicial">Situación Comercio</FormLabel>
+              <FormSelect
+                id="formSituacionJudicial"
+                value={codSituacionJudicial?.toString() ?? ''}
+                onChange={(e) => setCodSituacionJudicial(parseInt(e.target.value))}
+                required
+              >
+                <option value="">Seleccione una Situación Comercio</option>
+                {listadoSituacionJudicial?.map((tipo) => (
+                  <option key={tipo.value} value={tipo.value}>
+                    {tipo.text}
+                  </option>
+                ))}
+              </FormSelect>
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-2">
+              <FormLabel htmlFor="formvtofechaDDJJ">Fecha DDJJ</FormLabel>
+              <FormInput
+                type="date"
+                id="formvtofechaDDJJ"
+                value={fechaDdjjAnual.slice(0, 10)}
+                onChange={(e) => setFechaDdjjAnual(e.target.value)}
+
+              />
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-12">
+              <h2>Entrega Cedulón</h2>
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-2">
+              <FormLabel htmlFor="formEmiteCedulon">Emite Cedulón</FormLabel>
+              <FormSwitch>
+                <FormSwitch.Input
+                  id="formEmiteCedulon"
+                  type="checkbox"
+                  checked={emiteCedulon}
+                  onChange={(e) => setEmiteCedulon(e.target.checked)}
+
+                />
+              </FormSwitch>
+            </div>
+
+            <div className="col-span-12 intro-y lg:col-span-2">
+              <FormLabel htmlFor="formVeredaOcupad">Vereda Ocupad</FormLabel>
+              <FormSwitch>
+                <FormSwitch.Input
+                  id="formVeredaOcupad"
+                  type="checkbox"
+                  checked={ocupacionVereda}
+                  onChange={(e) => setOcupacionVereda(e.target.checked)}
+                />
+              </FormSwitch>
+            </div>
+
+          </div>
+
+          <div className="flex w-full justify-between col-span-12 intro-y lg:col-span-12 mt-5 mb-5">
+            <div className="col-span-12 intro-y lg:col-span-6">
+              Usuario: {user?.userName}
+            </div>
+            <div className="col-span-12 intro-y lg:col-span-6">
+              <Button
+                variant="primary"
+                className="ml-3"
+                onClick={handleAuditoria}
+              >
+                Guardar
+              </Button>
+              <Button variant="secondary" className="ml-3" onClick={() => navigate(`/`)}>
+                Cancelar
+              </Button>
+            </div>
+
+          </div>
         </div>
       </div >
     </>

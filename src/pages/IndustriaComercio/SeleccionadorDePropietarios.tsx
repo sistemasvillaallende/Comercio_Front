@@ -98,7 +98,7 @@ const SeleccionadorDePropietarios = (props: any) => {
         </div>
 
         <div className="conScroll">
-          <Table className="tablaPropietario">
+          <Table>
             <Table.Thead variant="light">
               <Table.Tr>
                 <Table.Th className="whitespace-nowrap text-center">Nro. Bad</Table.Th>

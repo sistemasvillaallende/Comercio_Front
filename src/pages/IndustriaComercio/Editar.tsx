@@ -17,6 +17,10 @@ import Button from "../../base-components/Button";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/UserProvider";
 
+import SeleccionadorDePropietarios from "./SeleccionadorDePropietarios";
+import { Propietario } from '../../interfaces/IndustriaComercio';
+
+
 const Editar = () => {
   const {
     elementoIndCom,
@@ -30,6 +34,10 @@ const Editar = () => {
     listadoSituacionJudicial,
     listadoZonas
   } = useIndustriaComercioContext();
+
+  const [ventanaPropietario, setVentanaPropietario] = useState<boolean>(false);
+  const [propietarioSeleccionado, setPropietarioSeleccionado] = useState<Propietario | null>(null);
+
   const [elementoIndustriaComercio, setElementoIndustriaComercio] = useState<ElementoIndustriaComercio>();
 
   const { user } = useUserContext();
@@ -123,6 +131,15 @@ const Editar = () => {
       setOcupacionVereda(elementoIndCom.ocupacion_vereda);
     }
   }, [elementoIndCom]);
+
+  useEffect(() => {
+    if (propietarioSeleccionado) {
+      setNroBad(propietarioSeleccionado?.nro_bad || 0)
+      setNroCuit(propietarioSeleccionado?.cuit || "0")
+      setNroIngBruto(propietarioSeleccionado?.cuit || "0")
+      setCuitVecinoDigital(propietarioSeleccionado?.cuit || "0")
+    }
+  }, [propietarioSeleccionado]);
 
   const handleAuditoria = async () => {
     const { value } = await Swal.fire({
@@ -281,6 +298,11 @@ const Editar = () => {
 
   return (
     <>
+
+      {ventanaPropietario && (
+        <SeleccionadorDePropietarios {...{ setPropietarioSeleccionado, setVentanaPropietario }} />
+      )}
+
       <div className="conScroll grid grid-cols-12 gap-6 mt-2 ml-3 mr-4 p-4">
         <div className="col-span-12 intro-y lg:col-span-12">
           <div className="flex w-full justify-between col-span-12 intro-y lg:col-span-12">
@@ -342,12 +364,21 @@ const Editar = () => {
 
             <div className="col-span-12 intro-y lg:col-span-2">
               <FormLabel htmlFor="formMarca">Badec</FormLabel>
-              <FormInput
-                id="formBadec"
-                type="number"
-                value={nroBad ?? ''}
-                onChange={(e) => setNroBad(Number(e.target.value))}
-              />
+              <InputGroup>
+                <FormInput
+                  id="formPropietario"
+                  type="text"
+                  value={nroBad ?? ''}
+                  readOnly
+                />
+                <InputGroup.Text
+                  id="input-group-price"
+                  className="cursor-pointer"
+                  onClick={() => setVentanaPropietario(true)}
+                >
+                  <Lucide icon="Search" className="w-4 h-4" />
+                </InputGroup.Text>
+              </InputGroup>
             </div>
 
             <div className="col-span-12 intro-y lg:col-span-12">

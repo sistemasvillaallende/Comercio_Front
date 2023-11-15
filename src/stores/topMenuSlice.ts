@@ -18,12 +18,12 @@ const initialState: TopMenuState = {
   menu: [
     {
       icon: "Car",
-      pathname: "/Autos",
+      pathname: "https://vecino.villaallende.gov.ar/autos/",
       title: "Autos",
     },
     {
       icon: "Home",
-      pathname: "/Tasa",
+      pathname: "https://vecino.villaallende.gov.ar/tasa/",
       title: "Tasa",
     },
     {
