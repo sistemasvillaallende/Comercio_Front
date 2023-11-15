@@ -73,7 +73,6 @@ const Nuevo = () => {
 
   useEffect(() => {
     if (elementoIndCom) {
-      //eliminar elemntoIndCom
       setElementoIndustriaComercio(undefined);
     }
   }, []);
@@ -355,7 +354,6 @@ const Nuevo = () => {
                   id="formTipoLiquidacion"
                   value={codZona}
                   onChange={(e) => setCodZona(e.target.value)}
-                  required
                 >
                   {listadoZonas?.map((tipo) => (
                     <option key={tipo.value} value={tipo.value}>
@@ -407,7 +405,6 @@ const Nuevo = () => {
                   id="formTipoLiquidacion"
                   value={tipoLiquidacionElemento?.toString() ?? ''}
                   onChange={(e) => setTipoLiquidacionElemento(Number(e.target.value))}
-                  required
                 >
                   <option value="">Seleccione un tipo de liquidación</option>
                   {listadoTipoLiquidacion?.map((tipo) => (
@@ -488,7 +485,6 @@ const Nuevo = () => {
                   id="formTipoLiquidacion"
                   value={categoriaIva}
                   onChange={(e) => setCategoriaIva(parseInt(e.target.value))}
-
                 >
                   <option value="">Seleccione una Condición Frente al IVA</option>
                   {listadoTipoCondicionIVA?.map((tipo) => (
@@ -620,7 +616,6 @@ const Nuevo = () => {
                     type="checkbox"
                     checked={ocupacionVereda}
                     onChange={(e) => setOcupacionVereda(e.target.checked)}
-
                   />
                 </FormSwitch>
               </div>

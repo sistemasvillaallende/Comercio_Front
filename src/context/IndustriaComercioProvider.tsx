@@ -146,7 +146,13 @@ export function IndustriaComercioProvider({ children }: any) {
     }
   };
 
-
+  useEffect(() => {
+    traerListaDeZonzas();
+    traerTipoLiquidacion(0);
+    traerCaracterDeLaEntidad(0);
+    traerTipoCondicionIVA(0);
+    traerSituacionJudicial(0);
+  }, []);
 
   return (
     <IndustriaComercioContext.Provider
@@ -162,7 +168,7 @@ export function IndustriaComercioProvider({ children }: any) {
         listadoTipoDeEntidad,
         listadoTipoCondicionIVA,
         listadoSituacionJudicial,
-        listadoZonas
+        listadoZonas,
       }}>
       {children}
     </IndustriaComercioContext.Provider>
