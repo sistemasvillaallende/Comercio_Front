@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import Button from "../../base-components/Button";
 import {
   FormInput,
@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
 import Table from "../../base-components/Table";
 import Cargando from '../Recursos/Cargando';
 import { useParams, useNavigate } from "react-router-dom";
+import { DownloadTableExcel, useDownloadExcel } from 'react-export-table-to-excel';
 
 
 const ComerciosPorCalle = () => {
@@ -64,6 +65,14 @@ const ComerciosPorCalle = () => {
 
   };
 
+  const tableRef = useRef(null)
+
+  const { onDownload } = useDownloadExcel({
+    currentTableRef: tableRef.current,
+    filename: 'ComerciosPorCalle',
+    sheet: 'Comercios por Calle',
+  })
+
   return (
     <>
       <div className=" grid grid-cols-12 gap-6 mt-2 ml-3 mr-4 mb-4">
@@ -109,64 +118,46 @@ const ComerciosPorCalle = () => {
                 Filtrar
               </Button>
 
+              <Button
+                variant="soft-success"
+                className='ml-3'
+                onClick={onDownload}
+              >
+                <Lucide icon="Filter" className="w-4 h-4 mr-1" />
+                Excel
+              </Button>
+
             </FormInline>
           </form>
         </div>
 
-        <div className="conScroll justify-between col-span-10 intro-y lg:col-span-12">
+        <div className="conScroll justify-between col-span-10 intro-y lg:col-span-12 comCalle">
           {cargando && <Cargando mensaje="cargando" />}
           {mostrarTabla && (
-            <Table striped className='mb-4'>
-              <Table.Thead>
-                <Table.Tr>
-                  <Table.Th className="whitespace-nowrap border-b-0 whitespace-nowrap text-center">
-                    Legajo
-                  </Table.Th>
-                  <Table.Th className="whitespace-nowrap border-b-0 whitespace-nowrap text-left">
-                    Nombre
-                  </Table.Th>
-                  <Table.Th className="whitespace-nowrap border-b-0 whitespace-nowrap text-left">
-                    Dirección
-                  </Table.Th>
-                  <Table.Th className="whitespace-nowrap border-b-0 whitespace-nowrap text-center">
-                    Contacto
-                  </Table.Th>
-                  <Table.Th className="whitespace-nowrap border-b-0 text-center">
-
-                  </Table.Th>
-                </Table.Tr>
-              </Table.Thead>
-              <Table.Tbody>
+            <table ref={tableRef}>
+              <thead>
+                <tr>
+                  <th>Legajo</th>
+                  <th>Nombre</th>
+                  <th>Dirección</th>
+                  <th>Contacto</th>
+                </tr>
+              </thead>
+              <tbody>
                 {listadoDeComercios.map((item, index) => (
-                  <Table.Tr key={index}>
-                    <Table.Td className="border-b-0 whitespace-nowrap text-center">
-                      {item.legajo}
-                    </Table.Td>
-                    <Table.Td className="border-b-0 whitespace-nowrap text-left">
-                      {item.nombre}
-                      {item.nom_fantasia !== "" && (`Nombre Fantasía: ${item.nom_fantasia}`)}
-                    </Table.Td>
-                    <Table.Td className="border-b-0 whitespace-nowrap text-left">
-                      {item.nom_calle} Nro. {item.nro_dom},                      {item.nom_bario}
-                    </Table.Td>
-                    <Table.Td className="border-b-0 whitespace-nowrap text-left">
+                  <tr key={index}>
+                    <td>{item.legajo}</td>
+                    <td>{item.nombre}</td>
+                    <td>{item.nom_calle} Nro. {item.nro_dom}, {item.nom_bario}</td>
+                    <td>
                       {item.celular && <>Cel. {item.celular}< br /></>}
                       {item.telefono && <>Tel. {item.telefono} < br /></>}
                       {item.email && `Email. ${item.email}`}
-                    </Table.Td>
-                    <Table.Td className="border-b-0 text-center">
-                      <Button
-                        variant="primary"
-                        style={{ cursor: "pointer" }}
-                        onClick={() => navigate(`/${item.legajo}/ver`)}
-                      >
-                        <Lucide icon="Eye" className="w-3 h-3" />
-                      </Button>
-                    </Table.Td>
-                  </Table.Tr>
+                    </td>
+                  </tr>
                 ))}
-              </Table.Tbody>
-            </Table>
+              </tbody>
+            </table>
           )}
         </div>
       </div>

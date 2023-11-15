@@ -168,3 +168,7 @@
     position: relative;
     /* Asegura que la posición sea relativa o absoluta para que z-index funcione */
 }
+
+.comCalle {
+    padding-bottom: 100px;
+}
