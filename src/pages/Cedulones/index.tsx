@@ -214,41 +214,54 @@ const Autos = () => {
     const value = event.target.value;
     if (value == "1") {
       const fetchData2 = async () => {
-        const response = await axios.get(
-          `${import.meta.env.VITE_URL_CTACTE}getListDeudaAuto?dominio=` +
-          elementoIndCom?.legajo
-        );
-        setDeuda(response.data);
-        setProc(null);
+        try {
+          const response = await axios.get(
+            `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/getListDeudaIyC?legajo=` +
+            elementoIndCom?.legajo
+          );
+          setDeuda(response.data);
+          setProc(null);
+        } catch (error) {
+          console.log(error);
+          setDeuda([]);
+        }
       };
       fetchData2();
     }
     if (value == "2") {
       const fetchData2 = async () => {
-        const response = await axios.get(
-          `${import.meta.env.VITE_URL_CTACTE
-          }getListDeudaAutoNoVencida?dominio=` + elementoIndCom?.legajo
-        );
-        setDeuda(response.data);
-        setProc(null);
-      };
+        try {
+          const response = await axios.get(
+            `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/getListDeudaIndyComNoVencida?legajo=` + elementoIndCom?.legajo
+          );
+          setDeuda(response.data);
+          setProc(null);
+        } catch (error) {
+          console.log(error);
+          setDeuda([]);
+        }
+      }
       fetchData2();
     }
     if (value == "3") {
       const fetchData2 = async () => {
-        const response = await axios.get(
-          `${import.meta.env.VITE_URL_CTACTE
-          }getListDeudaAutoProcurada?dominio=` + elementoIndCom?.legajo
-        );
-        setDeuda(response.data);
-        setProc(
-          response.data
-            .map((obj: { nro_proc: any }) => obj.nro_proc) // Obtenemos un array con solo los valores de la propiedad tipo
-            .filter(
-              (value: any, index: any, self: string | any[]) =>
-                self.indexOf(value) === index
-            )
-        );
+        try {
+          const response = await axios.get(
+            `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/getListDeudaIYCProcurada?legajo=` + elementoIndCom?.legajo
+          );
+          setDeuda(response.data);
+          setProc(
+            response.data
+              .map((obj: { nro_proc: any }) => obj.nro_proc) // Obtenemos un array con solo los valores de la propiedad tipo
+              .filter(
+                (value: any, index: any, self: string | any[]) =>
+                  self.indexOf(value) === index
+              )
+          );
+        } catch (error) {
+          console.log(error);
+          setDeuda([]);
+        }
       };
       fetchData2();
       var anula: LstDeuda[] = []
@@ -424,16 +437,6 @@ const Autos = () => {
                     <option key="2" value="2">Periodos no vencidos</option>
                     <option key="3" value="3">Periodos procurados</option>
                     <option key="4" value="4">Periodo anual</option>
-                  </FormSelect>
-                </div>
-                <div className="col-span-12 lg:col-span-6 2xl:col-span-6">
-                  <strong>Procuración</strong>
-                  <br />
-                  <FormSelect className="mt-2 sm:mr-2">
-                    {" "}
-                    {proc?.map((pr, index) => (
-                      <option value={pr}>{"Procuración Nro.: " + pr}</option>
-                    ))}
                   </FormSelect>
                 </div>
               </div>

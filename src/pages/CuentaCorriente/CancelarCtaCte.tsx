@@ -110,6 +110,15 @@ const CancelarCtaCte = () => {
   }
 
   const handleAuditoria = async () => {
+    if (motivo === 0) {
+      Swal.fire({
+        title: 'Debe seleccionar un motivo',
+        icon: 'warning',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#27a3cf',
+      });
+      return;
+    }
     const { value } = await Swal.fire({
       title: 'Autorización',
       input: 'textarea',
