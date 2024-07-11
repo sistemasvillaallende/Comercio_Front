@@ -123,7 +123,7 @@ const InformeDeDeuda = () => {
         deudaHasta = '50';
       }
 
-      const URL = `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/ListarCtacte?legajo=${legajo}&tipo_consulta=${tipoDeInforme}&cate_deuda_desde=${deudaDesde}&cate_deuda_hasta=${deudaHasta}`
+      const URL = `${import.meta.env.VITE_URL_BASE}Ctasctes_indycom/ListarCtacte?legajo=${legajo}&tipo_consulta=${tipoDeInforme}&cate_deuda_desde=${deudaDesde}&cate_deuda_hasta=${deudaHasta}`
 
       const response = await axios.get(URL);
       setInformeCompleto(response.data);
@@ -167,7 +167,7 @@ const InformeDeDeuda = () => {
 
   const conseguirListaCategoriasDeudaAuto = async () => {
     try {
-      const URL = `${import.meta.env.VITE_URL_API_IYC}Indycom/ListarCategoriasIyc`;
+      const URL = `${import.meta.env.VITE_URL_BASE}Indycom/ListarCategoriasIyc`;
       const response = await axios.get(URL);
       setCategoriasDeudaAuto(response.data);
     } catch (error) {

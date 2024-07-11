@@ -24,7 +24,7 @@ const EliminarCancelacion = () => {
   const { user } = useUserContext();
 
   useEffect(() => {
-    const apiUrl = `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/Listar_Periodos_cancelados?legajo=${elementoIndCom?.legajo}`
+    const apiUrl = `${import.meta.env.VITE_URL_BASE}Ctasctes_indycom/Listar_Periodos_cancelados?legajo=${elementoIndCom?.legajo}`
     console.log(apiUrl)
     axios.get(apiUrl).then((response) => {
       setReLiquidaciones(response.data);
@@ -86,7 +86,7 @@ const EliminarCancelacion = () => {
       }
     }
     console.log(consulta)
-    const apiUrl = `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/Confirma_elimina_cancelacion`;
+    const apiUrl = `${import.meta.env.VITE_URL_BASE}Ctasctes_indycom/Confirma_elimina_cancelacion`;
     axios.post(apiUrl, consulta).then((response) => {
       Swal.fire({
         title: 'Eliminación de Cancelación',

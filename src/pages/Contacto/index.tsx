@@ -14,7 +14,7 @@ const Contacto = () => {
   }, []);
 
   const buscarElemento = async (cuit: string) => {
-    const URL = `${import.meta.env.VITE_URL_API_IYC}Indycom/GetBadecByCuit?cuit=${cuit}`;
+    const URL = `${import.meta.env.VITE_URL_BASE}Indycom/GetBadecByCuit?cuit=${cuit}`;
     const response = await fetch(URL);
     const data = await response.json();
     setContacto(data[0]);

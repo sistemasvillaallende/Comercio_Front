@@ -22,3 +22,4 @@ export const formatDateToDDMMYYYY = (isoDate: string): string => {
 
   return `${day}/${month}/${year}`;
 };
+

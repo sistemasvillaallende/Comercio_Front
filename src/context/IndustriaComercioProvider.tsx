@@ -59,7 +59,7 @@ export function IndustriaComercioProvider({ children }: any) {
   const traerElemento = async (legajo: string) => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_URL_API_IYC}Indycom/GetIndycomPaginado?buscarPor=legajo&strParametro=${legajo}&pagina=1&registros_por_pagina=10`
+        `${import.meta.env.VITE_URL_BASE}Indycom/GetIndycomPaginado?buscarPor=legajo&strParametro=${legajo}&pagina=1&registros_por_pagina=5`
       );
       if (response.data.resultado.length > 0) {
         setElementoIndCom(response.data.resultado[0]);
@@ -83,9 +83,10 @@ export function IndustriaComercioProvider({ children }: any) {
   };
 
   const traerTipoLiquidacion = async (tipo: number) => {
+    // trae el tipo de liquidacion
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_URL_API_IYC}Indycom/Tipos_liq_iyc`
+        `${import.meta.env.VITE_URL_BASE}Indycom/Tipos_liq_iyc`
       );
       const tipoLiquidacion = response.data.find((tipoLiq: TiposLiqIyc) => tipoLiq.cod_tipo_liq === tipo);
       setTipoLiquidacion(tipoLiquidacion)
@@ -98,7 +99,7 @@ export function IndustriaComercioProvider({ children }: any) {
   const traerTipoCondicionIVA = async (tipo: number) => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_URL_API_IYC}Indycom/Tipos_iva`
+        `${import.meta.env.VITE_URL_BASE}Indycom/Tipos_iva`
       );
       const codCondAnteIVA = response.data.find((tipoIVA: any) => tipoIVA.cod_tipo_iva === tipo);
       setTipoCondicionIVA(codCondAnteIVA)
@@ -111,7 +112,7 @@ export function IndustriaComercioProvider({ children }: any) {
   const traerSituacionJudicial = async (codigo: number) => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_URL_API_IYC}Indycom/Situacion_judicial`
+        `${import.meta.env.VITE_URL_BASE}Indycom/Situacion_judicial`
       );
       const situacionJudicialCodigo = response.data.find((item: SituacionesJudiciales) => Number(item.value) === codigo);
       setSituacionJudicial(situacionJudicialCodigo)
@@ -125,7 +126,7 @@ export function IndustriaComercioProvider({ children }: any) {
     try {
       const codigoString = codigo.toString();
       const response = await axios.get(
-        `${import.meta.env.VITE_URL_API_IYC}Indycom/Tipos_entidad`
+        `${import.meta.env.VITE_URL_BASE}Indycom/Tipos_entidad`
       );
       const tipoDeEntidadCodigo = response.data.find((item: TipoDeEntidad) => item.value === codigoString);
       setTipoDeEntidad(tipoDeEntidadCodigo);
@@ -138,7 +139,7 @@ export function IndustriaComercioProvider({ children }: any) {
   const traerListaDeZonzas = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_URL_API_IYC}Indycom/Zonasiyc`
+        `${import.meta.env.VITE_URL_BASE}Indycom/Zonasiyc`
       );
       setListadoZonas(response.data);
     } catch (error) {

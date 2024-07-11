@@ -40,6 +40,7 @@ const Router = () => {
             {!usuarioLogeado ? (
               <Routes>
                 <Route path="/*" element={<Login />} />
+                <Route path="/CIDI/:codigoCIDI" element={<Login />} />
               </Routes>
             ) : (
               <Routes>

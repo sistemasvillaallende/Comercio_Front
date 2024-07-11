@@ -4,7 +4,6 @@ import axios from "axios";
 
 type UserType = {
   userName: string;
-  token: string;
   nombre: string;
   apellido: string;
 } | null;
@@ -13,9 +12,9 @@ type UserContextType = {
   user: UserType;
   error: string | null;
   setUser: (user: UserType) => void;
-  handleLogin: (username: string, password: string) => void;
   handleLogout: () => void;
   menuItems: MenuItem[];
+  handleLoginCIDI: (codigoCIDI: String) => void;
 };
 
 type MenuItem = {
@@ -28,9 +27,9 @@ const userContext = createContext<UserContextType>({
   user: null,
   error: null,
   setUser: () => { },
-  handleLogin: () => { },
   handleLogout: () => { },
   menuItems: [],
+  handleLoginCIDI: () => { },
 });
 
 export function useUserContext() {
@@ -48,34 +47,33 @@ export function UserProvider({ children }: any) {
     { texto: "Ver", url: "/editar", icono: "Pencil" },
   ];
 
-  const handleLogin = async (username: any, password: any) => {
+  const handleLoginCIDI = async (codigoCIDI: String) => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_URL_BASE}Login/ValidaUsuario`,
-        {
-          params: {
-            user: username,
-            password: password,
-          },
-        }
+        `${import.meta.env.VITE_URL_LOGINCIDI}UsuarioCIDI/ObtenerUsuarioCIDI2?Hash=${codigoCIDI}`
       );
-
       if (response.data) {
-        const token = "token generado por react";
-        setUser({
-          userName: username,
-          token: token,
-          nombre: "Nombre de usuario",
-          apellido: "Apellido de usuario",
-        });
+        //console.log(response.data) VER DATOS DE USUARIO
+        const user = response.data;
+        if (user.empleado == "N" || !user.empleado) {
+          console.log("NO EMPLEADO: ", user.empleado)
+        } else {
+          const username = JSON.parse(response.data.empleado).nombre
+          setUser({
+            userName: username,
+            nombre: user.nombre,
+            apellido: user.apellido
+          });
+        }
       } else {
         setError("Usuario o contraseña incorrectos");
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.error("Error al validar el usuario:", error);
       setError("Usuario o contraseña incorrectos");
     }
-  };
+  }
 
   const handleLogout = () => {
     sessionStorage.removeItem("usuarioLogeado");
@@ -95,9 +93,9 @@ export function UserProvider({ children }: any) {
         user,
         error,
         setUser,
-        handleLogin,
         handleLogout,
-        menuItems
+        menuItems,
+        handleLoginCIDI
       }}
     >
       {children}

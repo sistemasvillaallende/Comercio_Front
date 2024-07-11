@@ -35,7 +35,7 @@ const BasesImponibles = () => {
   const handleBuscar = (e: any) => {
     e.preventDefault();
     const fetchData = async () => {
-      const URL = `${import.meta.env.VITE_URL_API_IYC}Indycom/GetBasesImponibles?legajo=11079&periodo_desde=${periodoDesde}&periodo_hasta=${periodoHasta}`;
+      const URL = `${import.meta.env.VITE_URL_BASE}Indycom/GetBasesImponibles?legajo=11079&periodo_desde=${periodoDesde}&periodo_hasta=${periodoHasta}`;
       try {
         const response = await axios.get(URL);
         console.log(response);

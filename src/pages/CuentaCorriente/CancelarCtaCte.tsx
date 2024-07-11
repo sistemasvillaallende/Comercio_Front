@@ -24,7 +24,7 @@ const CancelarCtaCte = () => {
   const { user } = useUserContext();
 
   useEffect(() => {
-    const apiUrl = `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/Listar_periodos_a_cancelar?legajo=${elementoIndCom?.legajo}`
+    const apiUrl = `${import.meta.env.VITE_URL_BASE}Ctasctes_indycom/Listar_periodos_a_cancelar?legajo=${elementoIndCom?.legajo}`
     axios.get(apiUrl).then((response) => {
       setReLiquidaciones(response.data);
     }).catch((error) => {
@@ -86,7 +86,7 @@ const CancelarCtaCte = () => {
       }
     }
 
-    const apiUrl = `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/Confirma_cancelacion_ctasctes?tipo_transaccion=${motivo}`;
+    const apiUrl = `${import.meta.env.VITE_URL_BASE}Ctasctes_indycom/Confirma_cancelacion_ctasctes?tipo_transaccion=${motivo}`;
     axios.post(apiUrl, consulta).then((response) => {
       Swal.fire({
         title: 'Cancelación realizada',

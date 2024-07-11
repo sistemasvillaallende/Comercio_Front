@@ -13,7 +13,12 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import Cargando from "../Recursos/Cargando";
-import { formatDateToISOStringWithMilliseconds } from "../../utils/IycUtils";
+import {
+  transformarFechaNuevoFormato,
+  devolverFechaConGuiones,
+  devolverVencimiento,
+  devolverFechaConBarra
+} from "../../utils/IycUtils";
 
 interface Periodo {
   periodo: string;
@@ -71,7 +76,7 @@ const IniciarCtaCorriente = () => {
 
   const traerPeriodos = async () => {
     try {
-      const apiUrl = `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/IniciarCtacte?legajo=${elementoIndCom?.legajo}`;
+      const apiUrl = `${import.meta.env.VITE_URL_BASE}Ctasctes_indycom/IniciarCtacte?legajo=${elementoIndCom?.legajo}`;
       const response = await axios.get(apiUrl);
       setPeriodosExistentes(response.data);
       setCargando(true);
@@ -95,28 +100,7 @@ const IniciarCtaCorriente = () => {
     navigate(-1);
   };
 
-  const devolverFechaActual = () => {
-    const fechaActual = new Date();
-    const dia = fechaActual.getDate();
-    const mes = fechaActual.getMonth() + 1;
-    const anio = fechaActual.getFullYear();
-    const diaFormateado = dia < 10 ? '0' + dia : dia;
-    const mesFormateado = mes < 10 ? '0' + mes : mes;
-    const fechaActualString = `${diaFormateado}/${mesFormateado}/${anio}`;
-    return fechaActualString;
-  }
 
-  const transformarFechaNuevoFormato = (cadenaFecha: string) => {
-    const partes = cadenaFecha.split(' ');
-    // Tomar la primera parte que contiene la fecha
-    const fechaParte = partes[0];
-    // Dividir la fecha en día, mes y año
-    const [dia, mes, anio] = fechaParte.split('/');
-    // Formatear la fecha como AAAA-MM-DD
-    const fechaFormateada = `${anio}-${mes}-${dia}T00:00:00.000Z`;
-    return fechaFormateada;
-
-  }
 
   // Ejemplo de uso
   const cadenaFecha = "30/04/2021 12:00:00 a.m.";
@@ -136,7 +120,7 @@ const IniciarCtaCorriente = () => {
         "nro_transaccion": 1234,
         "nro_pago_parcial": 0,
         "legajo": 0,
-        "fecha_transaccion": formatDateToISOStringWithMilliseconds(fechaActual),
+        "fecha_transaccion": devolverFechaConGuiones(fechaActual),
         "periodo": periodo.periodo,
         "monto_original": 0,
         "nro_plan": 0,
@@ -145,7 +129,7 @@ const IniciarCtaCorriente = () => {
         "haber": 0,
         "nro_procuracion": 0,
         "pago_parcial": true,
-        "vencimiento": transformarFechaNuevoFormato(periodo.vencimiento),
+        "vencimiento": devolverVencimiento(periodo.vencimiento),
         "nro_cedulon": 0,
         "declaracion_jurada": true,
         "liquidacion_especial": true,
@@ -175,7 +159,7 @@ const IniciarCtaCorriente = () => {
       "lstCtasTes": lstCtasTes,
       "auditoria": {
         "id_auditoria": 0,
-        "fecha": formatDateToISOStringWithMilliseconds(fechaActual),
+        "fecha": devolverFechaConGuiones(fechaActual),
         "usuario": user?.userName,
         "proceso": "string",
         "identificacion": "string",
@@ -186,7 +170,7 @@ const IniciarCtaCorriente = () => {
       }
     }
     console.log(consulta)
-    const urlApi = `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/Confirma_iniciar_ctacte`;
+    const urlApi = `${import.meta.env.VITE_URL_BASE}Ctasctes_indycom/Confirma_iniciar_ctacte`;
     axios.post(urlApi, consulta)
       .then((response) => {
         if (response.data) {

@@ -15,14 +15,13 @@ const ver = () => {
   useEffect(() => {
     if (legajo !== elementoIndCom?.legajo.toString()) {
       buscarElemento(legajo || "");
-      console.log(elementoIndCom)
     } else {
       setElementoIndustriaComercio(elementoIndCom || undefined);
     }
   }, [elementoIndCom, legajo]);
 
   const buscarElemento = async (legajo: string) => {
-    const URL = `${import.meta.env.VITE_URL_API_IYC}Indycom/GetIndycomPaginado?buscarPor=legajo&strParametro=${legajo}&pagina=1&registros_por_pagina=10`;
+    const URL = `${import.meta.env.VITE_URL_BASE}Indycom/GetIndycomPaginado?buscarPor=legajo&strParametro=${legajo}&pagina=1&registros_por_pagina=5`;
     const response = await fetch(URL);
     const data = await response.json();
     setElementoIndustriaComercio(data.resultado[0]);

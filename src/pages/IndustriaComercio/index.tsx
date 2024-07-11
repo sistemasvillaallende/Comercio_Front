@@ -28,8 +28,8 @@ const index = () => {
 
     if (buscarPor && strParametro) {
       const fetchData = async () => {
-        const registrosPorPagina = 10;
-        const URL = `${import.meta.env.VITE_URL_API_IYC}Indycom/GetIndycomPaginado?buscarPor=${buscarPor}&strParametro=${strParametro}&pagina=${paginaNum}&registros_por_pagina=${registrosPorPagina}`;
+        const registrosPorPagina = 5;
+        const URL = `${import.meta.env.VITE_URL_BASE}Indycom/GetIndycomPaginado?buscarPor=${buscarPor}&strParametro=${strParametro}&pagina=${paginaNum}&registros_por_pagina=${registrosPorPagina}`;
         const response = await axios.get(URL);
         if (response.data === "") {
           Swal.fire({
@@ -174,10 +174,10 @@ const index = () => {
       return;
     }
     const fetchData = async () => {
-      const registrosPorPagina = 10;
+      const registrosPorPagina = 5;
       const paginaNum = 1;
       setPaginaActual(paginaNum);
-      const URL = `${import.meta.env.VITE_URL_API_IYC}Indycom/GetIndycomPaginado?buscarPor=${buscarPor}&strParametro=${strParametro}&pagina=${paginaNum}&registros_por_pagina=${registrosPorPagina}`;
+      const URL = `${import.meta.env.VITE_URL_BASE}Indycom/GetIndycomPaginado?buscarPor=${buscarPor}&strParametro=${strParametro}&pagina=${paginaNum}&registros_por_pagina=${registrosPorPagina}`;
       const response = await axios.get(URL);
       setCantPaginas(response.data.totalPaginas);
       setElementoIyC(response.data.resultado);

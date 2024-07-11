@@ -56,12 +56,12 @@ const CuentaCorriente = () => {
     setShowModal(false);
     const fetchData = async () => {
       const response = await axios.get(
-        `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/ListarCtacte?legajo= ${elementoIndCom?.legajo}&tipo_consulta=1&cate_deuda_desde=1&cate_deuda_hasta=20`);
+        `${import.meta.env.VITE_URL_BASE}Ctasctes_indycom/ListarCtacte?legajo= ${elementoIndCom?.legajo}&tipo_consulta=1&cate_deuda_desde=1&cate_deuda_hasta=20`);
 
       setAutos(response.data);
       console.log(response.data)
       const response2 = await axios.get(
-        `${import.meta.env.VITE_URL_API_IYC}Indycom/ListarCategoriasIyc`
+        `${import.meta.env.VITE_URL_BASE}Indycom/ListarCategoriasIyc`
       );
       setCate_deuda(response2.data);
     };
@@ -93,7 +93,7 @@ const CuentaCorriente = () => {
       hasta = cateDeuda;
     }
     let url =
-      `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/ListarCtacte?legajo=` +
+      `${import.meta.env.VITE_URL_BASE}Ctasctes_indycom/ListarCtacte?legajo=` +
       elementoIndCom?.legajo +
       `&tipo_consulta=` +
       value +
@@ -187,7 +187,7 @@ const CuentaCorriente = () => {
       hasta = Number.parseInt(value);
     }
     let url =
-      `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/ListarCtacte?legajo=` +
+      `${import.meta.env.VITE_URL_BASE}Ctasctes_indycom/ListarCtacte?legajo=` +
       elementoIndCom?.legajo +
       `&tipo_consulta=` +
       filtro +

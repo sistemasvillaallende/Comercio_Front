@@ -5,35 +5,36 @@ import Button from "../../base-components/Button";
 import clsx from "clsx";
 import { useUserContext } from "../../context/UserProvider";
 import Cargando from "../Recursos/Cargando";
-
-
-type UserType = {
-  userName: string;
-  token: string;
-  nombre: string;
-  apellido: string;
-} | null;
+import { useParams } from "react-router-dom";
+import Lucide from "../../base-components/Lucide";
+import logo from "../../assets/images/logocidi.png"
 
 const Login = () => {
-  const { user, handleLogin, error } = useUserContext();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const { user, handleLogin, error, handleLoginCIDI } = useUserContext();
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    document.title = "Inustria y Comercio";
+    document.title = "Industria y Comercio";
     const usuarioLogeado = sessionStorage.getItem("usuarioLogeado");
     if (usuarioLogeado) {
       window.location.href = "/";
     }
   }, []);
 
-  const onSubmit = async (e: any) => {
-    e.preventDefault();
+  const urlCIDI = `${import.meta.env.VITE_URL_CIDI}`;
+
+  const { codigoCIDI } = useParams();
+
+  const onSubmitCIDI = async () => {
+    if (!codigoCIDI) return;
     setIsLoading(true);
-    await handleLogin(username, password);
+    await handleLoginCIDI(codigoCIDI as String);
     setIsLoading(false);
-  };
+  }
+
+  useEffect(() => {
+    onSubmitCIDI();
+  }, [codigoCIDI]);
 
   return (
     <>
@@ -62,42 +63,14 @@ const Login = () => {
               {/* END: Login Info */}
               {/* BEGIN: Login Form */}
               <div className="flex h-screen py-5 my-10 xl:h-auto xl:py-0 xl:my-0">
-                <div className="w-full px-5 py-8 mx-auto my-auto bg-white rounded-md shadow-md xl:ml-20 dark:bg-darkmode-600 xl:bg-transparent sm:px-8 xl:p-0 xl:shadow-none sm:w-3/4 lg:w-2/4 xl:w-auto">
-                  <form>
-                    <h2 className="text-2xl font-bold text-center intro-x xl:text-3xl xl:text-left">
-                      Iniciar sesión
+                <div className="w-full px-5 py-8 mx-auto my-auto bg-white rounded-md shadow-md xl:ml-20 dark:bg-darkmode-600 xl:bg-transparent sm:px-8 xl:p-0 xl:shadow-none w-3/4 lg:w-2/4 xl:w-auto">
+                  <div className="mt-8 intro-x">
+                    <h2 className="text-1xl intro-x xl:text-2xl xl:text-left">
+                      <a href={urlCIDI} rel="noopener noreferrer">
+                        <img src={logo} alt="logo cidi" className="w-1/3 -mt-16 -intro-x" />
+                      </a>
                     </h2>
-                    <div className="mt-8 intro-x">
-                      <FormInput
-                        type="text"
-                        className="block px-4 py-3 intro-x login__input min-w-full xl:min-w-[350px]"
-                        placeholder="Email"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                      />
-                      <FormInput
-                        type="password"
-                        className="block px-4 py-3 mt-4 intro-x login__input min-w-full xl:min-w-[350px]"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                      />
-                    </div>
-                    {error && (
-                      <div className="text-center mt-4">
-                        <span className="text-red-500">{error}</span>
-                      </div>
-                    )}
-                    <div className="mt-5 text-center intro-x xl:mt-8 xl:text-left">
-                      <Button
-                        variant="primary"
-                        className="w-full px-4 py-3 align-top xl:w-32 xl:mr-3 sombra"
-                        onClick={onSubmit}
-                      >
-                        Ingresar
-                      </Button>
-                    </div>
-                  </form>
+                  </div>
                 </div>
               </div>
               {/* END: Login Form */}

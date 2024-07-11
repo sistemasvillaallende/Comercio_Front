@@ -26,4 +26,9 @@ package-lock.json
 *.sw?
 
 #React Typescript
-.env
+#.env
+#.env.production
+
+#archivos de IDE de VSCODE
+.vscode
+.vscode/*
