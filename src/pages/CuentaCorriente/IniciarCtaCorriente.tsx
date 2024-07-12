@@ -106,12 +106,6 @@ const IniciarCtaCorriente = () => {
   const cadenaFecha = "30/04/2021 12:00:00 a.m.";
   const fechaTransformada = transformarFechaNuevoFormato(cadenaFecha);
 
-  if (fechaTransformada) {
-    console.log(fechaTransformada);
-  }
-
-
-
   const iniciarCtaCte = () => {
     const fechaActual = new Date();
     const lstCtasTes = periodosIncluidos.map((periodo) => {

@@ -25,8 +25,6 @@ function Main() {
     <div className="py-5 md:py-0">
       <DarkModeSwitcher />
       <MainColorSwitcher />
-      <MobileMenu />
-      <TopBar layout="top-menu" />
       {/* BEGIN: Top Menu */}
       <nav
         className={clsx([
@@ -42,18 +40,17 @@ function Main() {
               className={clsx([
                 "relative [&:hover>ul]:block [&:hover>a>div:nth-child(2)>svg]:rotate-180",
                 !menu.active &&
-                  "[&:hover>a]:bg-slate-100 [&:hover>a]:dark:bg-transparent",
+                "[&:hover>a]:bg-slate-100 [&:hover>a]:dark:bg-transparent",
                 !menu.active &&
-                  "[&:hover>a]:before:content-[''] [&:hover>a]:before:block [&:hover>a]:before:inset-0 [&:hover>a]:before:rounded-full [&:hover>a]:xl:before:rounded-xl [&:hover>a]:before:absolute [&:hover>a]:before:z-[-1] [&:hover>a]:before:border-b-[3px] [&:hover>a]:before:border-solid [&:hover>a]:before:border-black/[0.08] [&:hover>a]:before:dark:bg-darkmode-700",
+                "[&:hover>a]:before:content-[''] [&:hover>a]:before:block [&:hover>a]:before:inset-0 [&:hover>a]:before:rounded-full [&:hover>a]:xl:before:rounded-xl [&:hover>a]:before:absolute [&:hover>a]:before:z-[-1] [&:hover>a]:before:border-b-[3px] [&:hover>a]:before:border-solid [&:hover>a]:before:border-black/[0.08] [&:hover>a]:before:dark:bg-darkmode-700",
               ])}
               key={menuKey}
             >
               <MenuLink
                 className={clsx({
                   // Animation
-                  [`opacity-0 translate-y-[50px] animate-[0.4s_ease-in-out_0.3s_intro-menu] animate-fill-mode-forwards animate-delay-${
-                    (menuKey + 1) * 10
-                  }`]: !menu.active,
+                  [`opacity-0 translate-y-[50px] animate-[0.4s_ease-in-out_0.3s_intro-menu] animate-fill-mode-forwards animate-delay-${(menuKey + 1) * 10
+                    }`]: !menu.active,
                 })}
                 menu={menu}
                 level="first"
@@ -159,8 +156,8 @@ function MenuLink(props: {
           "z-10 dark:text-slate-400",
           props.level == "first" && "-mt-[3px]",
           props.level == "first" &&
-            props.menu.active &&
-            "dark:text-white text-primary xl:text-primary",
+          props.menu.active &&
+          "dark:text-white text-primary xl:text-primary",
         ])}
       >
         <Lucide icon={props.menu.icon} />
@@ -170,8 +167,8 @@ function MenuLink(props: {
           "ml-3 flex items-center whitespace-nowrap z-10 dark:text-slate-400",
           props.level == "first" && "-mt-[3px]",
           props.level == "first" &&
-            props.menu.active &&
-            "font-medium dark:text-white text-slate-800 xl:text-primary",
+          props.menu.active &&
+          "font-medium dark:text-white text-slate-800 xl:text-primary",
           props.level != "first" && "w-full",
         ])}
       >

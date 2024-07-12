@@ -25,8 +25,6 @@ function Main() {
 
   return (
     <div className="py-5 md:py-0">
-      <MobileMenu />
-      <TopBar layout="side-menu" />
       <div className="flex overflow-hidden">
         {/* BEGIN: Side Menu */}
         <nav className="w-[105px] xl:w-[260px] px-5 pb-16 overflow-x-hidden z-50 pt-32 -mt-4 hidden md:block">

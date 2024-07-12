@@ -1,0 +1,35 @@
+html {
+  scroll-behavior: smooth;
+  overflow-y: scroll;
+  background-color: theme("colors.white");
+  @media screen(md) {
+    background-color: theme("colors.slate.200");
+  }
+
+  body {
+    background-color: white;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    padding-left: theme("spacing.3");
+    padding-right: theme("spacing.3");
+    font-family: theme("fontFamily.sans");
+    font-size: theme("fontSize.sm");
+    line-height: theme("lineHeight.5");
+    color: theme("colors.slate.800");
+    min-height: 100vh;
+
+    @media screen(sm) {
+      padding-left: theme("spacing.8");
+      padding-right: theme("spacing.8");
+    }
+    @media screen(md) {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .tabulator-unselectable input {
+      visibility: hidden;
+    }
+  }
+}

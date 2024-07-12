@@ -16,18 +16,16 @@ function Main() {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    if(location.pathname.toLowerCase().indexOf('CtasCtes'.toLowerCase()) !== -1){
+    if (location.pathname.toLowerCase().indexOf('CtasCtes'.toLowerCase()) !== -1) {
       setShow(false);
     }
-    else{
+    else {
       setShow(true);
     }
   }, [topMenuStore, location.pathname]);
 
   return (
     <div className="py-5 md:py-0" style={{ backgroundColor: "white" }}>
-      <MobileMenu />
-      <TopBar layout="top-menu" />
       <div
         style={{
           marginLeft: "50px",
@@ -84,8 +82,8 @@ function MenuLink(props: {
           "z-10 dark:text-slate-400",
           props.level == "first" && "-mt-[3px]",
           props.level == "first" &&
-            props.menu.active &&
-            "dark:text-white text-primary xl:text-primary",
+          props.menu.active &&
+          "dark:text-white text-primary xl:text-primary",
         ])}
       >
         <Lucide icon={props.menu.icon} />
@@ -95,8 +93,8 @@ function MenuLink(props: {
           "ml-3 flex items-center whitespace-nowrap z-10 dark:text-slate-400",
           props.level == "first" && "-mt-[3px]",
           props.level == "first" &&
-            props.menu.active &&
-            "font-medium dark:text-white text-slate-800 xl:text-primary",
+          props.menu.active &&
+          "font-medium dark:text-white text-slate-800 xl:text-primary",
           props.level != "first" && "w-full",
         ])}
       >

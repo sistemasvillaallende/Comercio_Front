@@ -40,8 +40,6 @@ function Main() {
   return (
     <div className="principal">
       <div className="py-5 md:py-0">
-        <MobileMenu />
-        <TopBar layout="top-menu" />
         {/* BEGIN: Top Menu */}
         {showLista && (
           <div>
