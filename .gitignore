@@ -32,3 +32,6 @@ package-lock.json
 #archivos de IDE de VSCODE
 .vscode
 .vscode/*
+
+#archivos de MacOS
+.DS_Store
