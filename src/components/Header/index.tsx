@@ -37,9 +37,9 @@ function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
   }
 
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem("isLoggedIn")
+    const isLoggedIn = localStorage.getItem("usuarioLogeado")
     if (isLoggedIn) {
-      const parsedUser = getSecureItem("isLoggedIn")
+      const parsedUser = getSecureItem("usuarioLogeado")
       if (parsedUser) {
         setUser(parsedUser)
       }
@@ -49,7 +49,7 @@ function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
   return (
     <>
       <div
-        style={{ height: "110px" }}
+        style={{ height: "110px", marginBottom: "-10px" }}
         className={clsx([
           "hidden md:block h-[70px] md:h-[125px] lg:h-[191px] z-[51] border-b border-white/[0.08] mt-12 md:mt-0 -mx-3 sm:-mx-8 md:-mx-0 px-3 md:border-b-0 relative md:sticky md:inset-x-0 md:top-0 sm:px-8 md:px-10",
           props.layout == "top-menu" && "dark:md:from-darkmode-800",

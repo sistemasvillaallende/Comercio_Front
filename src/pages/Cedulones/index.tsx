@@ -182,7 +182,7 @@ const Autos = () => {
 
     const fetchData2 = async () => {
       const response = await axios.get(
-        `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/getListDeudaIyC?legajo=` +
+        `${import.meta.env.VITE_URL_BASE}Ctasctes_indycom/getListDeudaIyC?legajo=` +
         elementoIndCom?.legajo
       );
       setDeuda(response.data);
@@ -216,7 +216,7 @@ const Autos = () => {
       const fetchData2 = async () => {
         try {
           const response = await axios.get(
-            `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/getListDeudaIyC?legajo=` +
+            `${import.meta.env.VITE_URL_BASE}Ctasctes_indycom/getListDeudaIyC?legajo=` +
             elementoIndCom?.legajo
           );
           setDeuda(response.data);
@@ -247,7 +247,7 @@ const Autos = () => {
       const fetchData2 = async () => {
         try {
           const response = await axios.get(
-            `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/getListDeudaIYCProcurada?legajo=` + elementoIndCom?.legajo
+            `${import.meta.env.VITE_URL_BASE}Ctasctes_indycom/getListDeudaIYCProcurada?legajo=` + elementoIndCom?.legajo
           );
           setDeuda(response.data);
           setProc(

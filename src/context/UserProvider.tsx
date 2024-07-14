@@ -1,6 +1,7 @@
 import { useState, useContext, createContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { getSecureItem, setSecureItem } from "../modules/secureStorage"
 
 type UserType = {
   userName: string;
@@ -36,6 +37,8 @@ export function useUserContext() {
   return useContext(userContext);
 }
 
+
+
 export function UserProvider({ children }: any) {
   const [user, setUser] = useState<UserType>(null);
   const [error, setError] = useState<string | null>(null);
@@ -53,7 +56,6 @@ export function UserProvider({ children }: any) {
         `${import.meta.env.VITE_URL_LOGINCIDI}UsuarioCIDI/ObtenerUsuarioCIDI2?Hash=${codigoCIDI}`
       );
       if (response.data) {
-        //console.log(response.data) VER DATOS DE USUARIO
         const user = response.data;
         if (user.empleado == "N" || !user.empleado) {
           console.log("NO EMPLEADO: ", user.empleado)
@@ -77,15 +79,21 @@ export function UserProvider({ children }: any) {
 
   const handleLogout = () => {
     sessionStorage.removeItem("usuarioLogeado");
+    setUser(null);
     navigate("/");
+    localStorage.clear()
   };
 
   useEffect(() => {
     if (user) {
-      sessionStorage.setItem("usuarioLogeado", JSON.stringify(user));
+      setSecureItem("usuarioLogeado", user);
       navigate("/");
     }
   }, [user]);
+
+  useEffect(() => {
+    const user = getSecureItem("usuarioLogeado");
+  }, []);
 
   return (
     <userContext.Provider

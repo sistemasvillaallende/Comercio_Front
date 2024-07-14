@@ -3,6 +3,7 @@ import imagenComercio from "../../assets/IconoComercio.svg";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useIndustriaComercioContext } from "../../context/IndustriaComercioProvider";
+import '../../assets/css/components/_Sidebar.css';
 
 const MenuElemento = () => {
   const { elementoIndCom, traerElemento } = useIndustriaComercioContext();
@@ -11,182 +12,95 @@ const MenuElemento = () => {
   if (elementoIndCom) {
     return (
       <>
-        <div
-          className="col-span-12 lg:col-span-2 2xl:col-span-2 containerctacte menu-auto"
-          style={{ overflowY: "scroll", backgroundColor: "#164e63" }}
-        >
-          {/* BEGIN: Inbox Menu */}
-          <div
-            className="p-2 mt-6 intro-y box"
-            style={{
-              backgroundColor: "#164e63",
-              marginTop: "0",
-              borderRadius: "0",
-            }}
-          >
-            <h2 style={{ color: "white" }}>
-              <img
-                style={{
-                  height: "30px",
-                  width: "auto",
-                  display: "initial",
-                  maxWidth: "30%",
-                  marginRight: "15px",
-                }}
-                alt="Midone Tailwind HTML Admin Template"
-                src={imagenComercio}
-              />
-              {elementoIndCom?.nom_fantasia.trim()}
-            </h2>
-            <hr />
-            <p style={{ color: "white", marginTop: "10px" }}>
-              CUIT: {elementoIndCom?.nro_cuit} <br />
-              LEGAJO: <strong>{elementoIndCom?.legajo}</strong>
-            </p>
-            <div className="pt-1 mt-2 text-white border-t border-white/10 dark:border-darkmode-400">
-
-              <Link
-                to="nuevo"
-                className="flex items-center px-3 py-2 font-medium rounded-md"
-              >
-                <Lucide icon="PlusSquare" className="w-4 h-4 mr-2" /> Nuevo
-              </Link>
-
+        <nav className="sidebar">
+          <h2><Lucide icon="Factory" className="w-4 h-4 mr-2" style={{
+            height: '40px', width: '40px',
+            color: 'hsla(0, 0%, 13%, 1)'
+          }} />
+            <span style={{ paddingTop: '10px', paddingLeft: '0px' }}>Industria y Comercio</span> </h2>
+          <ul>
+            <li>
+              <Link to="nuevo">Nuevo</Link>
+            </li>
+            <li>
               <Link
                 to={`${elementoIndCom?.legajo}/ver`}
-                className="flex items-center px-3 py-2 mt-2 rounded-md"
               >
-                <Lucide icon="Eye" className="w-4 h-4 mr-2" /> Ver Datos
+                Ver Datos
               </Link>
-
+            </li>
+            <li>
               <Link
                 to={`${elementoIndCom?.legajo}/editar`}
-                className="flex items-center px-3 py-2 font-medium rounded-md"
               >
-                <Lucide icon="Edit" className="w-4 h-4 mr-2" /> Editar
+                Editar
               </Link>
-
+            </li>
+            <li>
               <Link
                 to={`${elementoIndCom?.legajo}/baseimponible`}
-                className="flex items-center px-3 py-2 font-medium rounded-md"
               >
-                <Lucide icon="ShoppingBag" className="w-4 h-4 mr-2" /> Bases Imponibles
+                Bases Imponibles
               </Link>
-
+            </li>
+            <li>
               <Link
                 to={`${elementoIndCom?.legajo}/iniciarctacte`}
-                className="flex items-center px-3 py-2 mt-2 rounded-md"
               >
-                <Lucide icon="ShoppingBag" className="w-4 h-4 mr-2" /> Inicia Cta. Cte.
+                Inicia Cta. Cte.
               </Link>
-
+            </li>
+            <li>
               <Link
                 to={`${elementoIndCom?.legajo}/ctacte`}
-                className="flex items-center px-3 py-2 mt-2 rounded-md"
               >
-                <Lucide icon="ShoppingBag" className="w-4 h-4 mr-2" /> Cuenta Corriente
+                Cuenta Corriente
               </Link>
+            </li>
+            <li>
               <Link
                 to={`${elementoIndCom?.legajo}/cancelarctacte`}
-                className="flex items-center px-3 py-2 mt-2 rounded-md"
               >
-                <Lucide icon="ShoppingBag" className="w-4 h-4 mr-2" /> Cancelar Cta.Cte.
+                Cancelar Cta.Cte.
               </Link>
-
+            </li>
+            <li>
               <Link
                 to={`${elementoIndCom?.legajo}/eliminarCancelacion`}
-                className="flex items-center px-3 py-2 mt-2 rounded-md"
               >
-                <Lucide icon="ShoppingBag" className="w-4 h-4 mr-2" /> Eliminar Cancelación
+                Eliminar Cancelación
               </Link>
-
+            </li>
+            <li>
               <Link
                 to={`Cedulones`}
-                className="flex items-center px-3 py-2 mt-2 rounded-md"
               >
-                <Lucide icon="ShoppingBag" className="w-4 h-4 mr-2" /> Cedulones
+                Cedulones
               </Link>
-
+            </li>
+            <li>
               <Link
                 to={`${elementoIndCom?.legajo}/informes`}
-                className="flex items-center px-3 py-2 mt-2 rounded-md"
               >
-                <Lucide icon="ShoppingBag" className="w-4 h-4 mr-2" /> Informes
+                Informes
               </Link>
-
+            </li>
+            <li>
               <Link
                 to={`${elementoIndCom?.legajo}/contacto`}
-                className="flex items-center px-3 py-2 mt-2 rounded-md"
               >
-                <Lucide icon="ShoppingBag" className="w-4 h-4 mr-2" /> Datos de Contacto
+                Datos de Contacto
               </Link>
-
+            </li>
+            <li>
               <Link
                 to={`comerciosPorCalle`}
-                className="flex items-center px-3 py-2 mt-2 rounded-md"
               >
-                <Lucide icon="ShoppingBag" className="w-4 h-4 mr-2" /> Comercios por Calle
+                Comercios por Calle
               </Link>
-
-            </div>
-          </div>
-          {/* END: Inbox Menu */}
-        </div>
-      </>
-    );
-  } else {
-    return (
-      <>
-        <div
-          className="col-span-12 lg:col-span-2 2xl:col-span-2 containerctacte menu-auto"
-          style={{ overflowY: "scroll", backgroundColor: "#164e63" }}
-        >
-          {/* BEGIN: Inbox Menu */}
-          <div
-            className="p-2 mt-6 intro-y box"
-            style={{
-              backgroundColor: "#164e63",
-              marginTop: "0",
-              borderRadius: "0",
-            }}
-          >
-            <h2 style={{ color: "white" }}>
-              <img
-                style={{
-                  height: "30px",
-                  width: "auto",
-                  display: "initial",
-                  maxWidth: "30%",
-                  marginRight: "15px",
-                }}
-                alt="Midone Tailwind HTML Admin Template"
-                src={imagenComercio}
-              />
-              <br />
-              INDUSTRIA Y COMERCIO
-            </h2>
-            <div className="pt-1 mt-2 text-white border-t border-white/10 dark:border-darkmode-400">
-              <Link
-                to="nuevoVehiculo"
-                className="flex items-center px-3 py-2 font-medium rounded-md"
-              >
-                <Lucide
-                  icon="PlusSquare"
-                  className="w-4 h-4 mr-2"
-                /> Nuevo
-              </Link>
-
-              <Link
-                to={`ComerciosPorCalle`}
-                className="flex items-center px-3 py-2 mt-2 rounded-md"
-              >
-                <Lucide icon="ShoppingBag" className="w-4 h-4 mr-2" /> Comercios por Calle
-              </Link>
-
-            </div>
-          </div>
-          {/* END: Inbox Menu */}
-        </div>
+            </li>
+          </ul>
+        </nav>
       </>
     );
   }

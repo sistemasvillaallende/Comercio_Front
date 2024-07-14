@@ -38,7 +38,7 @@ function Main() {
   };
 
   return (
-    <div className="principal">
+    <>
       <div className="py-5 md:py-0">
         {/* BEGIN: Top Menu */}
         {showLista && (
@@ -139,32 +139,25 @@ function Main() {
           </div>
         )}
         {showEdicion && (
-          <div
-            className="grid grid-cols-12 mt-5 grilla"
-            style={{
-              marginTop: "0",
-              paddingTop: "20px",
-            }}
-          >
+          <div className="grid grid-cols-12 mt-15 grilla">
             <div
-              className="col-span-12 intro-y lg:col-span-2 content"
+              className="col-span-12 intro-y lg:col-span-3 content"
               style={{
-                padding: "25px !important",
                 backgroundColor: "white",
-                marginTop: "0px",
                 overflow: "hidden",
                 borderRadius: "0px",
-                borderTopLeftRadius: "20px",
-                borderBottomLeftRadius: "20px",
                 marginLeft: "20px",
+                paddingTop: "20px",
+                paddingRight: "20px",
+                boxShadow: "4px 4px 8px 0 rgba(0, 0, 0, 0.2)",
+                height: "100vh"
               }}
             >
               <MenuElemento />
             </div>
             <div
-              className="col-span-12 intro-y lg:col-span-10 box content"
+              className="col-span-12 intro-y lg:col-span-9 box content"
               style={{
-                padding: "25px !important",
                 backgroundColor: "white",
                 marginTop: "0px",
                 overflow: "hidden",
@@ -179,7 +172,7 @@ function Main() {
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 }
 

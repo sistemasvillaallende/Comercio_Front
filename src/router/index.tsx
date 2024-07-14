@@ -32,7 +32,7 @@ import EliminarCancelacion from "../pages/CuentaCorriente/EliminarCancelacion";
 import Header from "../components/Header/index"
 
 const Router = () => {
-  const usuarioLogeado = sessionStorage.getItem("usuarioLogeado");
+  const usuarioLogeado = localStorage.getItem("usuarioLogeado");
   const navigate = useNavigate();
 
   return (

@@ -197,6 +197,31 @@ const index = () => {
     fetchData();
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const registrosPorPagina = 5;
+      const paginaNum = 1;
+      setPaginaActual(paginaNum);
+      const URL = `${import.meta.env.VITE_URL_BASE}Indycom/GetIndycomPaginado?buscarPor=0&strParametro=0&pagina=1&registros_por_pagina=10`;
+      const response = await axios.get(URL);
+      setCantPaginas(response.data.totalPaginas);
+      setElementoIyC(response.data.resultado);
+      setCantPaginas(response.data.totalPaginas);
+      setVerTabla(true);
+      if (response.status === 204) {
+        Swal.fire({
+          title: "Sin resultados",
+          text: "ERROR 204: La consulta no tuvo resultado.",
+          icon: "error",
+          confirmButtonColor: "#27a3cf",
+        });
+        setVerTabla(false);
+        return;
+      }
+    };
+    fetchData();
+  }, []);
+
 
   const handleLimpiar = () => {
     window.location.href = "/";
