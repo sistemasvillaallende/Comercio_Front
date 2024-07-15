@@ -24,8 +24,7 @@ const CheckOutPago = ({ subsistema }: Props) => {
       .then((data) => {
         setTarjetas(data);
         let url2 =
-          `${
-            import.meta.env.VITE_URL_TARJETAS
+          `${import.meta.env.VITE_URL_TARJETAS
           }getPlanBySubsistema?subsistema=` +
           subsistema +
           `&deuda=0&cod_tarjeta=` +

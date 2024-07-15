@@ -182,7 +182,7 @@ const Autos = () => {
 
     const fetchData2 = async () => {
       const response = await axios.get(
-        `${import.meta.env.VITE_URL_BASE}Ctasctes_indycom/getListDeudaIyC?legajo=` +
+        `${import.meta.env.VITE_URL_BASE}Indycom/Ctasctes_indycom/getListDeudaIyC?legajo=` +
         elementoIndCom?.legajo
       );
       setDeuda(response.data);
@@ -195,11 +195,7 @@ const Autos = () => {
       .then((data) => {
         setTarjetas(data);
         let url2 =
-          `${import.meta.env.VITE_URL_TARJETAS
-          }getPlanBySubsistema?subsistema=` +
-          4 +
-          `&deuda=0&cod_tarjeta=` +
-          data[0].cod_tarjeta;
+          `${import.meta.env.VITE_URL_TARJETAS}getPlanBySubsistema?subsistema=` + 4 + `&deuda=0&cod_tarjeta=` + data[0].cod_tarjeta;
         fetch(url2)
           .then((response2) => response2.json())
           .then((data2) => {
@@ -232,7 +228,7 @@ const Autos = () => {
       const fetchData2 = async () => {
         try {
           const response = await axios.get(
-            `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/getListDeudaIndyComNoVencida?legajo=` + elementoIndCom?.legajo
+            `${import.meta.env.VITE_URL_BASE}Ctasctes_indycom/getListDeudaIndyComNoVencida?legajo=` + elementoIndCom?.legajo
           );
           setDeuda(response.data);
           setProc(null);

@@ -139,7 +139,7 @@ function Main() {
           </div>
         )}
         {showEdicion && (
-          <div className="grid grid-cols-12 mt-15 grilla">
+          <div className="grid grid-cols-12 mt-15 grilla mb-9">
             <div
               className="col-span-12 intro-y lg:col-span-3 content"
               style={{
