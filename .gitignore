@@ -25,7 +25,7 @@ package-lock.json
 *.sln
 *.sw?
 
-#React Typescript
+#Variables de entorno
 #.env
 #.env.production
 
