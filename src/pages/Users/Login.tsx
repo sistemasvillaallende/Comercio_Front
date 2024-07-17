@@ -5,7 +5,7 @@ import Button from "../../base-components/Button";
 import clsx from "clsx";
 import { useUserContext } from "../../context/UserProvider";
 import Cargando from "../Recursos/Cargando";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import Lucide from "../../base-components/Lucide";
 import logocidi from "../../assets/images/logocidi.png"
 import logo from "../../assets/images/logo.png"
@@ -24,18 +24,21 @@ const Login = () => {
 
   const urlCIDI = `${import.meta.env.VITE_URL_CIDI}`;
 
-  const { codigoCIDI } = useParams();
+  //const { codigoCIDI } = useParams();
+
+  let [searchParams, setSearchParams] = useSearchParams();
+  let cidi = searchParams.get('cidi');
 
   const onSubmitCIDI = async () => {
-    if (!codigoCIDI) return;
+    if (!cidi) return;
     setIsLoading(true);
-    await handleLoginCIDI(codigoCIDI as String);
+    await handleLoginCIDI(cidi as String);
     setIsLoading(false);
   }
 
   useEffect(() => {
     onSubmitCIDI();
-  }, [codigoCIDI]);
+  }, [cidi]);
 
   return (
     <>
