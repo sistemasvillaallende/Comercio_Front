@@ -1,0 +1,21 @@
+.TituloTopBar {
+    max-width: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: 1.2rem;
+}
+
+.TituloTopBar h1 {
+    flex-grow: 1;
+    font-size: 2rem;
+    font-weight: 500;
+    margin: 0;
+    padding-right: 0.5rem;
+    line-height: 1.1;
+}
+
+.TituloTopBar img {
+    height: auto;
+    max-width: 100%;
+}

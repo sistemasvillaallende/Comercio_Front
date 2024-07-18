@@ -1,0 +1,38 @@
+.sombra {
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.principal {
+    height: calc(100vh - 0px);
+    overflow-y: clip;
+}
+
+.grilla {
+    height: calc(100vh - 50px);
+    overflow-y: clip;
+}
+
+.content {
+    height: calc(100vh - 80px);
+    overflow-y: clip;
+}
+
+.menu-auto {
+    height: calc(100vh - 80px);
+    overflow-y: clip;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    background-color: black;
+    right: 0;
+    left: 0;
+    height: 50px;
+}
+
+@media (min-width: 640px) {
+    .sm\:w-\[460px\] {
+        width: 660px !important;
+    }
+}

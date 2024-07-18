@@ -24,7 +24,7 @@
    | https://tailwindcss.com/docs/theme
    |
    */
-@import "./_encodeSans.css";
+@import "./_roboto.css";
 
 /*
    |--------------------------------------------------------------------------
@@ -55,7 +55,7 @@
    | Import CSS components.
    |
    */
-@import "./components/_global.scss";
+@import "./components/_global.css";
 @import "./components/_intro.css";
 @import "./components/_zoom-in.css";
 @import "./components/_image-fit.css";
@@ -67,7 +67,14 @@
 @import "./components/_toastify.css";
 @import "./components/_zoom-vanilla.css";
 @import "./components/_tom-select.css";
-@import "./components/_ckeditor.scss";
+@import "./components/_ckeditor.css";
 @import "./components/_litepicker.css";
 @import "./components/_full-calendar.css";
-@import "./components/_tabulator.scss";
+@import "./components/_tabulator.css";
+@import "./pages/_general.css";
+@import "./pages/_pedidos.css";
+@import "./pages/_new_topbar.css";
+@import "./pages/_inicio.css";
+@import "./components/_tituloTopBar.css";
+@import "./pages/_automotores.css";
+@import "./pages/_recursos.css";

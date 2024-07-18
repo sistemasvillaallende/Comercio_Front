@@ -1,0 +1,57 @@
+.elemento-servicio {
+    border: 1px solid #9DA5B1;
+    background-color: #FFFFFF;
+    width: 350px;
+    border-radius: 5px;
+    padding: 20px;
+    cursor: pointer;
+    box-shadow: 5px 5px 10px #9DA5B1;
+}
+
+.elemento-servicio:hover {
+    box-shadow: 5px 5px 30px #767e8a;
+}
+
+.elemento-servicio .cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pendientes {
+    background-color: #4A4A4A;
+    padding: 5px 15px 5px 15px;
+    border-radius: 15px;
+    color: #FFFFFF;
+}
+
+.elemento-servicio h1 {
+    font-family: 'Encode Sans', sans-serif;
+    font-weight: bold;
+    font-size: 25px;
+    vertical-align: top;
+    margin-top: 10px;
+    margin-left: 0px;
+    margin-bottom: 10px;
+    margin-right: 0px;
+}
+
+.elemento-servicio .piso {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.piso img {
+    margin-left: 10px;
+}
+
+h2 {
+    font-family: 'Encode Sans', sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    margin-top: 10px;
+    margin-left: 0px;
+    margin-bottom: 10px;
+    margin-right: 0px;
+}
