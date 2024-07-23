@@ -24,21 +24,21 @@ const Login = () => {
 
   const urlCIDI = `${import.meta.env.VITE_URL_CIDI}`;
 
-  //const { codigoCIDI } = useParams();
+  const { codigoCIDI } = useParams();
 
-  let [searchParams, setSearchParams] = useSearchParams();
-  let cidi = searchParams.get('cidi');
+  //let [searchParams, setSearchParams] = useSearchParams();
+  //let codigoCIDI = searchParams.get('cidi');
 
   const onSubmitCIDI = async () => {
-    if (!cidi) return;
+    if (!codigoCIDI) return;
     setIsLoading(true);
-    await handleLoginCIDI(cidi as String);
+    await handleLoginCIDI(codigoCIDI as String);
     setIsLoading(false);
   }
 
   useEffect(() => {
     onSubmitCIDI();
-  }, [cidi]);
+  }, [codigoCIDI]);
 
   return (
     <>

@@ -182,7 +182,7 @@ const Autos = () => {
 
     const fetchData2 = async () => {
       const response = await axios.get(
-        `${import.meta.env.VITE_URL_BASE}Indycom/Ctasctes_indycom/getListDeudaIyC?legajo=` +
+        `${import.meta.env.VITE_URL_BASE}Ctasctes_indycom/getListDeudaIyC?legajo=` +
         elementoIndCom?.legajo
       );
       setDeuda(response.data);
