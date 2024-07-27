@@ -28,7 +28,7 @@ const index = () => {
 
     if (buscarPor && strParametro) {
       const fetchData = async () => {
-        const registrosPorPagina = 5;
+        const registrosPorPagina = import.meta.env.VITE_REGISTROS_POR_PAGINA;
         const URL = `${import.meta.env.VITE_URL_BASE}Indycom/GetIndycomPaginado?buscarPor=${buscarPor}&strParametro=${strParametro}&pagina=${paginaNum}&registros_por_pagina=${registrosPorPagina}`;
         const response = await axios.get(URL);
         if (response.data === "") {
@@ -174,7 +174,7 @@ const index = () => {
       return;
     }
     const fetchData = async () => {
-      const registrosPorPagina = 5;
+      const registrosPorPagina = import.meta.env.VITE_REGISTROS_POR_PAGINA;
       const paginaNum = 1;
       setPaginaActual(paginaNum);
       const URL = `${import.meta.env.VITE_URL_BASE}Indycom/GetIndycomPaginado?buscarPor=${buscarPor}&strParametro=${strParametro}&pagina=${paginaNum}&registros_por_pagina=${registrosPorPagina}`;
@@ -199,10 +199,10 @@ const index = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const registrosPorPagina = 5;
+      const registrosPorPagina = 10;
       const paginaNum = 1;
       setPaginaActual(paginaNum);
-      const URL = `${import.meta.env.VITE_URL_BASE}Indycom/GetIndycomPaginado?buscarPor=0&strParametro=0&pagina=1&registros_por_pagina=10`;
+      const URL = `${import.meta.env.VITE_URL_BASE}Indycom/GetIndycomPaginado?buscarPor=0&strParametro=0&pagina=${paginaActual}&registros_por_pagina=${registrosPorPagina}`;
       const response = await axios.get(URL);
       setCantPaginas(response.data.totalPaginas);
       setElementoIyC(response.data.resultado);

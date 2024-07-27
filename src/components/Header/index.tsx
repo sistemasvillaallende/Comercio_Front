@@ -11,6 +11,7 @@ import { useUserContext } from "../../context/UserProvider"
 import { capitalizeFirstLetter } from "../../utils/helper"
 import placeholderProfile from "../../assets/images/placeholders/Usuario.png"
 import { getSecureItem } from "../../modules/secureStorage"
+import logoHeader from "../../assets/images/logoHeader.svg"
 
 function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
   const [searchDropdown, setSearchDropdown] = useState(false)
@@ -49,14 +50,14 @@ function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
   return (
     <>
       <div
-        style={{ height: "110px", marginBottom: "-10px" }}
+        style={{ height: "80px", marginBottom: "-10px" }}
         className={clsx([
-          "hidden md:block h-[70px] md:h-[125px] lg:h-[191px] z-[51] border-b border-white/[0.08] mt-12 md:mt-0 -mx-3 sm:-mx-8 md:-mx-0 px-3 md:border-b-0 relative md:sticky md:inset-x-0 md:top-0 sm:px-8 md:px-10",
+          "hidden md:block h-[70px] md:h-[125px] lg:h-[191px] z-[51] bg-white border-b border-white/[0.08] mt-12 md:mt-0 -mx-3 sm:-mx-8 md:-mx-0 px-3 md:border-b-0 relative md:sticky md:inset-x-0 md:top-0 sm:px-8 md:px-10",
           props.layout == "top-menu" && "dark:md:from-darkmode-800",
         ])}
       >
         <div className="flex justify-between items-center h-full" style={{
-          height: '90px'
+          height: '80px'
         }}>
           {/* BEGIN: Logo */}
           <Link
@@ -81,7 +82,13 @@ function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
           <div style={{ width: "33%", fontSize: "24px", display: 'ruby', textAlign: 'center' }}
             className="flex items-center text-primary font-semibold drop-shadow-[1px_1px_2px_#00000025]">
 
-            <span style={{ textDecoration: 'overline', paddingTop: '10px', lineHeight: '20px' }}>Industria y Comercio</span>
+            <div className="flex flex-wrap items-center justify-center">
+              <img src={logoHeader} alt="logoHeader" className="mr-4 w-[60px]" />
+              <h2 className="section-title__title text-gray-600 text-2xl leading-3 overline">
+                Industria y Comercio
+              </h2>
+            </div>
+
           </div>
           <div style={{ width: "33%" }} className="flex justify-around items-center md:w-[290px] md:h-[69px] lg:w-[352px] lg:h-[80px] rounded-l-[20px]">
             <Menu style=
