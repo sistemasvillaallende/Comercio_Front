@@ -20,6 +20,9 @@ const MenuElemento = () => {
             <span style={{ paddingTop: '10px', paddingLeft: '0px' }}>Industria y Comercio</span> </h2>
           <ul>
             <li>
+              <Link to="/">Inicio</Link>
+            </li>
+            <li>
               <Link to="nuevo">Nuevo</Link>
             </li>
             <li>

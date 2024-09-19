@@ -42,113 +42,17 @@ function Main() {
       <div className="py-5 md:py-0">
         {/* BEGIN: Top Menu */}
         {showLista && (
-          <div>
-            <nav
-              style={{ paddingLeft: "35px" }}
-              className={clsx([
-                "relative z-50 hidden pt-10 -mt-4 md:block",
-
-                // Animation
-                "opacity-0 animate-[0.4s_ease-in-out_0.2s_intro-top-menu] animate-fill-mode-forwards",
-              ])}
-            >
-              <ul className="flex flex-wrap px-6 xl:px-[50px]">
-                {formattedMenu.map((menu, menuKey) => (
-                  <li
-                    className={clsx([
-                      "relative [&:hover>ul]:block [&:hover>a>div:nth-child(2)>svg]:rotate-180",
-                      !menu.active &&
-                      "[&:hover>a]:bg-slate-100 [&:hover>a]:dark:bg-transparent",
-                      !menu.active &&
-                      "[&:hover>a]:before:content-[''] [&:hover>a]:before:block [&:hover>a]:before:inset-0 [&:hover>a]:before:rounded-full [&:hover>a]:xl:before:rounded-xl [&:hover>a]:before:absolute [&:hover>a]:before:z-[-1] [&:hover>a]:before:border-b-[3px] [&:hover>a]:before:border-solid [&:hover>a]:before:border-black/[0.08] [&:hover>a]:before:dark:bg-darkmode-700",
-                    ])}
-                    key={menuKey}
-                  >
-                    <MenuLink
-                      className={clsx({
-                        // Animation
-                        [`opacity-0 translate-y-[50px] animate-[0.4s_ease-in-out_0.3s_intro-menu] animate-fill-mode-forwards animate-delay-${(menuKey + 1) * 10
-                          }`]: !menu.active,
-                      })}
-                      menu={menu}
-                      level="first"
-                    ></MenuLink>
-                    {/* BEGIN: Second Child */}
-                    {menu.subMenu && (
-                      <ul
-                        className={clsx([
-                          "shadow-[0px_3px_20px_#00000014] dark:shadow-[0px_3px_7px_#0000001c] bg-slate-100 dark:bg-darkmode-600 hidden w-56 absolute rounded-md z-20 px-0 mt-1",
-                          "before:content-[''] before:block before:absolute before:w-full before:h-full before:bg-white/[0.04] before:inset-0 before:rounded-md before:z-[-1] dark:before:bg-black/10",
-                          "after:content-[''] after:w-full after:h-1 after:absolute after:top-0 after:left-0 after:-mt-1 after:cursor-pointer",
-                        ])}
-                      >
-                        {menu.subMenu.map((subMenu, subMenuKey) => (
-                          <li
-                            className="px-5 relative [&:hover>ul]:block [&:hover>a>div:nth-child(2)>svg]:-rotate-90"
-                            key={subMenuKey}
-                          >
-                            <MenuLink menu={subMenu} level="second"></MenuLink>
-                            {/* BEGIN: Third Child */}
-                            {subMenu.subMenu && (
-                              <ul
-                                className={clsx([
-                                  "shadow-[0px_3px_20px_#00000014] dark:shadow-[0px_3px_7px_#0000001c] left-[100%] bg-slate-100 dark:bg-darkmode-600 hidden w-56 absolute rounded-md mt-0 ml-0 top-0 z-20 px-0",
-                                  "before:content-[''] before:block before:absolute before:w-full before:h-full before:bg-white/[0.04] before:inset-0 before:rounded-md before:z-[-1] dark:before:bg-black/10",
-                                  "after:content-[''] after:w-full after:h-1 after:absolute after:top-0 after:left-0 after:-mt-1 after:cursor-pointer",
-                                ])}
-                              >
-                                {subMenu.subMenu.map(
-                                  (lastSubMenu, lastSubMenuKey) => (
-                                    <li
-                                      className="px-5 relative [&:hover>ul]:block [&:hover>a>div:nth-child(2)>svg]:-rotate-90"
-                                      key={lastSubMenuKey}
-                                    >
-                                      <MenuLink
-                                        menu={lastSubMenu}
-                                        level="third"
-                                      ></MenuLink>
-                                    </li>
-                                  )
-                                )}
-                              </ul>
-                            )}
-                            {/* END: Third Child */}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                    {/* END: Second Child */}
-                  </li>
-                ))}
-              </ul>
-            </nav>
-            <div
-              style={{
-                marginLeft: "50px",
-                marginTop: "20px",
-                paddingLeft: "0 !important",
-                paddingTop: "0 !important",
-                marginRight: "50px",
-                padding: "25px",
-                backgroundColor: "#f1f5f8",
-                borderRadius: "15px",
-              }}
-            >
-              <Outlet />
-            </div>
+          <div className="bg-white">
+            <Outlet />
           </div>
         )}
         {showEdicion && (
-          <div className="grid grid-cols-12 mt-15 grilla mb-9">
+          <div className="grid grid-cols-12 mt-15 grilla">
             <div
               className="col-span-12 intro-y lg:col-span-3 content"
               style={{
                 backgroundColor: "white",
                 overflow: "hidden",
-                borderRadius: "0px",
-                marginLeft: "20px",
-                paddingTop: "20px",
-                paddingRight: "20px",
                 boxShadow: "4px 4px 8px 0 rgba(0, 0, 0, 0.2)",
                 height: "100vh"
               }}
@@ -156,15 +60,11 @@ function Main() {
               <MenuElemento />
             </div>
             <div
-              className="col-span-12 intro-y lg:col-span-9 box content"
+              className="col-span-12 intro-y lg:col-span-9 box pb-5"
               style={{
                 backgroundColor: "white",
-                marginTop: "0px",
                 overflow: "hidden",
-                borderRadius: "0px",
-                borderTopRightRadius: "20px",
-                borderBottomRightRadius: "20px",
-                marginRight: "20px",
+                height: "100vh"
               }}
             >
               <Outlet />

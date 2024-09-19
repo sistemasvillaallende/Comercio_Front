@@ -83,7 +83,7 @@
 /* INICIO SCROLL */
 
 .conScroll {
-    height: 85vh;
+    height: 100vh;
     overflow-y: scroll;
     scrollbar-width: thin;
     scrollbar-color: var(--color-barra) transparent;
@@ -104,7 +104,7 @@
 }
 
 .conScrollInicio {
-    height: 70vh;
+    height: 100vh;
 }
 
 /* FIN SCROLL */
