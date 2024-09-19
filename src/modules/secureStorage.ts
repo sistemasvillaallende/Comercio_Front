@@ -13,16 +13,39 @@ const decryptData = (encryptedData: string): any => {
 }
 
 const setSecureItem = (key: string, data: any): void => {
-  const encryptedData = encryptData(data)
-  localStorage.setItem(key, encryptedData)
+  const encryptedData = encryptData(data);
+  const timestamp = new Date().getTime();
+  const expiryTime = 12 * 60 * 60 * 1000; // 12 horas en milisegundos
+  const item = {
+    data: encryptedData,
+    expiry: timestamp + expiryTime
+  };
+  localStorage.setItem(key, JSON.stringify(item));
 }
 
-const getSecureItem = (key: string): any => {
-  const encryptedData = localStorage.getItem(key)
-  if (encryptedData) {
-    return decryptData(encryptedData)
+
+const getSecureItem = (key: string): any | null => {
+  const itemString = localStorage.getItem(key);
+  if (!itemString) return null;
+
+  try {
+    const item = JSON.parse(itemString);
+    const currentTime = new Date().getTime();
+
+    // Verificar si el dato ha expirado
+    if (currentTime > item.expiry) {
+      localStorage.removeItem(key); // Eliminar el ítem expirado
+      return null;
+    }
+
+    // Devolver los datos desencriptados
+    return decryptData(item.data);
+  } catch (error) {
+    // Manejo de errores en caso de que el JSON sea inválido
+    console.error('Error al leer o parsear el ítem del localStorage:', error);
+    localStorage.removeItem(key);
+    return null;
   }
-  return null
 }
 
 export { setSecureItem, getSecureItem }
