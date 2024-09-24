@@ -175,7 +175,7 @@ const Editar = () => {
       "nro_dom": nroDom,
       "cod_barrio": 10,
       "cod_tipo_per": 1,
-      "cod_zona": "1 ",
+      "cod_zona": codZona,
       "pri_periodo": priPeriodo,
       "tipo_liquidacion": tipoLiquidacionElemento,
       "dado_baja": dadoBaja,
@@ -220,7 +220,7 @@ const Editar = () => {
       "nro_sucursal": 0,
       "es_transferido": false,
       "con_ddjj_anual": false,
-      "cod_zona_liquidacion": "1 ",
+      "cod_zona_liquidacion": codZonaLiquidacion,
       "debito_automatico": false,
       "clave_pago": "0000000011013142973",
       "fecha_ddjj_anual": fechaDdjjAnual,
@@ -257,7 +257,6 @@ const Editar = () => {
         "ip": ""
       }
     };
-    console.log(requestBody);
 
     axios
       .post(urlApi, requestBody)
@@ -270,7 +269,7 @@ const Editar = () => {
             confirmButtonText: "Aceptar",
             confirmButtonColor: "#27a3cf",
           });
-          navigate(`/`);
+          navigate(`/${legajo}/ver`);
         } else {
           Swal.fire({
             title: "Error al actualizar",
@@ -293,7 +292,7 @@ const Editar = () => {
   };
 
   const cancelar = () => {
-    navigate(`/`);
+    navigate(`/${legajo}/ver`);
   };
 
   return (
@@ -440,7 +439,10 @@ const Editar = () => {
               <FormSelect
                 id="formTipoLiquidacion"
                 value={codZona}
-                onChange={(e) => setCodZona(e.target.value)}
+                onChange={(e) => {
+                  setCodZona(e.target.value)
+                  console.log(e.target.value)
+                }}
               >
                 {listadoZonas?.map((tipo) => (
                   <option key={tipo.value} value={tipo.value}>
@@ -694,7 +696,7 @@ const Editar = () => {
 
           </div>
 
-          <div className="flex w-full justify-between col-span-12 intro-y lg:col-span-12 mt-5 mb-5">
+          <div className="flex w-full justify-between col-span-12 intro-y lg:col-span-12 mt-5 mb-20">
             <div className="col-span-12 intro-y lg:col-span-6">
               Usuario: {user?.userName}
             </div>

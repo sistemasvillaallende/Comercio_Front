@@ -22,6 +22,29 @@ const index = () => {
   const [verTabla, setVerTabla] = useState<boolean>(false);
   const { elementoIndCom, setElementoIndCom, traerElemento } = useIndustriaComercioContext();
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const registrosPorPagina = import.meta.env.VITE_REGISTROS_POR_PAGINA;
+      const URL = `${import.meta.env.VITE_URL_BASE}Indycom/GetIndycomPaginado?buscarPor=${buscarPor}&strParametro=${strParametro}&pagina=${paginaActual}&registros_por_pagina=${registrosPorPagina}`;
+      const response = await axios.get(URL);
+      if (response.data === "") {
+        Swal.fire({
+          title: 'Error',
+          text: 'Al parecer ya no hay páginas.',
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+          confirmButtonColor: '#27a3cf',
+        });
+        return;
+      }
+      setCantPaginas(response.data.totalPaginas);
+      setElementoIyC(response.data.resultado);
+      setVerTabla(true);
+    };
+
+    fetchData();
+  }, [paginaActual, buscarPor, strParametro]);
+
   const handlePageChange = (newPage: number) => {
     const paginaNum = newPage;
     setPaginaActual(paginaNum);
@@ -31,6 +54,7 @@ const index = () => {
         const registrosPorPagina = import.meta.env.VITE_REGISTROS_POR_PAGINA;
         const URL = `${import.meta.env.VITE_URL_BASE}Indycom/GetIndycomPaginado?buscarPor=${buscarPor}&strParametro=${strParametro}&pagina=${paginaNum}&registros_por_pagina=${registrosPorPagina}`;
         const response = await axios.get(URL);
+        console.log(paginaNum)
         if (response.data === "") {
           Swal.fire({
             title: 'Error',
