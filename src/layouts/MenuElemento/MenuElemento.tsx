@@ -17,7 +17,7 @@ const MenuElemento = () => {
             height: '40px', width: '40px',
             color: 'hsla(0, 0%, 13%, 1)'
           }} />
-            <span style={{ paddingTop: '10px', paddingLeft: '0px' }}>Industria y Comercio</span> </h2>
+            <span style={{ paddingTop: '10px', paddingLeft: '0px' }}>Leg. {elementoIndCom.legajo}</span> </h2>
           <ul>
             <li>
               <Link to="/">Inicio</Link>
@@ -100,6 +100,13 @@ const MenuElemento = () => {
                 to={`comerciosPorCalle`}
               >
                 Comercios por Calle
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={`${elementoIndCom?.legajo}/declaraciones-juradas`}
+              >
+                Declaraciones Juradas
               </Link>
             </li>
           </ul>

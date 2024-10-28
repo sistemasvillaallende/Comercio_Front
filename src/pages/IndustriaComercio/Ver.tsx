@@ -41,22 +41,22 @@ const ver = () => {
 
 
   return (
-    <>
+    <div className="paginas">
       <div className="conScroll grid grid-cols-12 gap-6 mt-2 ml-3 mr-4 p-2">
         <div className="col-span-12 intro-y lg:col-span-12">
           <div className="flex w-full justify-between col-span-12 intro-y lg:col-span-12">
             <h2>Datos del Comercio o Industria</h2>
           </div>
-          <div className="grid grid-cols-12 gap-6">
+          <div className="flex flex-wrap">
 
-            <div className="cuadroOscuro grid grid-cols-12 gap-6 lg:col-span-12">
-              <div className="col-span-12 intro-y lg:col-span-2">
+            <div className="cuadroInformacion">
+              <div className="elementCuadro">
                 <p>Legajo: <strong>{elementoIndustriaComercio?.legajo}</strong></p>
               </div>
-              <div className="col-span-12 intro-y lg:col-span-2">
+              <div className="elementCuadro">
                 <p>Nro. Expediente: <strong>{elementoIndustriaComercio?.nro_exp_mesa_ent}</strong></p>
               </div>
-              <div className="col-span-12 intro-y lg:col-span-2">
+              <div className="elementCuadro">
                 <p>Fecha Alta: <strong>{elementoIndustriaComercio?.fecha_alta && convertirFecha(elementoIndustriaComercio?.fecha_alta)}</strong></p>
               </div>
               <div className="col-span-12 intro-y lg:col-span-6">
@@ -64,7 +64,7 @@ const ver = () => {
               </div>
             </div>
 
-            <div className="cuadroOscuro grid grid-cols-12 gap-6 lg:col-span-12">
+            <div className="cuadroInformacion">
               <div className="col-span-12 intro-y lg:col-span-8">
                 <p>Descripcion: <strong>{elementoIndustriaComercio?.des_com}</strong></p>
               </div>
@@ -77,32 +77,32 @@ const ver = () => {
               <h2>Datos del Domicilio</h2>
             </div>
 
-            <div className="cuadroOscuro grid grid-cols-12 gap-6 lg:col-span-12">
+            <div className="cuadroInformacion">
               <div className="col-span-12 intro-y lg:col-span-3">
                 <p>Calle: <strong>{elementoIndustriaComercio?.nom_calle.trim()}</strong></p>
               </div>
-              <div className="col-span-12 intro-y lg:col-span-2">
+              <div className="elementCuadro">
                 <p>Nro. Dom: <strong>{elementoIndustriaComercio?.nro_dom}</strong></p>
               </div>
               <div className="col-span-12 intro-y lg:col-span-1">
                 <p>Piso: {elementoIndustriaComercio?.piso_dpto_esp}</p>
               </div>
-              <div className="col-span-12 intro-y lg:col-span-2">
+              <div className="elementCuadro">
                 <p>Nro. Local: <strong>{elementoIndustriaComercio?.nro_local}</strong></p>
               </div>
             </div>
 
-            <div className="cuadroOscuro grid grid-cols-12 gap-6 lg:col-span-12">
+            <div className="cuadroInformacion">
               <div className="col-span-12 intro-y lg:col-span-5">
                 <p>Barrio: <strong>{elementoIndustriaComercio?.nom_barrio_dom_esp.trim()}</strong></p>
               </div>
-              <div className="col-span-12 intro-y lg:col-span-2">
+              <div className="elementCuadro">
                 <p>Zona: <strong>{elementoIndustriaComercio?.cod_zona}</strong></p>
               </div>
-              <div className="col-span-12 intro-y lg:col-span-2">
+              <div className="elementCuadro">
                 <p>Zona Liq.<strong>{elementoIndustriaComercio?.cod_zona_liquidacion}</strong></p>
               </div>
-              <div className="col-span-12 intro-y lg:col-span-2">
+              <div className="elementCuadro">
                 <p>Ciudad:<strong>{elementoIndustriaComercio?.ciudad.trim()}</strong></p>
               </div>
             </div>
@@ -111,29 +111,29 @@ const ver = () => {
               <h2>Datos de Liquidación</h2>
             </div>
 
-            <div className="cuadroOscuro grid grid-cols-12 gap-6 lg:col-span-12">
+            <div className="cuadroInformacion">
               <div className="col-span-12 intro-y lg:col-span-5">
                 <p>Tipo de Liquidación: <strong>{tipoLiquidacion?.descripcion_tipo_liq}</strong></p>
               </div>
-              <div className="col-span-12 intro-y lg:col-span-2">
+              <div className="elementCuadro">
                 <p>Primer Periodo: <strong>{elementoIndustriaComercio?.pri_periodo}</strong></p>
               </div>
-              <div className="col-span-12 intro-y lg:col-span-2">
+              <div className="elementCuadro">
                 <p>Último Periodo.<strong>{elementoIndustriaComercio?.per_ult}</strong></p>
               </div>
             </div>
 
-            <div className="cuadroOscuro grid grid-cols-12 gap-6 lg:col-span-12">
-              <div className="col-span-12 intro-y lg:col-span-2">
+            <div className="cuadroInformacion">
+              <div className="elementCuadro">
                 <p>CUIT: <strong>{elementoIndustriaComercio?.nro_cuit}</strong></p>
               </div>
-              <div className="col-span-12 intro-y lg:col-span-2">
+              <div className="elementCuadro">
                 <p>CUIT VD: <strong>{elementoIndustriaComercio?.cuit_vecino_digital}</strong></p>
               </div>
-              <div className="col-span-12 intro-y lg:col-span-2">
+              <div className="elementCuadro">
                 <p>Transporte: <strong>{elementoIndustriaComercio?.transporte ? "Si" : "No"}</strong></p>
               </div>
-              <div className="col-span-12 intro-y lg:col-span-2">
+              <div className="elementCuadro">
                 <p>Exento: <strong>{elementoIndustriaComercio?.exento ? "Si" : "No"}</strong></p>
               </div>
               <div className="col-span-12 intro-y lg:col-span-4">
@@ -141,7 +141,7 @@ const ver = () => {
               </div>
             </div>
 
-            <div className="cuadroOscuro grid grid-cols-12 gap-6 lg:col-span-12">
+            <div className="cuadroInformacion">
               <div className="col-span-12 intro-y lg:col-span-5">
                 <p>Condición Frente al IVA: <strong>{tipoCondicionIVA?.des_cond_ante_iva}</strong></p>
               </div>
@@ -150,25 +150,25 @@ const ver = () => {
               </div>
             </div>
 
-            <div className="cuadroOscuro grid grid-cols-12 gap-6 lg:col-span-12">
-              <div className="col-span-12 intro-y lg:col-span-2">
+            <div className="cuadroInformacion">
+              <div className="elementCuadro">
                 <p>Fecha Inicio: <strong>{elementoIndustriaComercio?.fecha_inicio && convertirFecha(elementoIndustriaComercio?.fecha_inicio)}</strong></p>
               </div>
               <div className="col-span-12 intro-y lg:col-span-3">
                 <p>Fecha Habilitación: <strong>{elementoIndustriaComercio?.fecha_hab && convertirFecha(elementoIndustriaComercio?.fecha_hab)}</strong></p>
               </div>
-              <div className="col-span-12 intro-y lg:col-span-2">
+              <div className="elementCuadro">
                 <p>Vto. Inscrip: <strong>{elementoIndustriaComercio?.vto_inscripcion && convertirFecha(elementoIndustriaComercio?.vto_inscripcion)}</strong></p>
               </div>
-              <div className="col-span-12 intro-y lg:col-span-2">
+              <div className="elementCuadro">
                 <p>Fecha Baja: <strong>{elementoIndustriaComercio?.fecha_baja && convertirFecha(elementoIndustriaComercio?.fecha_baja)}</strong></p>
               </div>
-              <div className="col-span-12 intro-y lg:col-span-2">
+              <div className="elementCuadro">
                 <p>Baja: <strong>{elementoIndustriaComercio?.dado_baja ? "Si" : "No"}</strong></p>
               </div>
             </div>
 
-            <div className="cuadroOscuro grid grid-cols-12 gap-6 lg:col-span-12">
+            <div className="cuadroInformacion">
               <div className="col-span-12 intro-y lg:col-span-6">
                 <p>Situación Comercio: <strong>{situacionJudicial?.text}</strong></p>
               </div>
@@ -181,7 +181,7 @@ const ver = () => {
               <h2>Entrega Cedulón</h2>
             </div>
 
-            <div className="cuadroOscuro grid grid-cols-12 gap-6 lg:col-span-12">
+            <div className="cuadroInformacion">
               <div className="col-span-12 intro-y lg:col-span-3">
                 <p>Emite Cedulón: <strong>{elementoIndustriaComercio?.emite_cedulon ? "Si" : "No"}</strong></p>
               </div>
@@ -193,7 +193,7 @@ const ver = () => {
           </div>
         </div>
       </div >
-    </>
+    </div>
   )
 }
 

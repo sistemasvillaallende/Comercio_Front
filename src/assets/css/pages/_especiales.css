@@ -1,0 +1,100 @@
+.modal-overlay-ctacte {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 200px;
+  z-index: 1000;
+}
+
+.modal-content-ctacte {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 300px;
+  width: 100%;
+}
+
+.boton-selecctor-cta-cte {
+  text-align: left;
+  border: none;
+  padding: 10px 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.elemento-input-ctacte {
+  margin-top: 8px;
+  font-weight: 600;
+  color: rgb(185, 30, 28);
+}
+
+.tdTabla-cta-cte {
+  padding-top: 4px;
+  padding-bottom: 0px;
+  font-size: 13px;
+  border: none;
+}
+
+/* Add this CSS to your styles */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #libredeuda, #libredeuda * {
+    visibility: visible;
+  }
+
+  #libredeuda {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+}
+
+.cuadroInformacion {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  background-color: #e4e4e4;
+  border-radius: 8px;
+}
+
+.elementCuadro {
+  margin: 5px;
+  background-color: #f2f2f2;
+  padding: 5px;
+  border-radius: 8px;
+}
+
+.topMenuEspecial {
+  background-color: white;
+  overflow: hidden;
+  border-radius: 0px;
+  padding-top: 20px;
+  box-shadow: 4px 4px 8px 0 rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+  z-index: 9999;
+}
+
+.topMenuOutlet {
+  grid-column: span 12 / span 12;
+  background-color: white;
+  margin-top: 0;
+  overflow: hidden;
+  border-radius: 0;
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  flex-grow: 1;
+}

@@ -27,6 +27,8 @@ import ResumenCuenta from "../pages/Informes/ResumenCuenta";
 import Cedulon from "../pages/Cedulones/Cedulon";
 import CancelarCtaCte from "../pages/CuentaCorriente/CancelarCtaCte";
 import EliminarCancelacion from "../pages/CuentaCorriente/EliminarCancelacion";
+import ImprimirDeclaracionJurada from '../pages/DeclaracionesJuradas/ImprimirDeclaracionJurada';
+import DeclaracionesJuradas from "../pages/DeclaracionesJuradas/DeclaracionesJuradas";
 
 //Componentes
 import Header from "../components/Header/index"
@@ -66,6 +68,10 @@ const Router = () => {
                     <Route path="/:legajo/deudas" element={<Deudas />} />
                     <Route path="/:legajo/Contacto" element={<Contacto />} />
                     <Route path="/ComerciosPorCalle" element={<ComerciosPorCalle />} />
+
+                    <Route path="/:legajo/declaraciones-juradas" element={<DeclaracionesJuradas />} />
+                    <Route path="/:legajo/declaraciones-juradas/:transaccion" element={<DeclaracionesJuradas />} />
+                    <Route path="/:legajo/imprimir-juradas/:transaccion" element={<ImprimirDeclaracionJurada />} />
 
                   </Route>
                   <Route path="/login" element={<Login />} />

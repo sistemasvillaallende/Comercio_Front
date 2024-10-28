@@ -38,41 +38,25 @@ function Main() {
   };
 
   return (
-    <>
-      <div className="py-5 md:py-0">
-        {/* BEGIN: Top Menu */}
-        {showLista && (
-          <div className="bg-white">
+    <div className="bg-white py-5 md:py-0 min-h-screen flex flex-col">
+      <MobileMenu />
+      {showLista && (
+        <div className="flex flex-col flex-grow">
+          <Outlet />
+        </div>
+      )}
+      {showEdicion && (
+        <div className="flex flex-grow">
+          <div className="topMenuEspecial">
+            <MenuElemento />
+          </div>
+          <div
+            className="topMenuOutlet">
             <Outlet />
           </div>
-        )}
-        {showEdicion && (
-          <div className="grid grid-cols-12 mt-15 grilla">
-            <div
-              className="col-span-12 intro-y lg:col-span-3 content"
-              style={{
-                backgroundColor: "white",
-                overflow: "hidden",
-                boxShadow: "4px 4px 8px 0 rgba(0, 0, 0, 0.2)",
-                height: "100vh"
-              }}
-            >
-              <MenuElemento />
-            </div>
-            <div
-              className="col-span-12 intro-y lg:col-span-9 box pb-5"
-              style={{
-                backgroundColor: "white",
-                overflow: "hidden",
-                height: "100vh"
-              }}
-            >
-              <Outlet />
-            </div>
-          </div>
-        )}
-      </div>
-    </>
+        </div>
+      )}
+    </div>
   );
 }
 
