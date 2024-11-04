@@ -54,14 +54,14 @@ const CeduloAuto = () => {
                     </div>
                     <div style={{ paddingTop: "2px", marginLeft: "60px" }}>
                       <p style={{ fontSize: "12px", fontWeight: "600" }}>
-                        MUNICIPALIDAD DE VILLA ALLENDE <br/>
-                        Tel.: 03543-439280 <br/>
-                        informes@villaallende.gov.ar <br/>
+                        MUNICIPALIDAD DE VILLA ALLENDE <br />
+                        Tel.: 03543-439280 <br />
+                        informes@villaallende.gov.ar <br />
                         Subsistema Automotor
                       </p>
                     </div>
                   </div>
-                  <div className="tm_invoice_right" style={{textAlign: "center"}}>
+                  <div className="tm_invoice_right" style={{ textAlign: "center" }}>
                     <h2>Resumen de Cuenta</h2>
                     <h2>Todos los Periodos</h2>
                   </div>

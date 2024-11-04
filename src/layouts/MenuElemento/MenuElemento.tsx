@@ -83,6 +83,13 @@ const MenuElemento = () => {
             </li>
             <li>
               <Link
+                to={`${elementoIndCom?.legajo}/reliquida`}
+              >
+                Reliquida
+              </Link>
+            </li>
+            <li>
+              <Link
                 to={`${elementoIndCom?.legajo}/informes`}
               >
                 Informes
@@ -107,6 +114,13 @@ const MenuElemento = () => {
                 to={`${elementoIndCom?.legajo}/declaraciones-juradas`}
               >
                 Declaraciones Juradas
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={`${elementoIndCom?.legajo}/rubros`}
+              >
+                Rubros
               </Link>
             </li>
           </ul>

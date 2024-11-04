@@ -30,8 +30,12 @@ import EliminarCancelacion from "../pages/CuentaCorriente/EliminarCancelacion";
 import ImprimirDeclaracionJurada from '../pages/DeclaracionesJuradas/ImprimirDeclaracionJurada';
 import DeclaracionesJuradas from "../pages/DeclaracionesJuradas/DeclaracionesJuradas";
 
+import Rubros from "../pages/Rubros/Rubros";
+import Reliquida from "../pages/IndustriaComercio/Reliquida";
+
 //Componentes
 import Header from "../components/Header/index"
+import { useEffect } from "react";
 
 const Router = () => {
   const usuarioLogeado = localStorage.getItem("usuarioLogeado");
@@ -73,6 +77,9 @@ const Router = () => {
                     <Route path="/:legajo/declaraciones-juradas/:transaccion" element={<DeclaracionesJuradas />} />
                     <Route path="/:legajo/imprimir-juradas/:transaccion" element={<ImprimirDeclaracionJurada />} />
 
+                    <Route path="/:legajo/Rubros" element={<Rubros />} />
+                    <Route path="/:legajo/reliquida" element={<Reliquida />} />
+
                   </Route>
                   <Route path="/login" element={<Login />} />
                   <Route path="/*" element={<NotFound />} />
@@ -85,6 +92,50 @@ const Router = () => {
         </CedulonesProvider>
       </UserProvider>
     </>
+
+    // <>
+    //   <UserProvider>
+    //     <CedulonesProvider>
+    //       <IndustriaComercioProvider>
+    //         <>
+    //           <Header />
+    //           <Routes>
+    //             <Route path="/" element={<TopMenu />}>
+    //               <Route path="/" element={<Inicio />} />
+    //               <Route path="/nuevo" element={<Nuevo />} />
+    //               <Route path="/:legajo/ver" element={<Ver />} />
+    //               <Route path="/:legajo/editar" element={<Editar />} />
+    //               <Route path="/:legajo/baseimponible" element={<BasesImponibles />} />
+
+    //               <Route path="/:legajo/iniciarctacte" element={<IniciarCtaCorriente />} />
+    //               <Route path="/:legajo/ctacte" element={<CuentaCorriente />} />
+    //               <Route path="/:legajo/cancelarctacte" element={<CancelarCtaCte />} />
+    //               <Route path="/:legajo/eliminarCancelacion" element={<EliminarCancelacion />} />
+
+    //               <Route path="/Cedulones/" element={<Cedulones />} />
+    //               <Route path="/:legajo/informes" element={<Informes />} />
+    //               <Route path="/:legajo/deudas" element={<Deudas />} />
+    //               <Route path="/:legajo/Contacto" element={<Contacto />} />
+    //               <Route path="/ComerciosPorCalle" element={<ComerciosPorCalle />} />
+
+    //               <Route path="/:legajo/declaraciones-juradas" element={<DeclaracionesJuradas />} />
+    //               <Route path="/:legajo/declaraciones-juradas/:transaccion" element={<DeclaracionesJuradas />} />
+    //               <Route path="/:legajo/imprimir-juradas/:transaccion" element={<ImprimirDeclaracionJurada />} />
+
+    //               <Route path="/:legajo/Rubros" element={<Rubros />} />
+    //               <Route path="/:legajo/reliquida" element={<Reliquida />} />
+
+    //             </Route>
+    //             <Route path="/login" element={<Login />} />
+    //             <Route path="/*" element={<NotFound />} />
+    //             <Route path="/Cedulon/:nrocedulon" element={<Cedulon />} />
+    //             <Route path="/ResumenCuenta" element={<ResumenCuenta />} />
+    //           </Routes>
+    //         </>
+    //       </IndustriaComercioProvider>
+    //     </CedulonesProvider>
+    //   </UserProvider>
+    // </>
   );
 };
 

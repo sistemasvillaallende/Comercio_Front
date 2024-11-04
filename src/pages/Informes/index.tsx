@@ -9,7 +9,7 @@ import Lucide from "../../base-components/Lucide";
 const Informes = () => {
 
   return (
-    <>
+    <div className='paginas'>
       <div className="conScroll grid grid-cols-12 gap-6 mt-2 ml-3 mr-4">
         <div className="col-span-12 intro-y lg:col-span-12">
 
@@ -19,7 +19,7 @@ const Informes = () => {
           <InformeDeDeuda />
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

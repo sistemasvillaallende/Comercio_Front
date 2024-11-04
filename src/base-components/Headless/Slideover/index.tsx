@@ -72,7 +72,7 @@ Slideover.Panel = ({
 }) => {
   const slideover = useContext(slideoverContext);
   return (
-    <>
+    <div className="paginas">
       <Transition.Child
         as="div"
         enter="ease-in-out duration-500"
@@ -110,7 +110,7 @@ Slideover.Panel = ({
           {children}
         </HeadlessDialog.Panel>
       </Transition.Child>
-    </>
+    </div>
   );
 };
 

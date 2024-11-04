@@ -72,7 +72,7 @@ Dialog.Panel = ({
 }) => {
   const dialog = useContext(dialogContext);
   return (
-    <>
+    <div className="paginas">
       <Transition.Child
         as="div"
         enter="ease-in-out duration-500"
@@ -110,7 +110,7 @@ Dialog.Panel = ({
           {children}
         </HeadlessDialog.Panel>
       </Transition.Child>
-    </>
+    </div>
   );
 };
 

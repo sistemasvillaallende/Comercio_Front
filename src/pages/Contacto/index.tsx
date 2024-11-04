@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { Badec } from '../../interfaces/IndustriaComercio'
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { set } from 'lodash';
 
 const Contacto = () => {
 
@@ -33,29 +32,26 @@ const Contacto = () => {
 
   return (
     <>
-      <div className="conScroll grid grid-cols-12 gap-6 mt-2 ml-3 mr-4 p-4">
-        <div className="col-span-12 intro-y lg:col-span-8">
-          <div className="flex w-full justify-between col-span-12 intro-y lg:col-span-12">
-            <h2>Datos de Contacto</h2>
+      <div className="conScroll flex flex-col gap-6 mt-2 ml-3 mr-4 p-4">
+        <div className="flex flex-col lg:flex-row lg:justify-between">
+          <h2>Datos de Contacto</h2>
+        </div>
+
+        <div className="flex flex-col gap-6">
+
+          <div className="cuadroOscuro flex flex-col lg:flex-row gap-6">
+            <div className="flex-1 lg:flex-none lg:w-1/6">
+              <p>Nro Bad: <strong>{contacto?.nro_bad}</strong></p>
+            </div>
+            <div className="flex-1 lg:flex-none lg:w-1/3">
+              <p>Nombre: <strong>{contacto?.nombre}</strong></p>
+            </div>
           </div>
 
-          <div className="grid grid-cols-12 gap-6">
-
-            <div className="cuadroOscuro grid grid-cols-12 gap-6 lg:col-span-12">
-              <div className="col-span-12 intro-y lg:col-span-2">
-                <p>Nro Bad: <strong>{contacto?.nro_bad}</strong></p>
-              </div>
-              <div className="col-span-12 intro-y lg:col-span-4">
-                <p>Nombre: <strong>{contacto?.nombre}</strong></p>
-              </div>
+          <div className="cuadroOscuro flex flex-col lg:flex-row gap-6">
+            <div className="flex-1">
+              <p>Dirección: <strong>{contacto?.nombre_calle} {contacto?.nro_dom}, {contacto?.localidad}, {contacto?.provincia}</strong></p>
             </div>
-
-            <div className="cuadroOscuro grid grid-cols-12 gap-6 lg:col-span-12">
-              <div className="col-span-12 intro-y lg:col-span-12">
-                <p>Direccón: <strong>{contacto?.nombre_calle} {contacto?.nro_dom}, {contacto?.localidad}, {contacto?.provincia}</strong></p>
-              </div>
-            </div>
-
           </div>
 
         </div>

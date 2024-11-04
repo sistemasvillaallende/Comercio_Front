@@ -43,26 +43,6 @@ export interface ImpresionDDJJ {
     concepto: string;
   }[];
 }
-
-export interface Rubro {
-  concepto: string;
-  codigo: number;
-  anio: number;
-}
-
-export interface RubroComercio {
-  legajo: number;
-  cod_rubro: number;
-  nro_sucursal: number;
-  cod_minimo: number;
-  cod_convenio: number;
-  cantidad: number;
-  exento: boolean;
-  descuento: boolean;
-  valor: number;
-  concepto: string;
-}
-
 export interface PeriodoReliquida {
   tipo_transaccion: number;
   nro_transaccion: number;
