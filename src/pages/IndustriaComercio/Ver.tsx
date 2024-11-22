@@ -20,6 +20,10 @@ const ver = () => {
     }
   }, [elementoIndCom, legajo]);
 
+  useEffect(() => {
+    traerElemento(legajo?.toString() ?? '');
+  }, [])
+
   const buscarElemento = async (legajo: string) => {
     const URL = `${import.meta.env.VITE_URL_BASE}Indycom/GetIndycomPaginado?buscarPor=legajo&strParametro=${legajo}&pagina=1&registros_por_pagina=5`;
     const response = await fetch(URL);

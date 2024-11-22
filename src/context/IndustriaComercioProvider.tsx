@@ -57,6 +57,7 @@ export function IndustriaComercioProvider({ children }: any) {
   const [listadoZonas, setListadoZonas] = useState<Zonas[]>([]);
 
   const traerElemento = async (legajo: string) => {
+    console.log("legajo: ", legajo)
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_URL_BASE}Indycom/GetIndycomPaginado?buscarPor=legajo&strParametro=${legajo}&pagina=1&registros_por_pagina=5`

@@ -32,7 +32,8 @@ const Editar = () => {
     listadoTipoDeEntidad,
     listadoTipoCondicionIVA,
     listadoSituacionJudicial,
-    listadoZonas
+    listadoZonas,
+    traerElemento
   } = useIndustriaComercioContext();
 
   const [ventanaPropietario, setVentanaPropietario] = useState<boolean>(false);
