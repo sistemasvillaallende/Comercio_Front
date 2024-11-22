@@ -14,7 +14,28 @@ import Button from "../../base-components/Button";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/UserProvider";
 import { useIndustriaComercioContext } from "../../context/IndustriaComercioProvider";
-import Table from "../../base-components/Table";
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Button as MuiButton,
+  Box,
+  Typography,
+  IconButton,
+  Tooltip,
+  TextField,
+  Container,
+  Grid,
+  Card,
+  CardContent
+} from '@mui/material';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import SearchIcon from '@mui/icons-material/Search';
+import * as XLSX from 'xlsx';
 import { currencyFormat } from "../../utils/helper";
 
 
@@ -54,111 +75,236 @@ const BasesImponibles = () => {
     fetchData();
   };
 
+  const handleExportToExcel = () => {
+    const dataToExport = listaBasesImponibles.map(item => ({
+      'Período': item.periodo,
+      'Concepto': item.concepto,
+      'Nº Transacción': item.nro_transaccion,
+      'Debe': item.debe,
+      'Monto Original': item.monto_original,
+      'Importe': item.importe
+    }));
 
+    const ws = XLSX.utils.json_to_sheet(dataToExport);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Bases Imponibles');
+
+    XLSX.writeFile(wb, `Bases_Imponibles_${new Date().toISOString().split('T')[0]}.xlsx`);
+  };
 
   return (
-    <>
+    <Container maxWidth={false}>
+      <Box sx={{ py: 3 }}>
+        <Grid container spacing={3} sx={{ mb: 3 }}>
+          <Grid item xs={12}>
+            <Card>
+              <CardContent>
+                <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Typography variant="h5" component="h2">
+                    Bases Imponibles
+                  </Typography>
+                  {listaBasesImponibles.length > 0 && (
+                    <MuiButton
+                      variant="contained"
+                      color="primary"
+                      startIcon={<FileDownloadIcon />}
+                      onClick={handleExportToExcel}
+                    >
+                      Exportar a Excel
+                    </MuiButton>
+                  )}
+                </Box>
 
-      <div className="conScroll grid grid-cols-12 gap-6 mt-2 ml-3 mr-4 p-4">
-        <div className="col-span-12 intro-y lg:col-span-12">
+                <Grid container spacing={2} alignItems="flex-end">
+                  <Grid item xs={12} md={3}>
+                    <TextField
+                      fullWidth
+                      label="Período Desde"
+                      variant="outlined"
+                      size="small"
+                      value={periodoDesde}
+                      onChange={(e) => setPeriodoDesde(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={3}>
+                    <TextField
+                      fullWidth
+                      label="Período Hasta"
+                      variant="outlined"
+                      size="small"
+                      value={periodoHasta}
+                      onChange={(e) => setPeriodoHasta(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <Box sx={{ display: 'flex', gap: 2 }}>
+                      <MuiButton
+                        variant="contained"
+                        color="primary"
+                        startIcon={<SearchIcon />}
+                        onClick={handleBuscar}
+                      >
+                        Buscar
+                      </MuiButton>
+                      <MuiButton
+                        variant="outlined"
+                        color="secondary"
+                      >
+                        Cancelar
+                      </MuiButton>
+                    </Box>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
 
-          <div className="flex w-full justify-between col-span-12 intro-y lg:col-span-12">
-            <h2>Bases Imponibles</h2>
-          </div>
-
-          <div className="grid grid-cols-12 gap-6 mt-3">
-
-            <div className="col-span-12 intro-y lg:col-span-2">
-              <FormLabel htmlFor="formFechaDesde">Desde</FormLabel>
-              <FormInput
-                type="text"
-                id="formFechaDesde"
-                value={periodoDesde}
-                onChange={(e) => setPeriodoDesde(e.target.value)}
-              />
-            </div>
-
-            <div className="col-span-12 intro-y lg:col-span-2">
-              <FormLabel htmlFor="formFechaHasta">Hasta</FormLabel>
-              <FormInput
-                type="text"
-                id="formFechaHasta"
-                value={periodoHasta}
-                onChange={(e) => setPeriodoHasta(e.target.value)}
-              />
-            </div>
-
-            <div className="col-span-12 intro-y lg:col-span-5 mt-7">
-              <Button
-                variant="primary"
-                onClick={handleBuscar}
-              >
-                Ver Bases imponibles
-              </Button>
-              <Button
-                variant="secondary"
-                className="ml-3">
-                Cancelar
-              </Button>
-            </div>
-
-          </div>
-
-        </div>
-        <div>
-          {listaBasesImponibles.length > 0 && (
-            <Table striped>
-              <Table.Thead>
-                <Table.Tr>
-                  <Table.Th className="whitespace-nowrap border-b-0 whitespace-nowrap text-center">
-                    Periodo
-                  </Table.Th>
-                  <Table.Th className="whitespace-nowrap border-b-0 whitespace-nowrap text-left">
-                    Concepto
-                  </Table.Th>
-                  <Table.Th className="whitespace-nowrap border-b-0 whitespace-nowrap text-center">
-                    Nro. Transacción
-                  </Table.Th>
-                  <Table.Th className="whitespace-nowrap border-b-0 whitespace-nowrap text-center">
-                    Debe
-                  </Table.Th>
-                  <Table.Th className="whitespace-nowrap border-b-0 whitespace-nowrap text-center">
-                    Monto Original
-                  </Table.Th>
-                  <Table.Th className="whitespace-nowrap border-b-0 whitespace-nowrap text-center">
-                    Importe
-                  </Table.Th>
-                </Table.Tr>
-              </Table.Thead>
-              <Table.Tbody>
-                {listaBasesImponibles.map((item, index) => (
-                  <Table.Tr key={index}>
-                    <Table.Td className="border-b-0 whitespace-nowrap text-center">
-                      {item.periodo}
-                    </Table.Td>
-                    <Table.Td className="border-b-0 whitespace-nowrap text-left">
-                      {item.concepto}
-                    </Table.Td>
-                    <Table.Td className="border-b-0 whitespace-nowrap text-center">
-                      {item.nro_transaccion}
-                    </Table.Td>
-                    <Table.Td className="border-b-0 whitespace-nowrap text-right">
-                      {currencyFormat(item.debe)}
-                    </Table.Td>
-                    <Table.Td className="border-b-0 whitespace-nowrap text-right">
-                      {currencyFormat(item.monto_original)}
-                    </Table.Td>
-                    <Table.Td className="border-b-0 whitespace-nowrap text-right">
-                      {currencyFormat(item.importe)}
-                    </Table.Td>
-                  </Table.Tr>
-                ))}
-              </Table.Tbody>
-            </Table>
-          )}
-        </div>
-      </div>
-    </>
+        {listaBasesImponibles.length > 0 && (
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <Card>
+                <CardContent sx={{ p: 0 }}>
+                  <TableContainer>
+                    <Table sx={{ minWidth: 650 }} size="small">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell
+                            align="center"
+                            sx={{
+                              backgroundColor: 'primary.main',
+                              color: 'common.white',
+                              fontWeight: 'bold'
+                            }}
+                          >
+                            Período
+                          </TableCell>
+                          <TableCell
+                            align="left"
+                            sx={{
+                              backgroundColor: 'primary.main',
+                              color: 'common.white',
+                              fontWeight: 'bold'
+                            }}
+                          >
+                            Concepto
+                          </TableCell>
+                          <TableCell
+                            align="center"
+                            sx={{
+                              backgroundColor: 'primary.main',
+                              color: 'common.white',
+                              fontWeight: 'bold'
+                            }}
+                          >
+                            Nº Transacción
+                          </TableCell>
+                          <TableCell
+                            align="right"
+                            sx={{
+                              backgroundColor: 'primary.main',
+                              color: 'common.white',
+                              fontWeight: 'bold'
+                            }}
+                          >
+                            Debe
+                          </TableCell>
+                          <TableCell
+                            align="right"
+                            sx={{
+                              backgroundColor: 'primary.main',
+                              color: 'common.white',
+                              fontWeight: 'bold'
+                            }}
+                          >
+                            Monto Original
+                          </TableCell>
+                          <TableCell
+                            align="right"
+                            sx={{
+                              backgroundColor: 'primary.main',
+                              color: 'common.white',
+                              fontWeight: 'bold'
+                            }}
+                          >
+                            Importe
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {listaBasesImponibles.map((item, index) => (
+                          <TableRow
+                            key={index}
+                            sx={{
+                              '&:nth-of-type(odd)': { backgroundColor: 'action.hover' },
+                              '&:hover': {
+                                backgroundColor: 'action.selected',
+                                cursor: 'pointer'
+                              }
+                            }}
+                          >
+                            <TableCell align="center">{item.periodo}</TableCell>
+                            <TableCell align="left">{item.concepto}</TableCell>
+                            <TableCell align="center">{item.nro_transaccion}</TableCell>
+                            <TableCell align="right">
+                              {new Intl.NumberFormat('es-AR', {
+                                style: 'currency',
+                                currency: 'ARS'
+                              }).format(item.debe)}
+                            </TableCell>
+                            <TableCell align="right">
+                              {new Intl.NumberFormat('es-AR', {
+                                style: 'currency',
+                                currency: 'ARS'
+                              }).format(item.monto_original)}
+                            </TableCell>
+                            <TableCell align="right">
+                              {new Intl.NumberFormat('es-AR', {
+                                style: 'currency',
+                                currency: 'ARS'
+                              }).format(item.importe)}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                        <TableRow
+                          sx={{
+                            backgroundColor: 'grey.100',
+                            '& .MuiTableCell-root': {
+                              fontWeight: 'bold',
+                              borderTop: '2px solid rgba(224, 224, 224, 1)'
+                            }
+                          }}
+                        >
+                          <TableCell colSpan={3} align="right">Totales:</TableCell>
+                          <TableCell align="right">
+                            {new Intl.NumberFormat('es-AR', {
+                              style: 'currency',
+                              currency: 'ARS'
+                            }).format(listaBasesImponibles.reduce((sum, item) => sum + item.debe, 0))}
+                          </TableCell>
+                          <TableCell align="right">
+                            {new Intl.NumberFormat('es-AR', {
+                              style: 'currency',
+                              currency: 'ARS'
+                            }).format(listaBasesImponibles.reduce((sum, item) => sum + item.monto_original, 0))}
+                          </TableCell>
+                          <TableCell align="right">
+                            {new Intl.NumberFormat('es-AR', {
+                              style: 'currency',
+                              currency: 'ARS'
+                            }).format(listaBasesImponibles.reduce((sum, item) => sum + item.importe, 0))}
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        )}
+      </Box>
+    </Container>
   )
 }
 

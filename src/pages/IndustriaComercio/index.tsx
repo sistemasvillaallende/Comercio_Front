@@ -17,7 +17,7 @@ const index = () => {
   const [cantPaginas, setCantPaginas] = useState<number>(0);
   const [paginaActual, setPaginaActual] = useState<number>(1);
   const navigate = useNavigate();
-  const [strParametro, setStrParametro] = useState<string>("");
+  const [strParametro, setStrParametro] = useState<string>("0");
   const [buscarPor, setBuscarPor] = useState<string>("0");
   const [verTabla, setVerTabla] = useState<boolean>(false);
   const { elementoIndCom, setElementoIndCom, traerElemento } = useIndustriaComercioContext();
@@ -82,8 +82,10 @@ const index = () => {
     const paginationItems: JSX.Element[] = [];
     const pageRange = 5;
 
+    const totalPaginas = Math.max(cantPaginas, 1);
+
     let startPage = Math.max(1, paginaActual - pageRange);
-    let endPage = Math.min(cantPaginas, paginaActual + pageRange);
+    let endPage = Math.min(totalPaginas, paginaActual + pageRange);
 
     if (paginaActual > 1) {
       paginationItems.push(
@@ -132,8 +134,8 @@ const index = () => {
       );
     }
 
-    if (endPage < cantPaginas) {
-      if (endPage < cantPaginas - 1) {
+    if (endPage < totalPaginas) {
+      if (endPage < totalPaginas - 1) {
         paginationItems.push(
           <span key="ellipsis-next" className="mr-2">
             ...
@@ -143,17 +145,17 @@ const index = () => {
 
       paginationItems.push(
         <Button
-          key={cantPaginas}
+          key={totalPaginas}
           variant="secondary"
           className="mr-2"
-          onClick={() => handlePageChange(cantPaginas)}
+          onClick={() => handlePageChange(totalPaginas)}
         >
-          {cantPaginas}
+          {totalPaginas}
         </Button>
       );
     }
 
-    if (paginaActual < cantPaginas) {
+    if (paginaActual < totalPaginas) {
       paginationItems.push(
         <Button
           key="next"
@@ -186,22 +188,14 @@ const index = () => {
 
   const handleBuscar = (e: any) => {
     e.preventDefault();
+    const paramBusqueda = strParametro || "0";
+    const criterioBusqueda = buscarPor || "0";
 
-    if (!buscarPor || !strParametro) {
-      Swal.fire({
-        title: "Faltan parámetros o criterios de búsqueda",
-        text: "Por favor, ingrese criterios de búsqueda válidos.",
-        icon: "error",
-        confirmButtonText: "Aceptar",
-        confirmButtonColor: "#27a3cf",
-      });
-      return;
-    }
     const fetchData = async () => {
       const registrosPorPagina = import.meta.env.VITE_REGISTROS_POR_PAGINA;
       const paginaNum = 1;
       setPaginaActual(paginaNum);
-      const URL = `${import.meta.env.VITE_URL_BASE}Indycom/GetIndycomPaginado?buscarPor=${buscarPor}&strParametro=${strParametro}&pagina=${paginaNum}&registros_por_pagina=${registrosPorPagina}`;
+      const URL = `${import.meta.env.VITE_URL_BASE}Indycom/GetIndycomPaginado?buscarPor=${criterioBusqueda}&strParametro=${paramBusqueda}&pagina=${paginaNum}&registros_por_pagina=${registrosPorPagina}`;
       const response = await axios.get(URL);
       setCantPaginas(response.data.totalPaginas);
       setElementoIyC(response.data.resultado);
@@ -223,7 +217,7 @@ const index = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const registrosPorPagina = 10;
+      const registrosPorPagina = import.meta.env.VITE_REGISTROS_POR_PAGINA;
       const paginaNum = 1;
       setPaginaActual(paginaNum);
       const URL = `${import.meta.env.VITE_URL_BASE}Indycom/GetIndycomPaginado?buscarPor=0&strParametro=0&pagina=${paginaActual}&registros_por_pagina=${registrosPorPagina}`;
@@ -383,7 +377,7 @@ const index = () => {
                 </Table.Tbody>
               </Table>
               <div className="w-full text-center">
-                {Array.isArray(elementoIyC) && elementoIyC.length >= 10 && renderPagination()}
+                {renderPagination()}
               </div>
             </div>
           }

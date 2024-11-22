@@ -25,6 +25,30 @@ interface Periodo {
   [key: string]: any;
 }
 
+import {
+  Box,
+  Paper,
+  Typography,
+  Select,
+  MenuItem,
+  Button as MuiButton,
+  Grid,
+  Container,
+  Checkbox,
+  TableBody,
+  TableHead,
+  Table,
+  TableContainer,
+  TableRow,
+  TableCell
+} from '@mui/material';
+import {
+  KeyboardDoubleArrowRight,
+  KeyboardDoubleArrowLeft,
+  KeyboardArrowRight,
+  KeyboardArrowLeft
+} from '@mui/icons-material';
+
 const IniciarCtaCorriente = () => {
   const { dominio } = useParams();
   const { user } = useUserContext();
@@ -80,15 +104,15 @@ const IniciarCtaCorriente = () => {
       const response = await axios.get(apiUrl);
       setPeriodosExistentes(response.data);
       setCargando(true);
-      console.log(response.data)
-    } catch (error) {
+    } catch (error: any) {
       Swal.fire({
         title: "Error",
-        text: "No se pudieron traer los periodos",
+        text: error?.message || "Error desconocido",
         icon: "error",
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#27a3cf",
       });
+      navigate(-1);
     }
   };
 
@@ -100,9 +124,6 @@ const IniciarCtaCorriente = () => {
     navigate(-1);
   };
 
-
-
-  // Ejemplo de uso
   const cadenaFecha = "30/04/2021 12:00:00 a.m.";
   const fechaTransformada = transformarFechaNuevoFormato(cadenaFecha);
 
@@ -198,16 +219,42 @@ const IniciarCtaCorriente = () => {
       });
   }
 
-  const handleChangeExistentes = (event: ChangeEvent<HTMLSelectElement>) => {
-    setPeriodosSeleccionadosExistentes(
-      Array.from(event.target.selectedOptions, (option) => option.value)
-    );
+  const handleSelectExistente = (periodo: string) => {
+    const seleccionados = [...periodosSeleccionadosExistentes];
+    const index = seleccionados.indexOf(periodo);
+    if (index === -1) {
+      seleccionados.push(periodo);
+    } else {
+      seleccionados.splice(index, 1);
+    }
+    setPeriodosSeleccionadosExistentes(seleccionados);
   };
 
-  const handleChangeIncluidos = (event: ChangeEvent<HTMLSelectElement>) => {
-    setPeriodosSeleccionadosIncluidos(
-      Array.from(event.target.selectedOptions, (option) => option.value)
-    );
+  const handleSelectIncluido = (periodo: string) => {
+    const seleccionados = [...periodosSeleccionadosIncluidos];
+    const index = seleccionados.indexOf(periodo);
+    if (index === -1) {
+      seleccionados.push(periodo);
+    } else {
+      seleccionados.splice(index, 1);
+    }
+    setPeriodosSeleccionadosIncluidos(seleccionados);
+  };
+
+  const handleSelectAllExistentes = () => {
+    if (periodosSeleccionadosExistentes.length === periodosExistentes.length) {
+      setPeriodosSeleccionadosExistentes([]);
+    } else {
+      setPeriodosSeleccionadosExistentes(periodosExistentes.map(p => p.periodo));
+    }
+  };
+
+  const handleSelectAllIncluidos = () => {
+    if (periodosSeleccionadosIncluidos.length === periodosIncluidos.length) {
+      setPeriodosSeleccionadosIncluidos([]);
+    } else {
+      setPeriodosSeleccionadosIncluidos(periodosIncluidos.map(p => p.periodo));
+    }
   };
 
   const formatearFecha = (fechaCompleta: string): string => {
@@ -218,128 +265,159 @@ const IniciarCtaCorriente = () => {
   };
 
   return (
-    <>
-      <div className="conScroll grid grid-cols-12 gap-6 mt-5 ml-5 mr-4">
-        <div className="col-span-12 intro-y lg:col-span-12">
-          <div className="grid grid-cols-12 gap-6 mt-3">
-            <div className="flex w-full justify-between col-span-12 intro-y lg:col-span-12">
-              <h2>Iniciar Cuenta Corriente</h2>
-              <h2>Legajo: {elementoIndCom?.legajo}</h2>
-            </div>
-            {!cargando && (
-              <Cargando mensaje="cargando los periodos" />
-            )}
-            {cargando && (
-              <>
-                <div className="flex w-full justify-between col-span-12 intro-y lg:col-span-6">
-                  <div className="col-span-12 intro-y lg:col-span-2">
-                    <div className="col-span-12 intro-y lg:col-span-4">
-                      <FormLabel htmlFor="dominio-input" className="sm:w-50">
-                        Periodos Existentes
-                      </FormLabel>
-                      <div className="col-span-12 intro-y lg:col-span-2">
-                        <select
-                          multiple={true}
-                          onChange={handleChangeExistentes}
-                          value={periodosSeleccionadosExistentes}
-                          className="selectorDePeriodos"
-                        >
-                          {periodosExistentes.map((periodo: Periodo) => (
-                            <option
-                              key={periodo.periodo}
-                              value={periodo.periodo}
-                            >
-                              {periodo.periodo}
-                              {" - "}
-                              {formatearFecha(periodo.vencimiento)}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-span-12 intro-y lg:col-span-2 mt-7">
-                    <Button
-                      variant="primary"
-                      className="ml-3 mb-2"
-                      onClick={moverPeriodoExistentesAIncluidos}
-                    >
-                      {">"}
-                    </Button>
-                    <br />
-                    <Button
-                      variant="primary"
-                      className="ml-3 mb-2"
-                      onClick={moverPeriodoIncluidosAExistentes}
-                    >
-                      {"<"}
-                    </Button>
-                    <br />
-                    <Button
-                      variant="primary"
-                      className="ml-3 mb-2"
-                      onClick={moverTodosExistentesAIncluidos}
-                    >
-                      {">>"}
-                    </Button>
-                    <br />
-                    <Button
-                      variant="primary"
-                      className="ml-3"
-                      onClick={moverTodosIncluidosAExistentes}
-                    >
-                      {"<<"}
-                    </Button>
-                  </div>
-                  <div className="col-span-12 intro-y lg:col-span-4">
-                    <div className="col-span-12 intro-y lg:col-span-2">
-                      <FormLabel htmlFor="dominio-input" className="sm:w-50">
-                        Periodos Incluidos
-                      </FormLabel>
-                      <div className="col-span-12 intro-y lg:col-span-4">
-                        <select
-                          multiple={true}
-                          onChange={handleChangeIncluidos}
-                          value={periodosSeleccionadosIncluidos}
-                          className="selectorDePeriodos"
-                        >
-                          {periodosIncluidos.map((periodo: Periodo) => (
-                            <option
-                              key={periodo.periodo}
-                              value={periodo.periodo}
-                            >
-                              {periodo.periodo}
-                              {" - "}
-                              {formatearFecha(periodo.vencimiento)}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-span-12 intro-y lg:col-span-12">
-                  <Button
-                    variant="primary"
-                    className="ml-3"
-                    onClick={iniciarCtaCte}
-                  >
-                    Confirmar
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    className="ml-3"
-                    onClick={cancelar}
-                  >
-                    Cancelar
-                  </Button>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-    </>
+    <Container maxWidth="lg">
+      <Paper elevation={3} sx={{ p: 3, mt: 3 }}>
+        <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between' }}>
+          <h5>Iniciar Cuenta Corriente</h5>
+          <h6>Legajo: {elementoIndCom?.legajo}</h6>
+        </Box>
+
+        {!cargando && <Cargando mensaje="cargando los periodos" />}
+
+        {cargando && (
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            <Box sx={{ flex: 1 }}>
+              <h6>Periodos Existentes</h6>
+              <TableContainer sx={{ minHeight: 300, maxHeight: 500 }}>
+                <Table stickyHeader size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          checked={periodosSeleccionadosExistentes.length === periodosExistentes.length}
+                          indeterminate={
+                            periodosSeleccionadosExistentes.length > 0 &&
+                            periodosSeleccionadosExistentes.length < periodosExistentes.length
+                          }
+                          onChange={handleSelectAllExistentes}
+                        />
+                      </TableCell>
+                      <TableCell>Periodo</TableCell>
+                      <TableCell>Vencimiento</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {periodosExistentes.map((periodo) => (
+                      <TableRow
+                        key={periodo.periodo}
+                        hover
+                        onClick={() => handleSelectExistente(periodo.periodo)}
+                        role="checkbox"
+                        selected={periodosSeleccionadosExistentes.includes(periodo.periodo)}
+                      >
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            checked={periodosSeleccionadosExistentes.includes(periodo.periodo)}
+                          />
+                        </TableCell>
+                        <TableCell>{periodo.periodo}</TableCell>
+                        <TableCell>{formatearFecha(periodo.vencimiento)}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Box>
+
+            <Box sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2,
+              justifyContent: 'center',
+              padding: '0 20px'
+            }}>
+              <MuiButton
+                variant="contained"
+                onClick={moverPeriodoExistentesAIncluidos}
+                startIcon={<KeyboardArrowRight />}
+              >
+                Mover
+              </MuiButton>
+              <MuiButton
+                variant="contained"
+                onClick={moverPeriodoIncluidosAExistentes}
+                startIcon={<KeyboardArrowLeft />}
+              >
+                Mover
+              </MuiButton>
+              <MuiButton
+                variant="contained"
+                onClick={moverTodosExistentesAIncluidos}
+                startIcon={<KeyboardDoubleArrowRight />}
+              >
+                Mover Todo
+              </MuiButton>
+              <MuiButton
+                variant="contained"
+                onClick={moverTodosIncluidosAExistentes}
+                startIcon={<KeyboardDoubleArrowLeft />}
+              >
+                Mover Todo
+              </MuiButton>
+            </Box>
+
+            <Box sx={{ flex: 1 }}>
+              <h6>Periodos Incluidos</h6>
+              <TableContainer sx={{ minHeight: 300, maxHeight: 500 }}>
+                <Table stickyHeader size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          checked={periodosSeleccionadosIncluidos.length === periodosIncluidos.length}
+                          indeterminate={
+                            periodosSeleccionadosIncluidos.length > 0 &&
+                            periodosSeleccionadosIncluidos.length < periodosIncluidos.length
+                          }
+                          onChange={handleSelectAllIncluidos}
+                        />
+                      </TableCell>
+                      <TableCell>Periodo</TableCell>
+                      <TableCell>Vencimiento</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {periodosIncluidos.map((periodo) => (
+                      <TableRow
+                        key={periodo.periodo}
+                        hover
+                        onClick={() => handleSelectIncluido(periodo.periodo)}
+                        role="checkbox"
+                        selected={periodosSeleccionadosIncluidos.includes(periodo.periodo)}
+                      >
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            checked={periodosSeleccionadosIncluidos.includes(periodo.periodo)}
+                          />
+                        </TableCell>
+                        <TableCell>{periodo.periodo}</TableCell>
+                        <TableCell>{formatearFecha(periodo.vencimiento)}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Box>
+          </Box>
+        )}
+
+        <Box sx={{ mt: 3, display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
+          <MuiButton
+            variant="contained"
+            color="primary"
+            onClick={iniciarCtaCte}
+          >
+            Confirmar
+          </MuiButton>
+          <MuiButton
+            variant="outlined"
+            onClick={cancelar}
+          >
+            Cancelar
+          </MuiButton>
+        </Box>
+      </Paper>
+    </Container>
   );
 };
 

@@ -18,7 +18,7 @@ const CheckOutPago = ({ subsistema }: Props) => {
   const [tarjetas, setTarjetas] = useState<Tarjetas[]>([]);
   const [PlanesCobro, setPlanesCobro] = useState<Planes_Cobro[] | null>(null);
   useEffect(() => {
-    let url = `${import.meta.env.VITE_URL_TARJETAS}getTarjetasDesktop`;
+    let url = `${import.meta.env.VITE_URL_TARJETAS}Tarjetas/getTarjetasDesktop`;
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
@@ -43,7 +43,7 @@ const CheckOutPago = ({ subsistema }: Props) => {
   function handleTarjetaChange(event: React.ChangeEvent<HTMLSelectElement>) {
     const value = event.target.value;
     let url =
-      `${import.meta.env.VITE_URL_TARJETAS}getPlanBySubsistema?subsistema=` +
+      `${import.meta.env.VITE_URL_TARJETAS}Tarjetas/getPlanBySubsistema?subsistema=` +
       subsistema +
       `&deuda=0&cod_tarjeta=` +
       value;

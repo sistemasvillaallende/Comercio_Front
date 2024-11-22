@@ -51,6 +51,7 @@ export function UserProvider({ children }: any) {
   ];
 
   const handleLoginCIDI = async (codigoCIDI: String) => {
+    console.log("codigoCIDI: ", codigoCIDI)
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_URL_LOGINCIDI}UsuarioCIDI/ObtenerUsuarioCIDI2?Hash=${codigoCIDI}`

@@ -29,6 +29,9 @@ import CancelarCtaCte from "../pages/CuentaCorriente/CancelarCtaCte";
 import EliminarCancelacion from "../pages/CuentaCorriente/EliminarCancelacion";
 import ImprimirDeclaracionJurada from '../pages/DeclaracionesJuradas/ImprimirDeclaracionJurada';
 import DeclaracionesJuradas from "../pages/DeclaracionesJuradas/DeclaracionesJuradas";
+import BajaComercial from "../pages/BajaComercial/BajaComercial";
+
+import Sucursales from "../pages/Sucursales/Sucursales";
 
 import Rubros from "../pages/Rubros/Rubros";
 import Reliquida from "../pages/IndustriaComercio/Reliquida";
@@ -79,6 +82,10 @@ const Router = () => {
 
                     <Route path="/:legajo/Rubros" element={<Rubros />} />
                     <Route path="/:legajo/reliquida" element={<Reliquida />} />
+
+                    <Route path="/:legajo/sucursales" element={<Sucursales />} />
+                    <Route path="/:legajo/deudas" element={<Deudas />} />
+                    <Route path="/:legajo/bajacomercial" element={<BajaComercial />} />
 
                   </Route>
                   <Route path="/login" element={<Login />} />

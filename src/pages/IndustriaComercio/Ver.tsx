@@ -59,17 +59,17 @@ const ver = () => {
               <div className="elementCuadro">
                 <p>Fecha Alta: <strong>{elementoIndustriaComercio?.fecha_alta && convertirFecha(elementoIndustriaComercio?.fecha_alta)}</strong></p>
               </div>
-              <div className="col-span-12 intro-y lg:col-span-6">
+              <div className="elementCuadro">
                 <p>Nombre de Fantasía: <strong>{elementoIndustriaComercio?.nom_fantasia}</strong></p>
               </div>
             </div>
 
             <div className="cuadroInformacion">
-              <div className="col-span-12 intro-y lg:col-span-8">
+              <div className="elementCuadro">
                 <p>Descripcion: <strong>{elementoIndustriaComercio?.des_com}</strong></p>
               </div>
-              <div className="col-span-12 intro-y lg:col-span-4">
-                <p>Badec: <strong>{elementoIndustriaComercio?.nro_bad}</strong></p>
+              <div className="elementCuadro">
+                <p> Badec: <strong>{elementoIndustriaComercio?.nro_bad}</strong></p>
               </div>
             </div>
 
@@ -78,13 +78,13 @@ const ver = () => {
             </div>
 
             <div className="cuadroInformacion">
-              <div className="col-span-12 intro-y lg:col-span-3">
+              <div className="elementCuadro">
                 <p>Calle: <strong>{elementoIndustriaComercio?.nom_calle.trim()}</strong></p>
               </div>
               <div className="elementCuadro">
                 <p>Nro. Dom: <strong>{elementoIndustriaComercio?.nro_dom}</strong></p>
               </div>
-              <div className="col-span-12 intro-y lg:col-span-1">
+              <div className="elementCuadro">
                 <p>Piso: {elementoIndustriaComercio?.piso_dpto_esp}</p>
               </div>
               <div className="elementCuadro">
@@ -93,7 +93,7 @@ const ver = () => {
             </div>
 
             <div className="cuadroInformacion">
-              <div className="col-span-12 intro-y lg:col-span-5">
+              <div className="elementCuadro">
                 <p>Barrio: <strong>{elementoIndustriaComercio?.nom_barrio_dom_esp.trim()}</strong></p>
               </div>
               <div className="elementCuadro">
@@ -112,7 +112,7 @@ const ver = () => {
             </div>
 
             <div className="cuadroInformacion">
-              <div className="col-span-12 intro-y lg:col-span-5">
+              <div className="elementCuadro">
                 <p>Tipo de Liquidación: <strong>{tipoLiquidacion?.descripcion_tipo_liq}</strong></p>
               </div>
               <div className="elementCuadro">
@@ -136,16 +136,16 @@ const ver = () => {
               <div className="elementCuadro">
                 <p>Exento: <strong>{elementoIndustriaComercio?.exento ? "Si" : "No"}</strong></p>
               </div>
-              <div className="col-span-12 intro-y lg:col-span-4">
+              <div className="elementCuadro">
                 <p>Caracter de la Entidad: <strong>{tipoDeEntidad?.text ? tipoDeEntidad?.text : "No definido"}</strong></p>
               </div>
             </div>
 
             <div className="cuadroInformacion">
-              <div className="col-span-12 intro-y lg:col-span-5">
+              <div className="elementCuadro">
                 <p>Condición Frente al IVA: <strong>{tipoCondicionIVA?.des_cond_ante_iva}</strong></p>
               </div>
-              <div className="col-span-12 intro-y lg:col-span-3">
+              <div className="elementCuadro">
                 <p>Ingresos Brutos: <strong>{elementoIndustriaComercio?.nro_ing_bruto}</strong></p>
               </div>
             </div>
@@ -154,7 +154,7 @@ const ver = () => {
               <div className="elementCuadro">
                 <p>Fecha Inicio: <strong>{elementoIndustriaComercio?.fecha_inicio && convertirFecha(elementoIndustriaComercio?.fecha_inicio)}</strong></p>
               </div>
-              <div className="col-span-12 intro-y lg:col-span-3">
+              <div className="elementCuadro">
                 <p>Fecha Habilitación: <strong>{elementoIndustriaComercio?.fecha_hab && convertirFecha(elementoIndustriaComercio?.fecha_hab)}</strong></p>
               </div>
               <div className="elementCuadro">
@@ -169,10 +169,10 @@ const ver = () => {
             </div>
 
             <div className="cuadroInformacion">
-              <div className="col-span-12 intro-y lg:col-span-6">
+              <div className="elementCuadro">
                 <p>Situación Comercio: <strong>{situacionJudicial?.text}</strong></p>
               </div>
-              <div className="col-span-12 intro-y lg:col-span-4">
+              <div className="elementCuadro">
                 <p>Fecha DDJJ: <strong>{elementoIndustriaComercio?.fecha_ddjj_anual && convertirFecha(elementoIndustriaComercio?.fecha_ddjj_anual)}</strong></p>
               </div>
             </div>
@@ -182,10 +182,10 @@ const ver = () => {
             </div>
 
             <div className="cuadroInformacion">
-              <div className="col-span-12 intro-y lg:col-span-3">
+              <div className="elementCuadro">
                 <p>Emite Cedulón: <strong>{elementoIndustriaComercio?.emite_cedulon ? "Si" : "No"}</strong></p>
               </div>
-              <div className="col-span-12 intro-y lg:col-span-3">
+              <div className="elementCuadro">
                 <p>Vereda Ocupad: <strong>{elementoIndustriaComercio?.ocupacion_vereda ? "Si" : "No"}</strong></p>
               </div>
             </div>

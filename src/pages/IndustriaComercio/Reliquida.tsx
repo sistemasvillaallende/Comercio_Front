@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { PeriodoReliquida } from '../../interfaces/Comercio';
 import Swal from 'sweetalert2';
-
 import {
   Paper,
   Table,
@@ -14,10 +13,13 @@ import {
   TableRow,
   Checkbox,
   Button,
-  IconButton
+  IconButton,
+  Box
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
+import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const Reliquida = () => {
   const [periodos, setPeriodos] = useState<PeriodoReliquida[]>([]);
@@ -26,6 +28,7 @@ const Reliquida = () => {
   const [totalMonto, setTotalMonto] = useState<number>(0);
   const [totalDebe, setTotalDebe] = useState<number>(0);
   const { legajo } = useParams();
+  const navigate = useNavigate();
 
   const obtenerPeriodos = async () => {
     try {
@@ -63,52 +66,58 @@ const Reliquida = () => {
     });
   };
 
+  const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      // Seleccionar todos
+      const allIndexes = periodos.map((_, index) => index);
+      setPeriodosSeleccionados(new Set(allIndexes));
+    } else {
+      // Deseleccionar todos
+      setPeriodosSeleccionados(new Set());
+    }
+  };
+
   const handleReliquidar = async () => {
     try {
       const periodosAReliquidar = periodos
         .filter((_, index) => periodosSeleccionados.has(index))
-        .map(periodo => {
-          const periodoFormateado = {
-            tipo_transaccion: 0,
-            nro_transaccion: Number(periodo.nro_transaccion) || 0,
-            nro_pago_parcial: 0,
-            legajo: Number(legajo),
-            fecha_transaccion: new Date().toISOString(),
-            periodo: periodo.periodo || "",
-            monto_original: Number(periodo.monto_original) || 0,
-            nro_plan: 0,
-            pagado: false,
-            debe: Number(periodo.debe) || 0,
-            haber: 0,
-            nro_procuracion: 0,
-            pago_parcial: false,
-            vencimiento: periodo.vencimiento || new Date().toISOString(),
-            nro_cedulon: 0,
-            declaracion_jurada: false,
-            liquidacion_especial: false,
-            cod_cate_deuda: 0,
-            monto_pagado: 0,
-            recargo: 0,
-            honorarios: 0,
-            iva_hons: 0,
-            tipo_deuda: 0,
-            decreto: "",
-            observaciones: "",
-            nro_cedulon_paypertic: 0,
-            des_movimiento: "",
-            des_categoria: "",
-            deuda: 0,
-            sel: 0,
-            costo_financiero: 0,
-            des_rubro: "",
-            cod_tipo_per: 1,
-            sub_total: 0,
-            deuda_activa: 0
-          };
-
-          console.log('Período formateado:', periodoFormateado);
-          return periodoFormateado;
-        });
+        .map(periodo => ({
+          tipo_transaccion: periodo.tipo_transaccion,
+          nro_transaccion: Number(periodo.nro_transaccion) || 0,
+          nro_pago_parcial: 0,
+          legajo: Number(legajo),
+          fecha_transaccion: new Date().toISOString(),
+          periodo: periodo.periodo || "",
+          monto_original: Number(periodo.monto_original) || 0,
+          nro_plan: 0,
+          pagado: false,
+          debe: Number(periodo.debe) || 0,
+          haber: 0,
+          nro_procuracion: 0,
+          pago_parcial: false,
+          vencimiento: periodo.vencimiento || new Date().toISOString(),
+          nro_cedulon: 0,
+          declaracion_jurada: false,
+          liquidacion_especial: false,
+          cod_cate_deuda: 0,
+          monto_pagado: 0,
+          recargo: 0,
+          honorarios: 0,
+          iva_hons: 0,
+          tipo_deuda: 0,
+          decreto: "",
+          observaciones: "",
+          nro_cedulon_paypertic: 0,
+          des_movimiento: "",
+          des_categoria: "",
+          deuda: 0,
+          sel: 0,
+          costo_financiero: 0,
+          des_rubro: "",
+          cod_tipo_per: 1,
+          sub_total: 0,
+          deuda_activa: 0
+        }));
 
       console.log('Cantidad de períodos a reliquidar:', periodosAReliquidar.length);
       console.log('Payload completo:', periodosAReliquidar);
@@ -147,14 +156,28 @@ const Reliquida = () => {
       console.error('Error detallado:', {
         mensaje: error.message,
         respuesta: error.response?.data,
-        payload: error.config?.data
+        status: error.response?.status
       });
 
-      Swal.fire({
-        title: 'Error',
-        text: `Error al reliquidar los períodos: ${error.response?.data || error.message}`,
-        icon: 'error'
-      });
+      let mensajeError = 'Error al reliquidar los períodos';
+
+      if (error.response?.status === 400) {
+        mensajeError = error.response.data.message || error.response.data || mensajeError;
+
+        Swal.fire({
+          title: 'Error',
+          text: mensajeError,
+          icon: 'error'
+        }).then(() => {
+          navigate(`/comercio/${legajo}/iniciarctacte`);
+        });
+      } else {
+        Swal.fire({
+          title: 'Error',
+          text: mensajeError,
+          icon: 'error'
+        });
+      }
     }
   };
 
@@ -199,16 +222,16 @@ const Reliquida = () => {
         const payload = {
           legajo: Number(legajo),
           lstCtastes: periodosReliquidados.map(periodo => ({
-            tipo_transaccion: 0, //listo
-            nro_transaccion: 0, //listo
-            nro_pago_parcial: 0, //listo
-            legajo: Number(legajo), //listo
-            fecha_transaccion: new Date().toISOString(), //listo
+            tipo_transaccion: periodo.tipo_transaccion,
+            nro_transaccion: Number(periodo.nro_transaccion) || 0,
+            nro_pago_parcial: 0,
+            legajo: Number(legajo),
+            fecha_transaccion: new Date().toISOString(),
             periodo: periodo.periodo,
-            monto_original: periodo.monto_original,
+            monto_original: Number(periodo.monto_original) || 0,
             nro_plan: 0,
             pagado: false,
-            debe: periodo.debe,
+            debe: Number(periodo.debe) || 0,
             haber: 0,
             nro_procuracion: 0,
             pago_parcial: false,
@@ -269,154 +292,166 @@ const Reliquida = () => {
     }
   };
 
-  const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      // Seleccionar todos
-      const allIndexes = periodos.map((_, index) => index);
-      setPeriodosSeleccionados(new Set(allIndexes));
-    } else {
-      // Deseleccionar todos
-      setPeriodosSeleccionados(new Set());
-    }
-  };
-
   return (
-    <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Períodos a Reliquidar</h2>
-
-      <div className="flex gap-4">
-        {/* Tabla izquierda */}
-        <div className="flex-1">
-          <div className="h-[650px] flex flex-col">
-            <h3 className="text-xl font-bold">Períodos</h3>
-            <TableContainer component={Paper} sx={{ flex: 1 }}>
-              <Table stickyHeader>
+    <div className='paginas'>
+      <Box sx={{ display: 'flex', gap: 2, p: 2 }}>
+        {/* Tabla Izquierda */}
+        <Box sx={{ flex: 1, minWidth: '45%' }}>
+          <Paper elevation={3} sx={{ p: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+              <Box>
+                Períodos a Reliquidar
+              </Box>
+            </Box>
+            <TableContainer sx={{ maxHeight: 500 }}>
+              <Table stickyHeader size="small">
                 <TableHead>
                   <TableRow>
-                    <TableCell align="center">
+                    <TableCell padding="checkbox">
                       <Checkbox
-                        checked={periodosSeleccionados.size === periodos.length && periodos.length > 0}
                         indeterminate={periodosSeleccionados.size > 0 && periodosSeleccionados.size < periodos.length}
+                        checked={periodosSeleccionados.size === periodos.length && periodos.length > 0}
                         onChange={handleSelectAll}
                       />
                     </TableCell>
-                    <TableCell align="center">Período</TableCell>
-                    <TableCell align="center">Monto</TableCell>
-                    <TableCell align="center">Debe</TableCell>
-                    <TableCell align="center">Vto.</TableCell>
-                    <TableCell align="center">Tipo</TableCell>
+                    <TableCell>Período</TableCell>
+                    <TableCell align="right">Monto</TableCell>
+                    <TableCell align="right">Debe</TableCell>
+                    <TableCell>Vto.</TableCell>
+                    <TableCell>Tipo</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {periodos.map((periodo, index) => (
-                    <TableRow key={index} sx={{ '&:nth-of-type(odd)': { backgroundColor: '#f5f5f5' } }}>
-                      <TableCell align="center">
+                    <TableRow
+                      key={index}
+                      hover
+                      selected={periodosSeleccionados.has(index)}
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    >
+                      <TableCell padding="checkbox">
                         <Checkbox
                           checked={periodosSeleccionados.has(index)}
                           onChange={() => handleCheckboxChange(index)}
                         />
                       </TableCell>
-                      <TableCell align="center">{periodo.periodo}</TableCell>
-                      <TableCell align="center">{periodo.monto_original}</TableCell>
-                      <TableCell align="center">{periodo.debe}</TableCell>
-                      <TableCell align="center">{formatearFecha(periodo.vencimiento)}</TableCell>
-                      <TableCell align="center">{periodo.tipo}</TableCell>
+                      <TableCell>{periodo.periodo}</TableCell>
+                      <TableCell align="right">
+                        ${Number(periodo.monto_original).toFixed(2)}
+                      </TableCell>
+                      <TableCell align="right">
+                        ${Number(periodo.debe).toFixed(2)}
+                      </TableCell>
+                      <TableCell>{formatearFecha(periodo.vencimiento)}</TableCell>
+                      <TableCell>{periodo.tipo}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             </TableContainer>
-          </div>
-        </div>
+          </Paper>
+        </Box>
 
-        {/* Tabla derecha */}
-        <div className="flex-1">
-          <div className="h-[650px] flex flex-col">
-            {periodosReliquidados.length > 0 ? (
-              <>
-                <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-xl font-bold"> Reliquidados</h3>
-                  <IconButton
-                    color="error"
-                    onClick={handleRemoveAllReliquidados}
-                    title="Eliminar todos los períodos reliquidados"
-                  >
-                    <DeleteSweepIcon />
-                  </IconButton>
-                </div>
-                <TableContainer component={Paper} sx={{ flex: 1 }}>
-                  <Table stickyHeader>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell align="center">Período</TableCell>
-                        <TableCell align="center">Monto</TableCell>
-                        <TableCell align="center">Debe</TableCell>
-                        <TableCell align="center">Vto.</TableCell>
-                        <TableCell align="center">Tipo</TableCell>
-                        <TableCell align="center">Acciones</TableCell>
+
+
+        {/* Tabla Derecha */}
+        <Box sx={{ flex: 1, minWidth: '45%' }}>
+          <Paper elevation={3} sx={{ p: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+              <Box>
+                Períodos Reliquidados
+              </Box>
+              {periodosReliquidados.length > 0 && (
+                <IconButton
+                  color="error"
+                  onClick={handleRemoveAllReliquidados}
+                  title="Eliminar todos los períodos reliquidados"
+                >
+                  <DeleteSweepIcon />
+                </IconButton>
+              )}
+            </Box>
+            <TableContainer sx={{ maxHeight: 500 }}>
+              <Table stickyHeader size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Período</TableCell>
+                    <TableCell align="right">Monto</TableCell>
+                    <TableCell align="right">Debe</TableCell>
+                    <TableCell>Vto.</TableCell>
+                    <TableCell>Tipo</TableCell>
+                    <TableCell align="center">Acciones</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {periodosReliquidados.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={6} align="center" sx={{ py: 3 }}>
+                        <span>No hay períodos reliquidados</span>
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    periodosReliquidados.map((periodo, index) => (
+                      <TableRow
+                        key={index}
+                        hover
+                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                      >
+                        <TableCell>{periodo.periodo}</TableCell>
+                        <TableCell align="right">
+                          ${Number(periodo.monto_original).toFixed(2)}
+                        </TableCell>
+                        <TableCell align="right">
+                          ${Number(periodo.debe).toFixed(2)}
+                        </TableCell>
+                        <TableCell>{formatearFecha(periodo.vencimiento)}</TableCell>
+                        <TableCell>{periodo.tipo}</TableCell>
+                        <TableCell align="center">
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => handleRemoveReliquidado(index)}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </TableCell>
                       </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {periodosReliquidados.map((periodo, index) => (
-                        <TableRow key={index} sx={{ '&:nth-of-type(odd)': { backgroundColor: '#f5f5f5' } }}>
-                          <TableCell align="center">{periodo.periodo}</TableCell>
-                          <TableCell align="center">{periodo.monto_original}</TableCell>
-                          <TableCell align="center">{periodo.debe}</TableCell>
-                          <TableCell align="center">{formatearFecha(periodo.vencimiento)}</TableCell>
-                          <TableCell align="center">{periodo.tipo}</TableCell>
-                          <TableCell align="center">
-                            <IconButton
-                              color="error"
-                              onClick={() => handleRemoveReliquidado(index)}
-                              size="small"
-                            >
-                              <DeleteIcon />
-                            </IconButton>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-
-                <div className="mt-4 p-4 bg-gray-100 rounded-md">
-                  <div className="flex justify-between items-center">
-                    <div className="font-semibold">
-                      Monto: $ {totalMonto.toFixed(2)}
-                    </div>
-                    <div className="font-semibold">
-                      Debe: $ {totalDebe.toFixed(2)}
-                    </div>
-                  </div>
-                </div>
-              </>
-            ) : (
-              <Paper sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <span className="text-gray-500">No hay períodos reliquidados</span>
-              </Paper>
-            )}
-          </div>
-        </div>
-
-      </div>
-      <div className="flex justify-end mt-2 gap-2">
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Paper>
+        </Box>
+      </Box>
+      {/* Botones centrales */}
+      <Box sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        gap: 2,
+        alignItems: 'flex-end'  // Alinea los botones a la derecha
+      }}>
         <Button
           variant="contained"
-          color="primary"
+          startIcon={<CompareArrowsIcon />}
           onClick={handleReliquidar}
           disabled={periodosSeleccionados.size === 0}
+          sx={{ minWidth: 'fit-content' }}  // Hace que el botón se ajuste al contenido
         >
           Reliquidar
         </Button>
         <Button
           variant="contained"
           color="success"
+          startIcon={<CheckCircleIcon />}
           onClick={handleConfirmar}
           disabled={periodosReliquidados.length === 0}
+          sx={{ minWidth: 'fit-content' }}  // Hace que el botón se ajuste al contenido
         >
           Confirmar
         </Button>
-      </div>
+      </Box>
     </div>
   );
 };

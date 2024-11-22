@@ -123,6 +123,27 @@ const MenuElemento = () => {
                 Rubros
               </Link>
             </li>
+            <li>
+              <Link
+                to={`${elementoIndCom?.legajo}/sucursales`}
+              >
+                Sucursales
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={`${elementoIndCom?.legajo}/deudas`}
+              >
+                Deudas
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={`${elementoIndCom?.legajo}/bajacomercial`}
+              >
+                Baja Comercial
+              </Link>
+            </li>
           </ul>
         </nav>
       </>

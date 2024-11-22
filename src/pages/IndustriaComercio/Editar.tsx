@@ -302,7 +302,7 @@ const Editar = () => {
         <SeleccionadorDePropietarios {...{ setPropietarioSeleccionado, setVentanaPropietario }} />
       )}
 
-      <div className="conScroll grid grid-cols-12 gap-6 mt-2 ml-3 mr-4 p-4">
+      <div className="paginas conScroll grid grid-cols-12 gap-6 mt-2 ml-3 mr-4 p-4">
         <div className="col-span-12 intro-y lg:col-span-12">
           <div className="flex w-full justify-between col-span-12 intro-y lg:col-span-12">
             <h2>Datos del Comercio o Industria</h2>
@@ -441,7 +441,6 @@ const Editar = () => {
                 value={codZona}
                 onChange={(e) => {
                   setCodZona(e.target.value)
-                  console.log(e.target.value)
                 }}
               >
                 {listadoZonas?.map((tipo) => (

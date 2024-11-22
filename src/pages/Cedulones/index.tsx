@@ -83,7 +83,7 @@ const Autos = () => {
   function handleTarjetaChange(event: React.ChangeEvent<HTMLSelectElement>) {
     const value = event.target.value;
     let url =
-      `${import.meta.env.VITE_URL_TARJETAS}getPlanBySubsistema?subsistema=` +
+      `${import.meta.env.VITE_URL_TARJETAS}Tarjetas/getPlanBySubsistema?subsistema=` +
       4 +
       `&deuda=0&cod_tarjeta=` +
       value;
@@ -122,7 +122,7 @@ const Autos = () => {
 
     setCedulonParaImpresion(cedulonParaImpresion);
 
-    const urlApi = `${import.meta.env.VITE_URL_API_IYC_CEDULONES}EmitoCedulonComercio`;
+    const urlApi = `${import.meta.env.VITE_URL_CEDULONES}Comercio/EmitoCedulonComercio`;
 
     const listaVCtasctes = deudaSeleccionada.map((deuda) => {
       return {
@@ -189,13 +189,13 @@ const Autos = () => {
     };
     fetchData2();
 
-    let url = `${import.meta.env.VITE_URL_TARJETAS}getTarjetasDesktop`;
+    let url = `${import.meta.env.VITE_URL_TARJETAS}Tarjetas/getTarjetasDesktop`;
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
         setTarjetas(data);
         let url2 =
-          `${import.meta.env.VITE_URL_TARJETAS}getPlanBySubsistema?subsistema=` + 4 + `&deuda=0&cod_tarjeta=` + data[0].cod_tarjeta;
+          `${import.meta.env.VITE_URL_TARJETAS}Tarjetas/getPlanBySubsistema?subsistema=` + 4 + `&deuda=0&cod_tarjeta=` + data[0].cod_tarjeta;
         fetch(url2)
           .then((response2) => response2.json())
           .then((data2) => {

@@ -52,6 +52,9 @@ const CuentaCorriente = () => {
   const [detallePlan, setDetallePlan] = useState<DetPlanPago | null>();
   const [showModalPlan, setShowModalPlan] = useState(false);
 
+  const [showOptionsModal, setShowOptionsModal] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] = useState<Ctasctes | null>(null);
+
   useEffect(() => {
     setShowModal(false);
     const fetchData = async () => {
@@ -111,13 +114,7 @@ const CuentaCorriente = () => {
   }
   function handledet(tipo_transaccion: number, nro_transaccion: number) {
     const fetchData = async () => {
-      const response = await axios.get(
-        `${import.meta.env.VITE_URL_API_IYC
-        }Ctasctes_indycom/Datos_transaccion=` +
-        tipo_transaccion +
-        `&nro_transaccion=` +
-        nro_transaccion
-      );
+      const response = await axios.get(`${import.meta.env.VITE_URL_BASE}Ctasctes_indycom/Datos_transaccion?tipo_transaccion=${tipo_transaccion}&nro_transaccion=${nro_transaccion}`);
 
       setDetalle(response.data);
     };
@@ -143,7 +140,7 @@ const CuentaCorriente = () => {
   function handledetDeuda(nro_transaccion: number) {
     const fetchData = async () => {
       const response = await axios.get(
-        `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/DetalleDeuda?nro_transaccion=` +
+        `${import.meta.env.VITE_URL_BASE}Ctasctes_indycom/DetalleDeuda?nro_transaccion=` +
         nro_transaccion
       );
 
@@ -167,15 +164,16 @@ const CuentaCorriente = () => {
     setShowModalProcuracion(true);
   }
   function handledetPlan(nro_plan: number) {
-    console.log(autos)
     let url =
-      `${import.meta.env.VITE_URL_API_IYC}Ctasctes_indycom/DetallePlan?nro_plan=` + nro_plan;
+      `${import.meta.env.VITE_URL_BASE}Ctasctes_indycom/DetallePlan?nro_plan=` + nro_plan;
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
         setDetallePlan(data), setShowModalPlan(true);
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error)
+      });
   }
   function handleSelectChangeTipo(event: React.ChangeEvent<HTMLSelectElement>) {
     const value = event.target.value;
@@ -252,6 +250,87 @@ const CuentaCorriente = () => {
             setShowModalPlan={setShowModalPlan}
             detalle={detallePlan ? detallePlan : null}
           ></ModalDetPlan>
+          <div className="modal"
+            style={{
+              display: showOptionsModal ? "block" : "none",
+              position: "fixed",
+              top: "0",
+              left: "0",
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0,0,0,0.5)",
+              zIndex: 1000
+            }}
+          >
+            <div className="modal-content"
+              style={{
+                position: "fixed",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                backgroundColor: "white",
+                padding: "20px",
+                borderRadius: "8px",
+                minWidth: "300px"
+              }}
+            >
+              <div className="modal-header">
+                <h3>Opciones</h3>
+                <Button
+                  onClick={() => setShowOptionsModal(false)}
+                  style={{ float: "right" }}
+                >
+                  ×
+                </Button>
+              </div>
+              <div className="modal-body">
+                <Button
+                  style={{
+                    display: "block",
+                    width: "100%",
+                    textAlign: "left",
+                    marginBottom: "10px",
+                    padding: "10px"
+                  }}
+                  onClick={() => {
+                    if (selectedTransaction) {
+                      handledet(
+                        selectedTransaction.tipo_transaccion,
+                        selectedTransaction.nro_transaccion
+                      );
+                      setShowOptionsModal(false);
+                    }
+                  }}
+                >
+                  <Lucide icon="FileSearch" className="w-4 h-4 mr-2" />
+                  Detalle Transaccion
+                </Button>
+
+                {selectedTransaction?.des_movimiento === "Deuda" && (
+                  <Button
+                    style={{
+                      display: "block",
+                      width: "100%",
+                      textAlign: "left",
+                      marginBottom: "10px",
+                      padding: "10px"
+                    }}
+                    onClick={() => {
+                      if (selectedTransaction) {
+                        handledetDeuda(selectedTransaction.nro_transaccion);
+                        setShowOptionsModal(false);
+                      }
+                    }}
+                  >
+                    <Lucide icon="FileSearch" className="w-4 h-4 mr-2" />
+                    Detalle Deuda
+                  </Button>
+                )}
+
+                {/* Repetir el mismo patrón para los otros botones */}
+              </div>
+            </div>
+          </div>
           <div
             className="grid grid-cols-12 gap-6 mt-5"
             style={{ marginTop: "0px" }}
@@ -314,7 +393,7 @@ const CuentaCorriente = () => {
                 }}
                 id="regular-form-1"
                 type="text"
-                value={currencyFormat(saldo_actualizado).toString()}
+                value={currencyFormat(Math.abs(saldo_actualizado)).toString()}
                 disabled
               />
             </div>
@@ -464,135 +543,20 @@ const CuentaCorriente = () => {
                           textAlign: "right",
                         }}
                       >
-                        <Menu>
-                          <Menu.Button
-                            as={Button}
-                            style={{
-                              backgroundColor:
-                                auto.sub_total >= 0 ? "#0D9488" : "#c0504e",
-                              color: "white",
-                              marginRight: "10px",
-                              height: "25px",
-                            }}
-                          >
-                            ...
-                          </Menu.Button>
-                          <Menu.Items className="w-48" placement="left-end">
-                            <Menu.Item>
-                              <Button
-                                style={{
-                                  textAlign: "left",
-                                  border: "None",
-                                  padding: "5px",
-                                  paddingLeft: "0",
-                                  fontWeight: "700",
-                                }}
-                                onClick={() =>
-                                  handledet(
-                                    auto.tipo_transaccion,
-                                    auto.nro_transaccion
-                                  )
-                                }
-                              >
-                                <Lucide
-                                  icon="FileSearch"
-                                  className="w-4 h-4 mr-2"
-                                />
-                                Detalle Transaccion
-                              </Button>
-                            </Menu.Item>
-                            {auto.des_movimiento == "Deuda" && (
-                              <Menu.Item>
-                                <Button
-                                  style={{
-                                    textAlign: "left",
-                                    border: "None",
-                                    padding: "5px",
-                                    paddingLeft: "0",
-                                    fontWeight: "700",
-                                  }}
-                                  onClick={() =>
-                                    handledetDeuda(auto.nro_transaccion)
-                                  }
-                                >
-                                  <Lucide
-                                    icon="FileSearch"
-                                    className="w-4 h-4 mr-2"
-                                  />
-                                  Detalle Deuda
-                                </Button>
-                              </Menu.Item>
-                            )}
-                            {(auto.des_movimiento == "Pago" ||
-                              auto.des_movimiento == "Fin de Plan") && (
-                                <Menu.Item>
-                                  <Button
-                                    style={{
-                                      textAlign: "left",
-                                      border: "None",
-                                      padding: "5px",
-                                      paddingLeft: "0",
-                                      fontWeight: "700",
-                                    }}
-                                    onClick={() =>
-                                      handledetPago(
-                                        auto.nro_cedulon,
-                                        auto.nro_transaccion
-                                      )
-                                    }
-                                  >
-                                    <Lucide
-                                      icon="FileSearch"
-                                      className="w-4 h-4 mr-2"
-                                    />
-                                    Detalle de Pago
-                                  </Button>
-                                </Menu.Item>
-                              )}
-                            {auto.nro_procuracion != 0 && (
-                              <Menu.Item>
-                                <Button
-                                  style={{
-                                    textAlign: "left",
-                                    border: "None",
-                                    padding: "5px",
-                                    paddingLeft: "0",
-                                    fontWeight: "700",
-                                  }}
-                                  onClick={() =>
-                                    handledetProcuracion(auto.nro_procuracion)
-                                  }
-                                >
-                                  <Lucide
-                                    icon="FileSearch"
-                                    className="w-4 h-4 mr-2"
-                                  />
-                                  Detalle Procuración
-                                </Button>
-                              </Menu.Item>
-                            )}
-                            {auto.nro_plan != null && (
-                              <Menu.Item>
-                                <Button
-                                  style={{
-                                    textAlign: "left",
-                                    border: "None",
-                                    padding: "5px",
-                                    paddingLeft: "0",
-                                    fontWeight: "700",
-                                  }}
-                                  onClick={() => handledetPlan(auto.nro_plan)}
-                                >
-                                  <Lucide
-                                    icon="FileSearch"
-                                    className="w-4 h-4 mr-2"
-                                  />
-                                  Detalle Plan de Pagos
-                                </Button>
-                              </Menu.Item>
-                            )}
-                          </Menu.Items>
-                        </Menu>
+                        <Button
+                          style={{
+                            backgroundColor: auto.sub_total >= 0 ? "#0D9488" : "#c0504e",
+                            color: "white",
+                            marginRight: "10px",
+                            height: "25px",
+                          }}
+                          onClick={() => {
+                            setSelectedTransaction(auto);
+                            setShowOptionsModal(true);
+                          }}
+                        >
+                          ...
+                        </Button>
                       </Table.Td>
                     </Table.Tr>
                   ))}
