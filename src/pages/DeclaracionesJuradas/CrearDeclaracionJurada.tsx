@@ -114,16 +114,18 @@ const CrearDeclaracionJurada: React.FC<Props> = ({ setCancelar }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {declaraciones.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((declaracion) => (
+            {declaraciones.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((declaracion, index) => (
               <TableRow key={declaracion.ddjj.nro_transaccion}>
                 <TableCell>{declaracion.periodo}</TableCell>
                 <TableCell>{declaracion.monto_original.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}</TableCell>
                 <TableCell>{declaracion.vencimiento}</TableCell>
                 <TableCell>{declaracion.categoria}</TableCell>
                 <TableCell>
-                  <Button variant="contained" color="success" onClick={() => crearDDJJ(declaracion.ddjj.nro_transaccion, declaracion.ddjj.legajo)}>
-                    Crear
-                  </Button>
+                  {index === 0 && (
+                    <Button variant="contained" color="success" onClick={() => crearDDJJ(declaracion.ddjj.nro_transaccion, declaracion.ddjj.legajo)}>
+                      Crear
+                    </Button>
+                  )}
                 </TableCell>
               </TableRow>
             ))}

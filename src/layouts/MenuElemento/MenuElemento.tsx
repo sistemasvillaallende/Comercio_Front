@@ -144,6 +144,20 @@ const MenuElemento = () => {
                 Baja Comercial
               </Link>
             </li>
+            <li>
+              <Link
+                to={`${elementoIndCom?.legajo}/concepto`}
+              >
+                Concepto
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={`${elementoIndCom?.legajo}/domiciliopostal`}
+              >
+                Domicilio Postal
+              </Link>
+            </li>
           </ul>
         </nav>
       </>

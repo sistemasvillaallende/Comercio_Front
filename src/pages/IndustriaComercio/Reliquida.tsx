@@ -285,6 +285,7 @@ const Reliquida = () => {
         await obtenerPeriodos();
 
         Swal.fire('¡Éxito!', 'La reliquidación se ha confirmado correctamente', 'success');
+        navigate(`/${legajo}/ver`);
       } catch (error) {
         console.error('Error al confirmar reliquidación:', error);
         Swal.fire('Error', 'Hubo un error al confirmar la reliquidación', 'error');

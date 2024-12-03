@@ -2,12 +2,8 @@ import { useState, useContext, createContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { getSecureItem, setSecureItem } from "../modules/secureStorage"
+import { UserType } from "../types/user";
 
-type UserType = {
-  userName: string;
-  nombre: string;
-  apellido: string;
-} | null;
 
 type UserContextType = {
   user: UserType;

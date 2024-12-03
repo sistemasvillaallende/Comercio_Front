@@ -22,6 +22,16 @@ import _, { head, set } from 'lodash';
 import { useUserContext } from '../../context/UserProvider';
 import Lucide from "../../base-components/Lucide";
 import Logo from "../../assets/logo.png";
+import {
+  Table as MUITable,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TablePagination,
+  Paper
+} from '@mui/material';
 
 const InformeDeDeuda = () => {
 
@@ -38,6 +48,8 @@ const InformeDeDeuda = () => {
 
   const [btnImprimir, setBtnImprimir] = React.useState<boolean>(false);
 
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   useEffect(() => {
     conseguirListaCategoriasDeudaAuto();
@@ -232,6 +244,29 @@ const InformeDeDeuda = () => {
     doc.save(`informe_de_deuda_${elementoIndCom?.legajo}_${fechaActual}.pdf`);
   }
 
+  const handlePeriodoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, ''); // Elimina cualquier caracter que no sea número
+
+    if (value.length > 6) {
+      value = value.substr(0, 6);
+    }
+
+    if (value.length > 4) {
+      value = value.substr(0, 4) + '/' + value.substr(4);
+    }
+
+    setPeriodo(value);
+  };
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   return (
     <>
       <div className="flex flex-col items-center mt-4">
@@ -245,9 +280,10 @@ const InformeDeDeuda = () => {
           <FormInput
             id="horizontal-form-1"
             type="text"
-            placeholder="AAAA/MM"
+            placeholder="AAAAMM"
             value={periodo}
-            onChange={(e) => setPeriodo(e.target.value)}
+            onChange={handlePeriodoChange}
+            maxLength={7}
           />
 
           <FormLabel
@@ -314,66 +350,64 @@ const InformeDeDeuda = () => {
       <div className="overflow-x-auto mt-3">
         {cargando && <Cargando mensaje="cargando" />}
         {mostrarTabla && (
-          <Table striped>
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th className="whitespace-nowrap border-b-0 whitespace-nowrap text-center">
-                  Nro. Transac.
-                </Table.Th>
-                <Table.Th className="whitespace-nowrap border-b-0 whitespace-nowrap text-left">
-                  Concepto
-                </Table.Th>
-                <Table.Th className="whitespace-nowrap border-b-0 whitespace-nowrap text-left">
-                  Categoria
-                </Table.Th>
-                <Table.Th className="whitespace-nowrap border-b-0 whitespace-nowrap text-center">
-                  Periodo
-                </Table.Th>
-                <Table.Th className="whitespace-nowrap border-b-0 whitespace-nowrap text-right">
-                  Debe
-                </Table.Th>
-                <Table.Th className="whitespace-nowrap border-b-0 whitespace-nowrap text-right">
-                  Haber
-                </Table.Th>
-                <Table.Th className="whitespace-nowrap border-b-0 whitespace-nowrap text-center">
-                  Plan de Pago
-                </Table.Th>
-                <Table.Th className="whitespace-nowrap border-b-0 whitespace-nowrap text-center">
-                  Nro. Proc.
-                </Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
-              {informeCompleto.map((item, index) => (
-                <Table.Tr key={index}>
-                  <Table.Td className="border-b-0 whitespace-nowrap text-center">
-                    {item.nro_transaccion}
-                  </Table.Td>
-                  <Table.Td className="border-b-0 whitespace-nowrap text-left">
-                    {item.des_movimiento}
-                  </Table.Td>
-                  <Table.Td className="border-b-0 whitespace-nowrap text-left">
-                    {item.des_categoria}
-                  </Table.Td>
-                  <Table.Td className="border-b-0 whitespace-nowrap text-center">
-                    {item.periodo}
-                  </Table.Td>
-                  <Table.Td className="border-b-0 whitespace-nowrap text-right">
-                    {currencyFormat(item.debe)}
-                  </Table.Td>
-                  <Table.Td className="border-b-0 whitespace-nowrap text-right">
-                    {currencyFormat(item.haber)}
-                  </Table.Td>
-                  <Table.Td className="border-b-0 whitespace-nowrap text-center">
-                    {item.nro_plan}
-                  </Table.Td>
-                  <Table.Td className="border-b-0 whitespace-nowrap text-center">
-                    {item.nro_procuracion}
-                  </Table.Td>
-                </Table.Tr>
-              ))}
-            </Table.Tbody>
-          </Table>
+          <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+            <TableContainer>
+              <MUITable stickyHeader>
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center">Nro. Transac.</TableCell>
+                    <TableCell align="left">Concepto</TableCell>
+                    <TableCell align="left">Categoria</TableCell>
+                    <TableCell align="center">Periodo</TableCell>
+                    <TableCell align="right">Debe</TableCell>
+                    <TableCell align="right">Haber</TableCell>
+                    <TableCell align="center">Plan de Pago</TableCell>
+                    <TableCell align="center">Nro. Proc.</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {informeCompleto
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((item, index) => (
+                      <TableRow key={index}>
+                        <TableCell align="center">{item.nro_transaccion}</TableCell>
+                        <TableCell align="left">{item.des_movimiento}</TableCell>
+                        <TableCell align="left">{item.des_categoria}</TableCell>
+                        <TableCell align="center">{item.periodo}</TableCell>
+                        <TableCell align="right">{currencyFormat(item.debe)}</TableCell>
+                        <TableCell align="right">{currencyFormat(item.haber)}</TableCell>
+                        <TableCell align="center">{item.nro_plan}</TableCell>
+                        <TableCell align="center">{item.nro_procuracion}</TableCell>
+                      </TableRow>
+                    ))}
+
+                  {/* Fila de totales */}
+                  <TableRow>
+                    <TableCell colSpan={4} align="right">Totales:</TableCell>
+                    <TableCell align="right">
+                      {currencyFormat(_.sumBy(informeCompleto, 'debe'))}
+                    </TableCell>
+                    <TableCell align="right">
+                      {currencyFormat(_.sumBy(informeCompleto, 'haber'))}
+                    </TableCell>
+                    <TableCell colSpan={2}></TableCell>
+                  </TableRow>
+                </TableBody>
+              </MUITable>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[10, 25, 50]}
+              component="div"
+              count={informeCompleto.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              labelRowsPerPage="Filas por página"
+              labelDisplayedRows={({ from, to, count }) =>
+                `${from}-${to} de ${count !== -1 ? count : `más de ${to}`}`}
+            />
+          </Paper>
         )}
       </div>
     </>

@@ -1,19 +1,24 @@
 import { useEffect, useState } from 'react'
 import { useIndustriaComercioContext } from "../../context/IndustriaComercioProvider";
-import Table from "../../base-components/Table";
-import { ReLiquidacion } from '../../interfaces/IndustriaComercio';
+import {
+  Box,
+  Paper,
+  Typography,
+  Grid,
+  Checkbox,
+  Table as MuiTable,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Button as MuiButton
+} from '@mui/material';
 import axios from "axios";
 import Swal from "sweetalert2";
-import Button from "../../base-components/Button";
-import Lucide from "../../base-components/Lucide";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/UserProvider";
 import { formatNumberToARS, formatDateToDDMMYYYY } from "../../utils/Operaciones";
-import {
-  FormSelect,
-  FormLabel,
-  FormInline,
-} from "../../base-components/Form";
 
 const EliminarCancelacion = () => {
   const { elementoIndCom } = useIndustriaComercioContext();
@@ -145,128 +150,129 @@ const EliminarCancelacion = () => {
   }
 
   return (
-    <>
-      <div className="conScroll grid grid-cols-12 gap-6 mt-5 ml-5 mr-4 sinAnimaciones">
-        <div className="col-span-12 intro-y lg:col-span-12">
-          <div className="flex w-full justify-between col-span-12 intro-y lg:col-span-12">
-            <h2> Revertir Cancelación Especial de Periodos en la Cuanta Corriente </h2>
-          </div>
-          <div className="grid grid-cols-12 gap-6 mt-3">
-            {/** INICIO TABLA 1 */}
-            <div className="col-span-12 intro-y lg:col-span-5">
-              <div className="text-lg font-medium text-primary">
-                Periodos Cancelados
-              </div>
-              <div className="cabeceraTable">
-                <Table>
-                  <Table.Thead variant="dark">
-                    <Table.Tr>
-                      <Table.Th>
-                        <Lucide
-                          icon="CheckSquare"
-                          className="w-5 h-5"
-                          onClick={() => handleSeleccionarTodo()}
-                          style={{ cursor: "pointer" }}
-                        />
-                      </Table.Th>
-                      <Table.Th>Periodo</Table.Th>
-                      <Table.Th className='text-center'>Debe</Table.Th>
-                      <Table.Th className='text-center'>Nro Trans</Table.Th>
-                    </Table.Tr>
-                  </Table.Thead>
-                </Table>
-              </div>
-              <div className='conScrollInicio cuadroDeudas'>
-                <Table>
-                  <Table.Tbody>
-                    {reLiquidaciones.map((liquidacion, index) => (
-                      <Table.Tr key={index}>
-                        <Table.Td>
-                          <label>
-                            <input
-                              type="checkbox"
-                              onChange={() => handleSeleccionar(liquidacion)}
-                              checked={reLiquidacionesSeleccionadas.includes(liquidacion)}
-                            />
-                          </label>
-                        </Table.Td>
-                        <Table.Td>{liquidacion?.periodo}</Table.Td>
-                        <Table.Td className='text-right'>{formatNumberToARS(liquidacion?.debe)}</Table.Td>
-                        <Table.Td className='text-right'>{liquidacion?.nro_transaccion}</Table.Td>
-                      </Table.Tr>
-                    ))}
-                  </Table.Tbody>
-                </Table>
-              </div>
-            </div>
-            {/** FIN TABLA 1 */}
+    <Box sx={{ p: 3 }}>
+      <Grid container spacing={3}>
+        {/* Título principal */}
+        <Grid item xs={12}>
+          <Typography variant="h5" gutterBottom>
+            Revertir Cancelación Especial de Periodos en la Cuenta Corriente
+          </Typography>
+        </Grid>
 
-            {/** INICIO TABLA 2 */}
-            <div className="col-span-12 intro-y lg:col-span-5 mr-2">
-              <div className="text-lg font-medium text-primary">
-                Periodos a Revertir
-              </div>
-              <div className="cabeceraTable">
-                <Table>
-                  <Table.Thead variant="dark">
-                    <Table.Tr>
-                      <Table.Th></Table.Th>
-                      <Table.Th>Periodo</Table.Th>
-                      <Table.Th className='text-center'>Debe</Table.Th>
-                      <Table.Th className='text-center'>Nro Trans</Table.Th>
-                    </Table.Tr>
-                  </Table.Thead>
-                </Table>
-              </div>
-              <div className='conScrollInicio cuadroDeudas'>
-                <Table>
-                  <Table.Tbody>
-                    {reLiquidacionesSeleccionadas.map((liquidacion, index) => (
-                      <Table.Tr key={index}>
-                        <Table.Td>
-                          <label>
-                            <input
-                              type="checkbox"
-                              onChange={() => handleSeleccionar(liquidacion)}
-                              checked={reLiquidacionesSeleccionadas.includes(liquidacion)}
-                            />
-                          </label>
-                        </Table.Td>
-                        <Table.Td>{liquidacion?.periodo}</Table.Td>
-                        <Table.Td className='text-right'>{formatNumberToARS(liquidacion?.monto_original)}</Table.Td>
-                        <Table.Td className='text-right'>{liquidacion?.nro_transaccion}</Table.Td>
-                      </Table.Tr>
-                    ))}
-                  </Table.Tbody>
-                </Table>
-              </div>
-              <div className="mt-3 flex w-full justify-between text-lg font-medium text-primary text-right">
-                <span>Total:</span>
-                <span>{formatNumberToARS(sumarMontosSeleccionados())}</span>
-              </div>
-            </div>
-            {/** FIN TABLA 1 */}
-            <div className="col-span-12 intro-y lg:col-span-6 mr-2 mt-2">
-              <Button
-                variant="primary"
-                className="ml-3"
-                onClick={handleAuditoria}
-              >
-                Confirmar
-              </Button>
-              <Button
-                variant="secondary"
-                className="ml-3"
-                onClick={handleCancelar}
-              >
-                Cancelar
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  )
+        {/* Tabla de Periodos Cancelados */}
+        <Grid item xs={12} md={6}>
+          <Paper elevation={3} sx={{ p: 2 }}>
+            <Typography variant="h6" color="primary" gutterBottom>
+              Periodos Cancelados
+            </Typography>
+            <TableContainer sx={{ maxHeight: 400 }}>
+              <MuiTable stickyHeader size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        onChange={handleSeleccionarTodo}
+                        checked={reLiquidacionesSeleccionadas.length === reLiquidaciones.length}
+                      />
+                    </TableCell>
+                    <TableCell>Periodo</TableCell>
+                    <TableCell align="right">Debe</TableCell>
+                    <TableCell align="right">Nro Trans</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {reLiquidaciones.map((liquidacion, index) => (
+                    <TableRow
+                      key={index}
+                      hover
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    >
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          onChange={() => handleSeleccionar(liquidacion)}
+                          checked={reLiquidacionesSeleccionadas.includes(liquidacion)}
+                        />
+                      </TableCell>
+                      <TableCell>{liquidacion?.periodo}</TableCell>
+                      <TableCell align="right">{formatNumberToARS(liquidacion?.debe)}</TableCell>
+                      <TableCell align="right">{liquidacion?.nro_transaccion}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </MuiTable>
+            </TableContainer>
+          </Paper>
+        </Grid>
+
+        {/* Tabla de Periodos a Revertir */}
+        <Grid item xs={12} md={6}>
+          <Paper elevation={3} sx={{ p: 2 }}>
+            <Typography variant="h6" color="primary" gutterBottom>
+              Periodos a Revertir
+            </Typography>
+            <TableContainer sx={{ maxHeight: 400 }}>
+              <MuiTable stickyHeader size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell padding="checkbox"></TableCell>
+                    <TableCell>Periodo</TableCell>
+                    <TableCell align="right">Debe</TableCell>
+                    <TableCell align="right">Nro Trans</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {reLiquidacionesSeleccionadas.map((liquidacion, index) => (
+                    <TableRow
+                      key={index}
+                      hover
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    >
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          onChange={() => handleSeleccionar(liquidacion)}
+                          checked={reLiquidacionesSeleccionadas.includes(liquidacion)}
+                        />
+                      </TableCell>
+                      <TableCell>{liquidacion?.periodo}</TableCell>
+                      <TableCell align="right">{formatNumberToARS(liquidacion?.monto_original)}</TableCell>
+                      <TableCell align="right">{liquidacion?.nro_transaccion}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </MuiTable>
+            </TableContainer>
+            <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
+              <Typography variant="h6" color="primary">
+                Total:
+              </Typography>
+              <Typography variant="h6" color="primary">
+                {formatNumberToARS(sumarMontosSeleccionados())}
+              </Typography>
+            </Box>
+          </Paper>
+        </Grid>
+
+        {/* Botones de acción */}
+        <Grid item xs={12}>
+          <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+            <MuiButton
+              variant="contained"
+              color="primary"
+              onClick={handleAuditoria}
+            >
+              Confirmar
+            </MuiButton>
+            <MuiButton
+              variant="outlined"
+              onClick={handleCancelar}
+            >
+              Cancelar
+            </MuiButton>
+          </Box>
+        </Grid>
+      </Grid>
+    </Box>
+  );
 }
 
 export default EliminarCancelacion

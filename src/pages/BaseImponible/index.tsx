@@ -39,12 +39,13 @@ import SearchIcon from '@mui/icons-material/Search';
 import * as XLSX from 'xlsx';
 import { currencyFormat } from "../../utils/helper";
 import CircularProgress from '@mui/material/CircularProgress';
-
+import { useParams } from 'react-router-dom';
 
 const BasesImponibles = () => {
 
   const { elementoIndCom, tipoLiquidacion, tipoCondicionIVA, situacionJudicial, tipoDeEntidad } = useIndustriaComercioContext();
 
+  const { legajo } = useParams()
 
   const [periodoDesde, setPeriodoDesde] = useState("");
   const [periodoHasta, setPeriodoHasta] = useState("");
@@ -78,7 +79,7 @@ const BasesImponibles = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const URL = `${import.meta.env.VITE_URL_BASE}Indycom/GetBasesImponibles?legajo=11079&periodo_desde=${periodoDesde}&periodo_hasta=${periodoHasta}`;
+      const URL = `${import.meta.env.VITE_URL_BASE}Indycom/GetBasesImponibles?legajo=${legajo}&periodo_desde=${periodoDesde}&periodo_hasta=${periodoHasta}`;
       const response = await axios.get(URL);
       setListaBasesImponibles(response.data);
       setPage(0); // Reset a la primera página cuando se hace una nueva búsqueda
@@ -162,10 +163,12 @@ const BasesImponibles = () => {
                 </Box>
 
                 <Grid container spacing={2} alignItems="flex-end">
+
                   <Grid item xs={12} md={3}>
+                    <FormLabel>Desde</FormLabel>
                     <TextField
                       fullWidth
-                      label="Período Desde"
+                      label="AAA/MM"
                       variant="outlined"
                       size="small"
                       value={periodoDesde}
@@ -174,9 +177,10 @@ const BasesImponibles = () => {
                     />
                   </Grid>
                   <Grid item xs={12} md={3}>
+                    <FormLabel>Hasta</FormLabel>
                     <TextField
                       fullWidth
-                      label="Período Hasta"
+                      label="AAA/MM"
                       variant="outlined"
                       size="small"
                       value={periodoHasta}

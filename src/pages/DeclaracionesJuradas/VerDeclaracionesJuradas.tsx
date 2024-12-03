@@ -23,6 +23,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import PrintIcon from '@mui/icons-material/Print';
 import SearchIcon from '@mui/icons-material/Search';
 import BackspaceIcon from '@mui/icons-material/Backspace';
+import AddIcon from '@mui/icons-material/Add';
 
 const VerDeclaracionesJuradas = () => {
   const { legajo } = useParams<{ legajo: string }>();
@@ -221,42 +222,57 @@ const VerDeclaracionesJuradas = () => {
               <TableCell>Pres. Web</TableCell>
               <TableCell>Código Zona</TableCell>
               <TableCell>Código Tipo Per</TableCell>
-              <TableCell></TableCell>
+              <TableCell>Acciones</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {declaraciones.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((declaracion) => (
-              <TableRow key={declaracion.ddjj.nro_transaccion}>
-                <TableCell>{declaracion.periodo}</TableCell>
-                <TableCell>{declaracion.monto_original.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}</TableCell>
-                <TableCell>{declaracion.vencimiento}</TableCell>
-                <TableCell>{declaracion.ddjj.nro_transaccion}</TableCell>
-                <TableCell>{declaracion.ddjj.completa ? 'Sí' : 'No'}</TableCell>
-                <TableCell>{new Date(declaracion.ddjj.fecha_presentacion_ddjj).toLocaleDateString('es-AR')}</TableCell>
-                <TableCell>{declaracion.ddjj.presentacion_web}</TableCell>
-                <TableCell>{declaracion.ddjj.cod_zona}</TableCell>
-                <TableCell>{declaracion.ddjj.cod_tipo_per}</TableCell>
-                <TableCell>
-                  <div className='flex'>
-                    <IconButton
-                      aria-label="delete"
-                      color="error"
-                      onClick={() => handleEliminar(declaracion.ddjj.nro_transaccion, declaracion.periodo)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
+            {declaraciones
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((declaracion, index) => (
+                <TableRow key={declaracion.ddjj.nro_transaccion}>
+                  <TableCell>{declaracion.periodo}</TableCell>
+                  <TableCell>
+                    {declaracion.monto_original.toLocaleString('es-AR', {
+                      style: 'currency',
+                      currency: 'ARS'
+                    })}
+                  </TableCell>
+                  <TableCell>{declaracion.vencimiento}</TableCell>
+                  <TableCell>{declaracion.ddjj.nro_transaccion}</TableCell>
+                  <TableCell>{declaracion.ddjj.completa ? 'Sí' : 'No'}</TableCell>
+                  <TableCell>
+                    {new Date(declaracion.ddjj.fecha_presentacion_ddjj)
+                      .toLocaleDateString('es-AR')}
+                  </TableCell>
+                  <TableCell>{declaracion.ddjj.presentacion_web}</TableCell>
+                  <TableCell>{declaracion.ddjj.cod_zona}</TableCell>
+                  <TableCell>{declaracion.ddjj.cod_tipo_per}</TableCell>
+                  <TableCell>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
 
-                    <IconButton
-                      aria-label="imprimir"
-                      color="info"
-                      onClick={() => handleImprimir(declaracion.ddjj.nro_transaccion, declaracion.ddjj.legajo)}
-                    >
-                      <PrintIcon />
-                    </IconButton>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
+                      <IconButton
+                        color="error"
+                        onClick={() => handleEliminar(
+                          declaracion.ddjj.nro_transaccion,
+                          declaracion.periodo
+                        )}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+
+                      <IconButton
+                        color="info"
+                        onClick={() => handleImprimir(
+                          declaracion.ddjj.nro_transaccion,
+                          declaracion.ddjj.legajo
+                        )}
+                      >
+                        <PrintIcon />
+                      </IconButton>
+                    </Box>
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
         <TablePagination
