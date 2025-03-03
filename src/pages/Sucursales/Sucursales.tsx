@@ -652,23 +652,28 @@ const Sucursales = () => {
         PaperProps={{
           sx: {
             position: 'fixed',
-            top: '20px',
-            margin: '0 auto',
-            maxHeight: 'calc(100% - 40px)',
-            overflowY: 'auto'
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            margin: 0,
+            zIndex: 9999,
+            maxHeight: '90vh', // Limitar la altura máxima al 90% de la altura de la ventana
+            overflowY: 'auto'  // Permitir el desplazamiento vertical si el contenido es demasiado alto
           }
         }}
       >
-        <DialogTitle>Nueva Sucursal</DialogTitle>
-        <DialogContent>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+        <DialogTitle sx={{ fontSize: '1.25rem' }}>Nueva Sucursal</DialogTitle>
+        <DialogContent sx={{ fontSize: '0.875rem' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
               <TextField
                 sx={{
                   flex: {
                     xs: '1 1 100%',     // Pantalla extra pequeña: ancho completo
                     sm: '1 1 calc(50% - 8px)'  // Pantalla pequeña y mayor: 50%
-                  }
+                  },
+                  '& .MuiInputBase-input': { fontSize: '0.875rem' },
+                  '& .MuiInputLabel-root': { fontSize: '0.875rem' }
                 }}
                 label="Nombre Fantasía"
                 name="nom_fantasia"
@@ -680,7 +685,9 @@ const Sucursales = () => {
                   flex: {
                     xs: '1 1 100%',
                     sm: '1 1 calc(50% - 8px)'
-                  }
+                  },
+                  '& .MuiInputBase-input': { fontSize: '0.875rem' },
+                  '& .MuiInputLabel-root': { fontSize: '0.875rem' }
                 }}
                 label="Descripción Comercial"
                 name="des_com"
@@ -692,7 +699,9 @@ const Sucursales = () => {
                   flex: {
                     xs: '1 1 100%',
                     sm: '1 1 calc(70% - 8px)'
-                  }
+                  },
+                  '& .MuiInputBase-input': { fontSize: '0.875rem' },
+                  '& .MuiInputLabel-root': { fontSize: '0.875rem' }
                 }}
                 options={calles}
                 getOptionLabel={(option) => option.text}
@@ -726,7 +735,9 @@ const Sucursales = () => {
                   flex: {
                     xs: '1 1 100%',
                     sm: '1 1 calc(30% - 8px)'
-                  }
+                  },
+                  '& .MuiInputBase-input': { fontSize: '0.875rem' },
+                  '& .MuiInputLabel-root': { fontSize: '0.875rem' }
                 }}
                 label="Número"
                 name="nro_dom"
@@ -738,7 +749,9 @@ const Sucursales = () => {
                   flex: {
                     xs: '1 1 100%',
                     sm: '1 1 calc(50% - 8px)'
-                  }
+                  },
+                  '& .MuiInputBase-input': { fontSize: '0.875rem' },
+                  '& .MuiInputLabel-root': { fontSize: '0.875rem' }
                 }}
                 label="Barrio"
                 name="nom_barrio"
@@ -750,7 +763,9 @@ const Sucursales = () => {
                   flex: {
                     xs: '1 1 100%',
                     sm: '1 1 calc(50% - 8px)'
-                  }
+                  },
+                  '& .MuiInputBase-input': { fontSize: '0.875rem' },
+                  '& .MuiInputLabel-root': { fontSize: '0.875rem' }
                 }}
                 label="Ciudad"
                 name="ciudad"
@@ -762,7 +777,9 @@ const Sucursales = () => {
                   flex: {
                     xs: '1 1 100%',
                     sm: '1 1 calc(33% - 8px)'
-                  }
+                  },
+                  '& .MuiInputBase-input': { fontSize: '0.875rem' },
+                  '& .MuiInputLabel-root': { fontSize: '0.875rem' }
                 }}
                 label="Provincia"
                 name="provincia"
@@ -774,7 +791,9 @@ const Sucursales = () => {
                   flex: {
                     xs: '1 1 100%',
                     sm: '1 1 calc(33% - 8px)'
-                  }
+                  },
+                  '& .MuiInputBase-input': { fontSize: '0.875rem' },
+                  '& .MuiInputLabel-root': { fontSize: '0.875rem' }
                 }}
                 label="N° Local"
                 name="nro_local"
@@ -786,7 +805,9 @@ const Sucursales = () => {
                   flex: {
                     xs: '1 1 100%',
                     sm: '1 1 calc(33% - 8px)'
-                  }
+                  },
+                  '& .MuiInputBase-input': { fontSize: '0.875rem' },
+                  '& .MuiInputLabel-root': { fontSize: '0.875rem' }
                 }}
                 label="Piso/Dpto"
                 name="piso_dpto"
@@ -798,7 +819,9 @@ const Sucursales = () => {
                   flex: {
                     xs: '1 1 100%',
                     sm: '1 1 calc(33% - 8px)'
-                  }
+                  },
+                  '& .MuiInputBase-input': { fontSize: '0.875rem' },
+                  '& .MuiInputLabel-root': { fontSize: '0.875rem' }
                 }}
                 label="Código Postal"
                 name="cod_postal"
@@ -810,7 +833,9 @@ const Sucursales = () => {
                   flex: {
                     xs: '1 1 100%',
                     sm: '1 1 calc(33% - 8px)'
-                  }
+                  },
+                  '& .MuiInputBase-input': { fontSize: '0.875rem' },
+                  '& .MuiInputLabel-root': { fontSize: '0.875rem' }
                 }}
                 label="N° Resolución"
                 name="nro_res"
@@ -822,7 +847,9 @@ const Sucursales = () => {
                   flex: {
                     xs: '1 1 100%',
                     sm: '1 1 calc(33% - 8px)'
-                  }
+                  },
+                  '& .MuiInputBase-input': { fontSize: '0.875rem' },
+                  '& .MuiInputLabel-root': { fontSize: '0.875rem' }
                 }}
                 label="N° Expediente Mesa Entrada"
                 name="nro_exp_mesa_ent"
@@ -834,7 +861,9 @@ const Sucursales = () => {
                   flex: {
                     xs: '1 1 100%',
                     sm: '1 1 calc(33% - 8px)'
-                  }
+                  },
+                  '& .MuiInputBase-input': { fontSize: '0.875rem' },
+                  '& .MuiInputLabel-root': { fontSize: '0.875rem' }
                 }}
                 label="Código de Zona"
                 name="cod_zona"
@@ -848,7 +877,7 @@ const Sucursales = () => {
                 value={nuevaSucursal.sucursal.fecha_hab.split('.')[0]}
                 onChange={handleInputChange}
                 InputLabelProps={{ shrink: true }}
-                sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(33% - 8px)' } }}
+                sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(33% - 8px)' }, '& .MuiInputBase-input': { fontSize: '0.875rem' }, '& .MuiInputLabel-root': { fontSize: '0.875rem' } }}
               />
               <TextField
                 type="datetime-local"
@@ -857,7 +886,7 @@ const Sucursales = () => {
                 value={nuevaSucursal.sucursal.fecha_inicio.split('.')[0]}
                 onChange={handleInputChange}
                 InputLabelProps={{ shrink: true }}
-                sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(33% - 8px)' } }}
+                sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(33% - 8px)' }, '& .MuiInputBase-input': { fontSize: '0.875rem' }, '& .MuiInputLabel-root': { fontSize: '0.875rem' } }}
               />
               <TextField
                 type="datetime-local"
@@ -866,13 +895,13 @@ const Sucursales = () => {
                 value={nuevaSucursal.sucursal.vto_inscripcion.split('.')[0]}
                 onChange={handleInputChange}
                 InputLabelProps={{ shrink: true }}
-                sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(33% - 8px)' } }}
+                sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(33% - 8px)' }, '& .MuiInputBase-input': { fontSize: '0.875rem' }, '& .MuiInputLabel-root': { fontSize: '0.875rem' } }}
               />
             </Box>
 
-            <Box sx={{ mt: 3 }}>
-              <h3>Información de Auditoría</h3>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 1 }}>
+            <Box sx={{ mt: 2 }}>
+              <h3 style={{ fontSize: '1rem' }}>Información de Auditoría</h3>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1 }}>
                 <TextField
                   label="Observaciones"
                   name="auditoria.observaciones"
@@ -880,20 +909,20 @@ const Sucursales = () => {
                   onChange={handleInputChange}
                   multiline
                   rows={3}
-                  sx={{ flex: '1 1 100%' }}
+                  sx={{ flex: '1 1 100%', '& .MuiInputBase-input': { fontSize: '0.875rem' }, '& .MuiInputLabel-root': { fontSize: '0.875rem' } }}
                 />
               </Box>
             </Box>
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenModal(false)} color="inherit">
+          <Button onClick={() => setOpenModal(false)} color="inherit" sx={{ fontSize: '0.875rem' }}>
             Cancelar
           </Button>
           <Button
             onClick={handleSubmit}
             variant="contained"
-            sx={{ backgroundColor: '#27a3cf' }}
+            sx={{ backgroundColor: '#27a3cf', fontSize: '0.875rem' }}
           >
             Guardar
           </Button>
@@ -909,23 +938,28 @@ const Sucursales = () => {
         PaperProps={{
           sx: {
             position: 'fixed',
-            top: '20px',
-            margin: '0 auto',
-            maxHeight: 'calc(100% - 40px)',
-            overflowY: 'auto'
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            margin: 0,
+            zIndex: 9999,
+            maxHeight: '90vh', // Limitar la altura máxima al 90% de la altura de la ventana
+            overflowY: 'auto'  // Permitir el desplazamiento vertical si el contenido es demasiado alto
           }
         }}
       >
-        <DialogTitle>Editar Sucursal</DialogTitle>
-        <DialogContent>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+        <DialogTitle sx={{ fontSize: '1.25rem' }}>Editar Sucursal</DialogTitle>
+        <DialogContent sx={{ fontSize: '0.875rem' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mt: 1 }}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
               <TextField
                 sx={{
                   flex: {
                     xs: '1 1 100%',     // Pantalla extra pequeña: ancho completo
                     sm: '1 1 calc(50% - 8px)'  // Pantalla pequeña y mayor: 50%
-                  }
+                  },
+                  '& .MuiInputBase-input': { fontSize: '0.875rem' },
+                  '& .MuiInputLabel-root': { fontSize: '0.875rem' }
                 }}
                 label="Nombre Fantasía"
                 name="nom_fantasia"
@@ -937,7 +971,9 @@ const Sucursales = () => {
                   flex: {
                     xs: '1 1 100%',
                     sm: '1 1 calc(50% - 8px)'
-                  }
+                  },
+                  '& .MuiInputBase-input': { fontSize: '0.875rem' },
+                  '& .MuiInputLabel-root': { fontSize: '0.875rem' }
                 }}
                 label="Descripción Comercial"
                 name="des_com"
@@ -949,7 +985,9 @@ const Sucursales = () => {
                   flex: {
                     xs: '1 1 100%',
                     sm: '1 1 calc(70% - 8px)'
-                  }
+                  },
+                  '& .MuiInputBase-input': { fontSize: '0.875rem' },
+                  '& .MuiInputLabel-root': { fontSize: '0.875rem' }
                 }}
                 options={calles}
                 getOptionLabel={(option) => option.text}
@@ -983,7 +1021,9 @@ const Sucursales = () => {
                   flex: {
                     xs: '1 1 100%',
                     sm: '1 1 calc(30% - 8px)'
-                  }
+                  },
+                  '& .MuiInputBase-input': { fontSize: '0.875rem' },
+                  '& .MuiInputLabel-root': { fontSize: '0.875rem' }
                 }}
                 label="Número"
                 name="nro_dom"
@@ -995,7 +1035,9 @@ const Sucursales = () => {
                   flex: {
                     xs: '1 1 100%',
                     sm: '1 1 calc(50% - 8px)'
-                  }
+                  },
+                  '& .MuiInputBase-input': { fontSize: '0.875rem' },
+                  '& .MuiInputLabel-root': { fontSize: '0.875rem' }
                 }}
                 label="Barrio"
                 name="nom_barrio"
@@ -1007,7 +1049,9 @@ const Sucursales = () => {
                   flex: {
                     xs: '1 1 100%',
                     sm: '1 1 calc(50% - 8px)'
-                  }
+                  },
+                  '& .MuiInputBase-input': { fontSize: '0.875rem' },
+                  '& .MuiInputLabel-root': { fontSize: '0.875rem' }
                 }}
                 label="Ciudad"
                 name="ciudad"
@@ -1019,7 +1063,9 @@ const Sucursales = () => {
                   flex: {
                     xs: '1 1 100%',
                     sm: '1 1 calc(33% - 8px)'
-                  }
+                  },
+                  '& .MuiInputBase-input': { fontSize: '0.875rem' },
+                  '& .MuiInputLabel-root': { fontSize: '0.875rem' }
                 }}
                 label="Provincia"
                 name="provincia"
@@ -1031,7 +1077,9 @@ const Sucursales = () => {
                   flex: {
                     xs: '1 1 100%',
                     sm: '1 1 calc(33% - 8px)'
-                  }
+                  },
+                  '& .MuiInputBase-input': { fontSize: '0.875rem' },
+                  '& .MuiInputLabel-root': { fontSize: '0.875rem' }
                 }}
                 label="N° Local"
                 name="nro_local"
@@ -1043,7 +1091,9 @@ const Sucursales = () => {
                   flex: {
                     xs: '1 1 100%',
                     sm: '1 1 calc(33% - 8px)'
-                  }
+                  },
+                  '& .MuiInputBase-input': { fontSize: '0.875rem' },
+                  '& .MuiInputLabel-root': { fontSize: '0.875rem' }
                 }}
                 label="Piso/Dpto"
                 name="piso_dpto"
@@ -1055,7 +1105,9 @@ const Sucursales = () => {
                   flex: {
                     xs: '1 1 100%',
                     sm: '1 1 calc(33% - 8px)'
-                  }
+                  },
+                  '& .MuiInputBase-input': { fontSize: '0.875rem' },
+                  '& .MuiInputLabel-root': { fontSize: '0.875rem' }
                 }}
                 label="Código Postal"
                 name="cod_postal"
@@ -1067,7 +1119,9 @@ const Sucursales = () => {
                   flex: {
                     xs: '1 1 100%',
                     sm: '1 1 calc(33% - 8px)'
-                  }
+                  },
+                  '& .MuiInputBase-input': { fontSize: '0.875rem' },
+                  '& .MuiInputLabel-root': { fontSize: '0.875rem' }
                 }}
                 label="N° Resolución"
                 name="nro_res"
@@ -1079,7 +1133,9 @@ const Sucursales = () => {
                   flex: {
                     xs: '1 1 100%',
                     sm: '1 1 calc(33% - 8px)'
-                  }
+                  },
+                  '& .MuiInputBase-input': { fontSize: '0.875rem' },
+                  '& .MuiInputLabel-root': { fontSize: '0.875rem' }
                 }}
                 label="N° Expediente Mesa Entrada"
                 name="nro_exp_mesa_ent"
@@ -1091,7 +1147,9 @@ const Sucursales = () => {
                   flex: {
                     xs: '1 1 100%',
                     sm: '1 1 calc(33% - 8px)'
-                  }
+                  },
+                  '& .MuiInputBase-input': { fontSize: '0.875rem' },
+                  '& .MuiInputLabel-root': { fontSize: '0.875rem' }
                 }}
                 label="Código de Zona"
                 name="cod_zona"
@@ -1105,7 +1163,7 @@ const Sucursales = () => {
                 value={nuevaSucursal.sucursal.fecha_hab.split('.')[0]}
                 onChange={handleInputChange}
                 InputLabelProps={{ shrink: true }}
-                sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(33% - 8px)' } }}
+                sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(33% - 8px)' }, '& .MuiInputBase-input': { fontSize: '0.875rem' }, '& .MuiInputLabel-root': { fontSize: '0.875rem' } }}
               />
               <TextField
                 type="datetime-local"
@@ -1114,7 +1172,7 @@ const Sucursales = () => {
                 value={nuevaSucursal.sucursal.fecha_inicio.split('.')[0]}
                 onChange={handleInputChange}
                 InputLabelProps={{ shrink: true }}
-                sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(33% - 8px)' } }}
+                sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(33% - 8px)' }, '& .MuiInputBase-input': { fontSize: '0.875rem' }, '& .MuiInputLabel-root': { fontSize: '0.875rem' } }}
               />
               <TextField
                 type="datetime-local"
@@ -1123,13 +1181,13 @@ const Sucursales = () => {
                 value={nuevaSucursal.sucursal.vto_inscripcion.split('.')[0]}
                 onChange={handleInputChange}
                 InputLabelProps={{ shrink: true }}
-                sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(33% - 8px)' } }}
+                sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(33% - 8px)' }, '& .MuiInputBase-input': { fontSize: '0.875rem' }, '& .MuiInputLabel-root': { fontSize: '0.875rem' } }}
               />
             </Box>
 
-            <Box sx={{ mt: 3 }}>
-              <h3>Información de Auditoría</h3>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 1 }}>
+            <Box sx={{ mt: 2 }}>
+              <h3 style={{ fontSize: '1rem' }}>Información de Auditoría</h3>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1 }}>
                 <TextField
                   label="Observaciones"
                   name="auditoria.observaciones"
@@ -1137,20 +1195,20 @@ const Sucursales = () => {
                   onChange={handleInputChange}
                   multiline
                   rows={3}
-                  sx={{ flex: '1 1 100%' }}
+                  sx={{ flex: '1 1 100%', '& .MuiInputBase-input': { fontSize: '0.875rem' }, '& .MuiInputLabel-root': { fontSize: '0.875rem' } }}
                 />
               </Box>
             </Box>
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setEditModalOpen(false)} color="inherit">
+          <Button onClick={() => setEditModalOpen(false)} color="inherit" sx={{ fontSize: '0.875rem' }}>
             Cancelar
           </Button>
           <Button
             onClick={handleEdit}
             variant="contained"
-            sx={{ backgroundColor: '#27a3cf' }}
+            sx={{ backgroundColor: '#27a3cf', fontSize: '0.875rem' }}
           >
             Guardar Cambios
           </Button>

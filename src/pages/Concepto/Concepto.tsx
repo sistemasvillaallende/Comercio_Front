@@ -223,6 +223,7 @@ const Concepto = () => {
         }}
         conceptoEditar={conceptoEditar}
         modo={modo}
+        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
       />
 
       {/* Diálogo de confirmación para eliminar */}

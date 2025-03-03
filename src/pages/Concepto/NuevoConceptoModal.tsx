@@ -38,9 +38,18 @@ interface NuevoConceptoModalProps {
   onConceptoCreado: () => void;
   conceptoEditar?: Concepto;
   modo: 'crear' | 'editar';
+  style?: React.CSSProperties;
 }
 
-const NuevoConceptoModal = ({ open, onClose, legajo, onConceptoCreado, conceptoEditar, modo }: NuevoConceptoModalProps) => {
+const NuevoConceptoModal: React.FC<NuevoConceptoModalProps> = ({
+  open,
+  onClose,
+  legajo,
+  onConceptoCreado,
+  conceptoEditar,
+  modo,
+  style
+}) => {
   const [conceptosBase, setConceptosBase] = useState<ConceptoBase[]>([]);
   const [formData, setFormData] = useState({
     cod_concepto_iyc: '',
@@ -157,9 +166,10 @@ const NuevoConceptoModal = ({ open, onClose, legajo, onConceptoCreado, conceptoE
         style: {
           position: 'fixed',
           top: '2%',
-          margin: 0
+          margin: 90
         }
       }}
+      style={style}
     >
       <DialogTitle>{modo === 'crear' ? 'Nuevo Concepto' : 'Editar Concepto'}</DialogTitle>
       <DialogContent>
@@ -237,4 +247,4 @@ const NuevoConceptoModal = ({ open, onClose, legajo, onConceptoCreado, conceptoE
   );
 };
 
-export default NuevoConceptoModal; 
+export default NuevoConceptoModal;

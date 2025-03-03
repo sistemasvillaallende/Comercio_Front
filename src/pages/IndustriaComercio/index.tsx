@@ -241,10 +241,6 @@ const index = () => {
   }, []);
 
 
-  const handleLimpiar = () => {
-    window.location.href = "/";
-  }
-
   const transformarDinero = (dinero: number) => {
     return dinero.toLocaleString('es-AR', {
       style: 'currency',
@@ -279,7 +275,7 @@ const index = () => {
                       </FormSelect>
                       <FormInput
                         type="text"
-                        className="mr-5 border-transparent w-56 shadow-none rounded-5 pr-8"
+                        className="mr-5 w-56 rounded-5 pr-8"
                         placeholder="Buscar..."
                         value={strParametro}
                         onChange={(e) => setStrParametro(e.target.value)}
@@ -291,9 +287,6 @@ const index = () => {
                       Buscar
                     </Button>
                   </form>
-                  <Button variant="secondary" className="mt-2 mb-3 mr-3" onClick={handleLimpiar}>
-                    Limpiar
-                  </Button>
 
                   <Button
                     variant="primary"

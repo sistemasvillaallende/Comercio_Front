@@ -41,7 +41,7 @@ function Main() {
     <div className="bg-white py-5 md:py-0 min-h-screen flex flex-col">
       <MobileMenu />
       {showLista && (
-        <div className="flex flex-col flex-grow">
+        <div className=" mt-32">
           <Outlet />
         </div>
       )}

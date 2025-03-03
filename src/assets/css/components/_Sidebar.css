@@ -1,50 +1,49 @@
 /* src/components/Sidebar.css */
 .sidebar {
-    height: 100%;
-    width: auto;
+  height: 100%;
+  width: auto;
+  left: 0;
+  background-color: transparent;
+  padding-top: 5px;
+}
 
-    left: 0;
-    background-color: transparent;
-    padding-top: 5px;
-  }
-  
-  .sidebar h2 {
-    color: hsla(0, 0%, 13%, 1);
-    text-align: left;
-    margin-bottom: 10px;
-    font-size: 18px;
-    font-weight: 600;
-    border-bottom: solid 4px #c09e76;
-    display: flex;
-    padding-bottom: 5px;
-  }
-  
-  .sidebar ul {
-    list-style-type: none;
-    padding: 0;
-    margin-bottom: 30px;
-  }
-  
-  .sidebar ul li {
-    text-align: left;
-    margin-bottom: 10px;
-  }
-  
-  .sidebar ul li a {
-    padding: 8px;
-    color: gray;
-    text-decoration: none;
-    display: block;
-    font-size: 15px;
-    font-weight: 500;
-  }
-  
-  .sidebar ul li a:hover {
-    background-color: #575757;
-    color: white;
-  }
-  .sidebar ul li a:current {
-    background-color: #575757;
-    color: white;
-  }
-  
+.sidebar h2 {
+  color: hsla(0, 0%, 13%, 1);
+  text-align: left;
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  border-bottom: solid 4px #c09e76;
+  display: flex;
+  padding-bottom: 5px;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 30px;
+}
+
+.sidebar ul li {
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+.sidebar ul li a {
+  padding: 8px;
+  color: gray;
+  text-decoration: none;
+  display: block;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.sidebar ul li a:hover {
+  background-color: #575757;
+  color: white;
+}
+
+.sidebar ul li a:current {
+  background-color: #575757;
+  color: white;
+}

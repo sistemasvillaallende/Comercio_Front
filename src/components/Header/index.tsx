@@ -48,7 +48,7 @@ function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
   }, [])
 
   return (
-    <div className="contenido-ocultado">
+    <div className="menu-institucional">
       <div
         style={{ height: "80px", marginBottom: "-10px" }}
         className={clsx([
