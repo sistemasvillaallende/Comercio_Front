@@ -380,6 +380,7 @@ const Rubros = () => {
               buscarRubros(e.target.value);
             }}
             fullWidth
+            placeholder='Buscar rubro...'
           />
           <Select
             fullWidth
