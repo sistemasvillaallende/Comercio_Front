@@ -98,25 +98,24 @@ const NuevoConceptoModal: React.FC<NuevoConceptoModalProps> = ({
         throw new Error('Concepto no encontrado');
       }
 
-      const payload =
-      {
-        "legajo": Number(legajo),
-        "cod_concepto_iyc": 3,
-        "des_concepto_iyc": "DEPARTAMENTE DE EMERGENCIAS MEDICAS               ",
-        "porcentaje": 1,
-        "monto": 1,
-        "vencimiento": "2024-10-08",
-        "nro_decreto": "4",
-        "objAuditoria": {
-          "id_auditoria": 0,
-          "fecha": "27/11/2024 08:51:40",
-          "usuario": "Usuario",
-          "proceso": "",
-          "identificacion": "",
-          "autorizaciones": "",
-          "observaciones": "khkj",
-          "detalle": "",
-          "ip": ""
+      const payload = {
+        legajo: Number(legajo),
+        cod_concepto_iyc: Number(formData.cod_concepto_iyc),
+        des_concepto_iyc: conceptoSeleccionado.des_concepto_iyc.trim(),
+        porcentaje: Number(formData.porcentaje),
+        monto: Number(formData.monto),
+        vencimiento: formData.vencimiento.slice(0, 10), // Formato YYYY-MM-DD
+        nro_decreto: formData.nro_decreto,
+        objAuditoria: {
+          id_auditoria: 0,
+          fecha: dayjs().format('D/M/YYYY HH:mm:ss'), // Fecha actual
+          usuario: "Usuario", // Cambiar si es dinámico
+          proceso: "",
+          identificacion: "",
+          autorizaciones: "",
+          observaciones: formData.observaciones,
+          detalle: "",
+          ip: ""
         }
       };
 
@@ -124,7 +123,7 @@ const NuevoConceptoModal: React.FC<NuevoConceptoModalProps> = ({
 
       const url = modo === 'crear'
         ? `${import.meta.env.VITE_URL_BASE}Conceptos_iyc/AddConcepto?usuario=Usuario`
-        : `${import.meta.env.VITE_URL_BASE}Conceptos_iyc/UpdateConcepto?usuario=usuario`;
+        : `${import.meta.env.VITE_URL_BASE}Conceptos_iyc/UpdateConcepto?usuario=Usuario`;
 
       await axios.post(url, payload);
 
@@ -136,8 +135,7 @@ const NuevoConceptoModal: React.FC<NuevoConceptoModalProps> = ({
         text: modo === 'crear'
           ? 'El concepto se ha creado correctamente'
           : 'El concepto se ha actualizado correctamente',
-        confirmButtonText: 'Aceptar',
-        position: 'top'
+        confirmButtonText: 'Aceptar'
       });
 
       onConceptoCreado();
@@ -150,8 +148,7 @@ const NuevoConceptoModal: React.FC<NuevoConceptoModalProps> = ({
         text: modo === 'crear'
           ? 'No se pudo crear el concepto. Por favor, intente nuevamente'
           : 'No se pudo actualizar el concepto. Por favor, intente nuevamente',
-        confirmButtonText: 'Aceptar',
-        position: 'top'
+        confirmButtonText: 'Aceptar'
       });
     }
   };
