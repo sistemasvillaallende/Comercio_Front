@@ -61,4 +61,17 @@ export const parseCIDICookie = (): UserType | null => {
     console.error('Error al parsear la cookie CIDI:', error);
     return null;
   }
-} 
+}
+
+export const deleteCookie = (): void => {
+  console.log("Borrando cookie CIDI...");
+
+  // Establece la cookie con una fecha de expiración en el pasado
+  document.cookie = "VABack.CIDI=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+  console.log("Cookie CIDI borrada.");
+
+  // Cierra la pestaña
+  window.location.reload();
+
+}
