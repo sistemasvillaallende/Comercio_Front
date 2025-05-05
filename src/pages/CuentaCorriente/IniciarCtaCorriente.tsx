@@ -196,7 +196,8 @@ const IniciarCtaCorriente = () => {
             confirmButtonText: "Aceptar",
             confirmButtonColor: "#27a3cf",
           });
-          navigate(-1);
+          //navigate(-1);
+          navigate(`/${elementoIndCom?.legajo}/ctacte`);
         } else {
           Swal.fire({
             title: "Error",
