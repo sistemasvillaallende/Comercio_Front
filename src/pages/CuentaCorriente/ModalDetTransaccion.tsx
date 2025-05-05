@@ -25,8 +25,8 @@ const ModalDetTransaccion = ({ showModal, setShowModal, detalle }: Props) => {
           setShowModal(false);
         }}
       >
-        <Dialog.Panel className="p-10" style={{ paddingTop: "10px", paddingBottom: "10px" ,marginTop: "25px" }}>
-          <Dialog.Title style={{borderColor:"#cbd5e1"}}>
+        <Dialog.Panel className="p-10" style={{ paddingTop: "10px", paddingBottom: "10px", marginTop: "40px" }}>
+          <Dialog.Title style={{ borderColor: "#cbd5e1" }}>
             <h2>
               Detalle Transacción
             </h2>
@@ -34,9 +34,9 @@ const ModalDetTransaccion = ({ showModal, setShowModal, detalle }: Props) => {
           <Dialog.Description>
             <div dangerouslySetInnerHTML={{ __html: detalle }} />
           </Dialog.Description>
-          <Dialog.Footer style={{textAlign:"center", paddingTop: "25px"}}>
+          <Dialog.Footer style={{ textAlign: "center", paddingTop: "25px" }}>
             <Button
-                style={{backgroundColor: "#164e63", borderColor:"#164e63"}}
+              style={{ backgroundColor: "#164e63", borderColor: "#164e63" }}
               type="button"
               variant="primary"
               onClick={() => {

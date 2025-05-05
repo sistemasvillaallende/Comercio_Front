@@ -10,8 +10,8 @@ interface Props {
   detalle: DetDeuda[];
 }
 interface DetDeuda {
-    concepto: string;
-    importe: number;
+  concepto: string;
+  importe: number;
 }
 const ModalDetDeuda = ({ showModal, setShowModal, detalle }: Props) => {
   return (
@@ -23,14 +23,14 @@ const ModalDetDeuda = ({ showModal, setShowModal, detalle }: Props) => {
           setShowModal(false);
         }}
       >
-        <Dialog.Panel className="p-10" style={{ padding: "10px", marginTop: "25px" }}>
-          <Dialog.Title style={{borderColor:"#cbd5e1"}}>
+        <Dialog.Panel className="p-10" style={{ padding: "10px", marginTop: "40px" }}>
+          <Dialog.Title style={{ borderColor: "#cbd5e1" }}>
             <h2>
               Detalle Deuda
             </h2>
           </Dialog.Title>
           <Dialog.Description>
-          <Table style={{ backgroundColor: "white" }}>
+            <Table style={{ backgroundColor: "white" }}>
               <Table.Thead
                 style={{
                   position: "sticky",
@@ -74,9 +74,9 @@ const ModalDetDeuda = ({ showModal, setShowModal, detalle }: Props) => {
               </Table.Tbody>
             </Table>
           </Dialog.Description>
-          <Dialog.Footer style={{textAlign:"center", paddingTop: "25px"}}>
+          <Dialog.Footer style={{ textAlign: "center", paddingTop: "25px" }}>
             <Button
-                style={{backgroundColor: "#164e63", borderColor:"#164e63"}}
+              style={{ backgroundColor: "#164e63", borderColor: "#164e63" }}
               type="button"
               variant="primary"
               onClick={() => {
