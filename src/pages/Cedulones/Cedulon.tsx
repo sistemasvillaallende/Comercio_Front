@@ -160,7 +160,6 @@ const Cedulon = () => {
         title: '¡Éxito!',
         text: 'El PDF se ha descargado correctamente',
         icon: 'success',
-        position: 'top',
         timer: 2000,
         showConfirmButton: false
       });
@@ -171,7 +170,6 @@ const Cedulon = () => {
         title: 'Error',
         text: 'No se pudo generar el PDF',
         icon: 'error',
-        position: 'top'
       });
     }
   };

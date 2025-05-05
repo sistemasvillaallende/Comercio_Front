@@ -96,7 +96,6 @@ const Rubros = () => {
         confirmButtonText: 'Aceptar',
         cancelButtonText: 'Cancelar',
         confirmButtonColor: "#27a3cf",
-        position: 'top',
         inputValidator: (value) => {
           if (!value) {
             return 'Debes ingresar un texto para continuar';
@@ -151,7 +150,6 @@ const Rubros = () => {
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar',
       confirmButtonColor: "#27a3cf",
-      position: 'top',
       inputValidator: (value) => {
         if (!value) {
           return 'Debes ingresar un texto para continuar';
@@ -245,7 +243,6 @@ const Rubros = () => {
         confirmButtonText: 'Aceptar',
         cancelButtonText: 'Cancelar',
         confirmButtonColor: "#27a3cf",
-        position: 'top',
         inputValidator: (value) => {
           if (!value) {
             return 'Debes ingresar un texto para continuar';

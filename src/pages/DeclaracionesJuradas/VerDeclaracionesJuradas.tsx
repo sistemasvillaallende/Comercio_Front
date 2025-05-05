@@ -108,7 +108,6 @@ const VerDeclaracionesJuradas = () => {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar',
-      position: 'top',
     });
 
     if (result.isConfirmed) {
@@ -120,7 +119,6 @@ const VerDeclaracionesJuradas = () => {
         confirmButtonText: 'Aceptar',
         cancelButtonText: 'Cancelar',
         confirmButtonColor: "#27a3cf",
-        position: 'top',
         inputValidator: (value) => {
           if (!value) {
             return 'Debes ingresar un texto para continuar';
@@ -149,7 +147,6 @@ const VerDeclaracionesJuradas = () => {
             icon: 'error',
             confirmButtonText: 'Aceptar',
             confirmButtonColor: '#27a3cf',
-            position: 'top',
           });
           // Actualizar la lista de declaraciones después de eliminar
           setDeclaraciones(declaraciones.filter(declaracion => declaracion.ddjj.nro_transaccion !== nro_transaccion));
@@ -161,7 +158,6 @@ const VerDeclaracionesJuradas = () => {
             icon: 'error',
             confirmButtonText: 'Aceptar',
             confirmButtonColor: '#27a3cf',
-            position: 'top',
           });
         }
       }

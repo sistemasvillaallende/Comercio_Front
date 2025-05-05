@@ -43,7 +43,6 @@ const IngresarDeclaracionJurada = () => {
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar',
       confirmButtonColor: "#27a3cf",
-      position: 'top',
       inputValidator: (value) => {
         if (!value) {
           return 'Debes ingresar un texto para continuar';
@@ -86,7 +85,6 @@ const IngresarDeclaracionJurada = () => {
         text: 'Ahora debe finalizar la carga.',
         confirmButtonText: 'Aceptar',
         confirmButtonColor: '#27a3cf',
-        position: 'top',
       });
       console.log('Respuesta del servidor:', response.data);
     } catch (error) {
@@ -96,7 +94,6 @@ const IngresarDeclaracionJurada = () => {
         text: 'Error al enviar la declaración jurada',
         confirmButtonText: 'Aceptar',
         confirmButtonColor: '#27a3cf',
-        position: 'top',
       });
       console.error('Error al enviar la declaración jurada:', error);
     }
@@ -111,7 +108,6 @@ const IngresarDeclaracionJurada = () => {
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar',
       confirmButtonColor: "#27a3cf",
-      position: 'top',
       inputValidator: (value) => {
         if (!value) {
           return 'Debes ingresar un texto para continuar';
