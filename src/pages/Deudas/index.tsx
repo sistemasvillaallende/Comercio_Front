@@ -268,7 +268,8 @@ const Deudas = () => {
         ...swalConfig,
         title: 'Error',
         text: 'Por favor complete todos los campos requeridos',
-        icon: 'error'
+        icon: 'error',
+        position: 'center',
       });
       return;
     }
@@ -392,7 +393,8 @@ const Deudas = () => {
         ...swalConfig,
         title: '¡Éxito!',
         text: editingDeuda ? 'La deuda ha sido modificada correctamente' : 'La deuda ha sido creada correctamente',
-        icon: 'success'
+        icon: 'success',
+        position: 'center',
       });
 
     } catch (error) {
@@ -451,7 +453,8 @@ const Deudas = () => {
         ...swalConfig,
         title: 'Error',
         text: editingDeuda ? 'No se pudo modificar la deuda' : 'No se pudo crear la deuda',
-        icon: 'error'
+        icon: 'error',
+        position: 'center',
       });
     }
   };
@@ -498,6 +501,7 @@ const Deudas = () => {
       cancelButtonColor: '#3085d6',
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar',
+      position: 'center',
       inputValidator: (value) => {
         if (!value) {
           return 'Debe ingresar observaciones';
@@ -529,7 +533,8 @@ const Deudas = () => {
           ...swalConfig,
           title: '¡Eliminado!',
           text: 'La deuda ha sido eliminada correctamente',
-          icon: 'success'
+          icon: 'success',
+          position: 'center',
         });
 
         fetchDeudas();
@@ -539,7 +544,8 @@ const Deudas = () => {
           ...swalConfig,
           title: 'Error',
           text: 'No se pudo eliminar la deuda',
-          icon: 'error'
+          icon: 'error',
+          position: 'center',
         });
       }
     }
@@ -731,7 +737,7 @@ const Deudas = () => {
         sx={{
           '& .MuiDialog-container': {
             alignItems: 'flex-start',
-            pt: 2
+            pt: 15
           }
         }}
         disableRestoreFocus
