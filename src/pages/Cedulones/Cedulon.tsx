@@ -52,6 +52,7 @@ const Cedulon = () => {
       .get(urlApi)
       .then((response) => {
         setCabecera(response.data);
+        console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -326,7 +327,7 @@ const Cedulon = () => {
                       <div className="tm_border tm_accent_border_20 tm_radius_0 tm_accent_bg_10 tm_curve_35 tm_text_center">
                         <div>
                           <b className="tm_accent_color tm_f26 tm_medium tm_body_lineheight">
-                            Total: {currencyFormat(cabecera?.montoPagar || 0)}
+                            Total: {currencyFormat(cedulonParaImpresionProvider?.total || 0)}
                           </b>
                         </div>
                       </div>
@@ -334,7 +335,7 @@ const Cedulon = () => {
                   </div>
                   <h2 className="tm_f16 tm_section_heading tm_accent_border_20 tm_mb0">
                     <span className="tm_accent_bg_10 tm_radius_0 tm_curve_35 tm_border tm_accent_border_20 tm_border_bottom_0 tm_accent_color">
-                      <span>Impuesto al Automotor</span>
+                      <span>Detalles</span>
                     </span>
                   </h2>
                   <div className="tm_table tm_style1 tm_mb30">
@@ -365,7 +366,7 @@ const Cedulon = () => {
                               </td>
                               <td className="tm_width_6 tm_border_left tm_accent_border_20">
                                 <b className="tm_primary_color tm_medium">
-                                  Dominio:{" "}
+                                  Legajo:{" "}
                                 </b>
                                 {cabecera?.denominacion}
                               </td>
@@ -417,14 +418,14 @@ const Cedulon = () => {
                         <p className="tm_mb2">
                           <b
                             className="tm_primary_color"
-                            style={{ fontSize: "16px" }}
+                            style={{ fontSize: "15px" }}
                           >
                             Cedulon valido solo para pago en caja Municipal
                           </b>
                         </p>
                         <p
                           className="tm_m0"
-                          style={{ fontSize: "14px", marginTop: "10px" }}
+                          style={{ fontSize: "14px" }}
                         >
                           Medio de Pago <br />
                           {cedulonParaImpresionProvider?.tarjetaDeCredito}
@@ -496,7 +497,6 @@ const Cedulon = () => {
                           <td className="tm_width_3 tm_border_top_0">
                             <b className="tm_primary_color tm_medium">
                               CUPON MUNICIPALIDAD <br />
-                              IMPUESTO AL AUTOMOTOR
                             </b>
                           </td>
                           <td className="tm_width_3 tm_border_top_0 tm_border_left tm_accent_border_20">
@@ -511,7 +511,6 @@ const Cedulon = () => {
                           <td className="tm_width_3 tm_border_top_0 tm_border_right tm_accent_border_20">
                             <b className="tm_primary_color tm_medium">
                               CUPON MUNICIPALIDAD <br />
-                              IMPUESTO AL AUTOMOTOR
                             </b>
                           </td>
                         </tr>
@@ -540,7 +539,7 @@ const Cedulon = () => {
                             style={{ paddingTop: "0" }}
                             className="tm_width_3 tm_border_left tm_border_top_0"
                           >
-                            Dominio: {cabecera?.denominacion}
+                            Legajo: {cabecera?.denominacion}
                           </td>
                           <td
                             style={{ paddingTop: "0" }}
@@ -552,7 +551,7 @@ const Cedulon = () => {
                             style={{ paddingTop: "0" }}
                             className="tm_width_3 tm_border_top_0 tm_border_left tm_border_right tm_accent_border_20"
                           >
-                            Dominio: {cabecera?.denominacion}
+                            Legajo: {cabecera?.denominacion}
                           </td>
                         </tr>
                         <tr>
