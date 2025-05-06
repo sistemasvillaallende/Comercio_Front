@@ -142,6 +142,7 @@ const NuevoConceptoModal: React.FC<NuevoConceptoModalProps> = ({
 
     } catch (error) {
       console.error('Error:', error);
+      onClose();
       Swal.fire({
         icon: 'error',
         title: 'Error',
