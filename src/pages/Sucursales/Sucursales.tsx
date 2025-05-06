@@ -279,7 +279,8 @@ const Sucursales = () => {
           ...swalConfig,
           title: '¡Éxito!',
           text: 'Sucursal creada exitosamente',
-          icon: 'success'
+          icon: 'success',
+          position: 'center'
         });
 
         // Recargar sucursales
@@ -295,7 +296,8 @@ const Sucursales = () => {
         ...swalConfig,
         title: 'Error',
         text: `Error al crear sucursal: ${error.response?.data?.message || error.message}`,
-        icon: 'error'
+        icon: 'error',
+        position: 'center'
       });
     }
   };
@@ -335,7 +337,8 @@ const Sucursales = () => {
           ...swalConfig,
           title: 'Error',
           text: 'No se ha seleccionado ninguna sucursal para editar',
-          icon: 'error'
+          icon: 'error',
+          position: 'center'
         });
         return;
       }
@@ -397,7 +400,8 @@ const Sucursales = () => {
           ...swalConfig,
           title: '¡Éxito!',
           text: 'Sucursal modificada exitosamente',
-          icon: 'success'
+          icon: 'success',
+          position: 'center'
         });
 
         // Recargar sucursaleszzzzz
@@ -413,7 +417,8 @@ const Sucursales = () => {
         ...swalConfig,
         title: 'Error',
         text: `Error al modificar sucursal: ${error.response?.data?.message || error.message}`,
-        icon: 'error'
+        icon: 'error',
+        position: 'center'
       });
     }
   };
@@ -441,7 +446,8 @@ const Sucursales = () => {
         ...swalConfig,
         title: 'Campos Requeridos',
         html: `Por favor complete los siguientes campos:<br><br>${camposFaltantes.join('<br>')}`,
-        icon: 'warning'
+        icon: 'warning',
+        position: 'center'
       });
       return false;
     }
@@ -465,7 +471,8 @@ const Sucursales = () => {
         showCancelButton: true,
         confirmButtonText: 'Sí, eliminar',
         cancelButtonText: 'Cancelar',
-        reverseButtons: true
+        reverseButtons: true,
+        position: 'center',
       });
 
       if (result.isConfirmed) {
@@ -493,7 +500,8 @@ const Sucursales = () => {
             ...swalConfig,
             title: '¡Eliminado!',
             text: 'La sucursal ha sido eliminada.',
-            icon: 'success'
+            icon: 'success',
+            position: 'center'
           });
 
           // Recargar sucursales
@@ -509,7 +517,8 @@ const Sucursales = () => {
         ...swalConfig,
         title: 'Error',
         text: `Error al eliminar sucursal: ${error.response?.data?.message || error.message}`,
-        icon: 'error'
+        icon: 'error',
+        position: 'center'
       });
     }
   };

@@ -1193,3 +1193,9 @@
     width: 100%;
     z-index: 9999;
 }
+
+/* styles.css */
+.swal2-container {
+    z-index: 9999 !important;
+    /* Asegura que siempre esté arriba */
+}
