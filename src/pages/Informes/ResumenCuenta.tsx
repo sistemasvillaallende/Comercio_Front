@@ -108,13 +108,13 @@ const CeduloAuto = () => {
                               <b className="tm_primary_color tm_medium">
                                 Contribuyente:{" "}
                               </b>
-                              VELEZ SPITALE IGNACIO MARTIN
+                              NOMBRE CONTRIBUYENTE
                             </td>
                             <td className="tm_width_6 tm_border_top_0 tm_border_left tm_accent_border_20">
                               <b className="tm_primary_color tm_medium">
                                 Vehiculo:{" "}
                               </b>{" "}
-                              PEUGEOT 307 XS 1.6
+                              NOMBRE AUTOMOTOR
                             </td>
                           </tr>
                           <tr>
@@ -122,13 +122,13 @@ const CeduloAuto = () => {
                               <b className="tm_primary_color tm_medium">
                                 CUIT:{" "}
                               </b>
-                              23-27173499-9
+                              00-00000000-0
                             </td>
                             <td className="tm_width_6 tm_border_left tm_accent_border_20">
                               <b className="tm_primary_color tm_medium">
                                 Dominio:{" "}
                               </b>
-                              FKQ208
+                              ABC123
                             </td>
                           </tr>
                         </tbody>
@@ -307,16 +307,16 @@ const CeduloAuto = () => {
                       </tr>
                       <tr>
                         <td className="tm_width_3 tm_border_left tm_accent_border_20">
-                          VELEZ SPITALE IGNACIO MARTIN
+                          NOMBRE CONTRIBUYENTE
                         </td>
                         <td className="tm_width_3 tm_border_left tm_accent_border_20">
-                          PEUGEOT 307 XS 1.6
+                          NOMBRE AUTOMOTOR
                         </td>
                         <td className="tm_width_3 tm_border_left tm_accent_border_20">
-                          VELEZ SPITALE IGNACIO MARTIN
+                          NOMBRE CONTRIBUYENTE
                         </td>
                         <td className="tm_width_3 tm_border_right tm_border_left tm_accent_border_20">
-                          PEUGEOT 307 XS 1.6
+                          NOMBRE AUTOMOTOR
                         </td>
                       </tr>
                       <tr>
@@ -330,7 +330,7 @@ const CeduloAuto = () => {
                           style={{ paddingTop: "0" }}
                           className="tm_width_3 tm_border_left tm_border_top_0"
                         >
-                          Dominio: FKQ208
+                          Dominio: ABC123
                         </td>
                         <td
                           style={{ paddingTop: "0" }}
@@ -342,7 +342,7 @@ const CeduloAuto = () => {
                           style={{ paddingTop: "0" }}
                           className="tm_width_3 tm_border_top_0 tm_border_left tm_border_right tm_accent_border_20"
                         >
-                          Dominio: FKQ208
+                          Dominio: ABC123
                         </td>
                       </tr>
                       <tr>
