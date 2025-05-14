@@ -1,0 +1,169 @@
+@media print {
+  body {
+    background: white;
+    margin: 0;
+    padding: 0;
+  }
+
+  @page {
+    size: A4;
+    margin: 10mm;
+  }
+}
+
+.tm_container {
+  background-color: white;
+  width: 100%;
+}
+
+.tm_invoice {
+  background-color: white;
+  padding: 20px;
+  position: relative;
+}
+
+/* Estilos para la cabecera */
+.tm_invoice_head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20px;
+}
+
+/* Estilos para las tablas */
+.tm_table {
+  width: 100%;
+  margin: 15px 0;
+}
+
+.tm_table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tm_table th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+  padding: 10px;
+}
+
+
+
+/* Estilos para el pie de página con líneas punteadas */
+.tm_bottom_invoice {
+  margin-top: 30px;
+  position: relative;
+}
+
+.tm_bottom_invoice table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tm_bottom_invoice td {
+  padding: 10px;
+}
+
+/* Eliminar las líneas punteadas verticales para separar los cupones */
+.tm_bottom_invoice:before,
+.tm_bottom_invoice:after {
+  content: none;
+}
+
+.tm_bottom_invoice:before {
+  left: 50%;
+}
+
+.tm_bottom_invoice:after {
+  left: 25%;
+}
+
+/* Eliminar tercera línea vertical */
+.tm_bottom_invoice .vertical-line {
+  display: none;
+}
+
+/* Estilos para montos y totales */
+.tm_text_right {
+  text-align: right;
+}
+
+
+
+/* Estilos para el código de barras */
+.tm_invoice_right {
+  text-align: right;
+}
+
+/* Ajustes de tipografía */
+.tm_f26 {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.tm_f16 {
+  font-size: 16px;
+}
+
+.tm_medium {
+  font-weight: 500;
+}
+
+/* Ajustes de espaciado */
+.tm_mb20 {
+  margin-bottom: 20px;
+}
+
+.tm_mb30 {
+  margin-bottom: 30px;
+}
+
+
+
+.tm_radius_0 {
+  border-radius: 8px;
+}
+
+/* Estilos para la información del cedulón */
+.tm_invoice_info {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.tm_invoice_info_left {
+  flex: 1;
+}
+
+.tm_invoice_info_right {
+  flex: 1;
+  text-align: right;
+}
+
+/* Estilo para el total */
+.tm_invoice_total {
+  font-size: 24px;
+  font-weight: bold;
+  color: #1976d2;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  text-align: right;
+}
+
+/* Ajustes para impresión */
+@media print {
+  .tm_invoice {
+    padding: 0;
+  }
+
+  .tm_bottom_invoice:before,
+  .tm_bottom_invoice:after,
+  .tm_bottom_invoice .vertical-line {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
