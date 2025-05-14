@@ -304,7 +304,7 @@ const Cedulon = () => {
                       <b className=" font-medium">Contribuyente:</b> {cabecera?.nombre}
                     </div>
                     <div className="flex-1">
-                      <b className=" font-medium">Vehículo:</b> {cabecera?.detalle}
+                      <b className=" font-medium">Detalle:</b> {cabecera?.detalle}
                     </div>
                   </div>
 
@@ -407,6 +407,7 @@ const Cedulon = () => {
                     </div>
 
                   </div>
+
                 </div>
               </div>
             </div>
@@ -417,6 +418,7 @@ const Cedulon = () => {
             <div className="w-1/2 pl-2">CUPON MUNICIPALIDAD</div>
             <div className="w-1/2 pl-2">CUPON CONTRIBUYENTE</div>
           </div>
+
           <div className="mt-auto flex border-t border-l border-r border-b border-solid border-gray-500">
             <div className="flex flex-col w-1/2 border-r border-solid border-gray-500">
               <div className="flex w-full border-b border-solid border-gray-500">
@@ -487,6 +489,7 @@ const Cedulon = () => {
               </div>
             </div>
           </div>
+
         </div>
       </Paper>
     </Container >
