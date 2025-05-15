@@ -36,6 +36,7 @@ const Cedulon = () => {
   const [descuentoTotal, setDescuentoTotal] = useState<number>(0);
   const [costoFinancieroTotal, setCostoFinancieroTotal] = useState<number>(0);
   const [checkout, setCheckout] = useState<CheckOut>();
+  const [barcodeData, setBarcodeData] = useState<string>("");
 
   useEffect(() => {
     if (nrocedulon) {
@@ -51,7 +52,8 @@ const Cedulon = () => {
       .get(urlApi)
       .then((response) => {
         setCabecera(response.data);
-        console.log(response.data);
+        console.log(response.data)
+        setBarcodeData(`C0${nrocedulon}`);
       })
       .catch((error) => {
         console.log(error);
@@ -90,9 +92,6 @@ const Cedulon = () => {
   };
 
   const divRef = useRef(null);
-
-  // Actualiza el valor del código de barras para usar el número de cedulón
-  const barcodeData = nrocedulon || "0000";
 
   const generatePDF = async () => {
     try {
