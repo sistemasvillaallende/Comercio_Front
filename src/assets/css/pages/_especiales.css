@@ -85,13 +85,11 @@
   box-shadow: 4px 4px 8px 0 rgba(0, 0, 0, 0.2);
   flex-shrink: 0;
   z-index: 9990;
-  margin-top: 65px;
 }
 
 .topMenuOutlet {
   grid-column: span 12 / span 12;
   background-color: white;
-  margin-top: 80px;
   overflow: hidden;
   border-radius: 0;
   border-top-right-radius: 0.5rem;
