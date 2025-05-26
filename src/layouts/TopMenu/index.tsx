@@ -20,7 +20,7 @@ function Main() {
 
   useEffect(() => {
     setFormattedMenu(topMenu());
-    if (location.pathname == "/" || paginacion()) {
+    if (location.pathname == "/" || location.pathname == "/tabla" || paginacion()) {
       setShowLista(true);
       setShowEdicion(false);
     } else {

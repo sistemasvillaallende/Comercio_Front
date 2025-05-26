@@ -44,6 +44,8 @@ import Header from "../components/Header/index";
 import { useUserContext } from "../context/UserProvider"; // Asumiendo que tienes un contexto de usuario
 import { parseCIDICookie } from "../utils/cookieParser"; // Asumiendo que tienes una función para parsear cookies
 
+import TablaComercio from "../pages/IndustriaComercio/TablaComercio";
+
 const RouterContent = () => {
   const { user, setUser } = useUserContext();
 
@@ -64,7 +66,8 @@ const RouterContent = () => {
       <Header />
       <Routes>
         <Route path="/" element={<TopMenu />}>
-          <Route path="/" element={<Inicio />} />
+          <Route path="/tabla" element={<Inicio />} />
+          <Route path="/" element={<TablaComercio />} />
           <Route path="/nuevo" element={<Nuevo />} />
           <Route path="/:legajo/ver" element={<Ver />} />
           <Route path="/:legajo/editar" element={<Editar />} />
