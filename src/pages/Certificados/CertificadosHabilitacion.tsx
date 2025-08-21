@@ -140,21 +140,21 @@ const CertificadosHabilitacion = () => {
       pdf.setFont('helvetica', 'bold');
       pdf.text('Nombre de Fantasía:', 20, yPosition);
       pdf.setFont('helvetica', 'normal');
-      const nombreFantasia = datosComercio?.nom_fantasia || 'SUPER DIEGUITO';
+      const nombreFantasia = datosComercio?.nom_fantasia || '-';
       pdf.text(nombreFantasia, 20 + labelWidth, yPosition);
 
       yPosition += lineHeight;
       pdf.setFont('helvetica', 'bold');
       pdf.text('Titular:', 20, yPosition);
       pdf.setFont('helvetica', 'normal');
-      const titular = datosComercio?.titular || 'BRIZUELA HECTOR HUGO';
+      const titular = datosComercio?.titular || '-';
       pdf.text(titular, 20 + labelWidth, yPosition);
 
       yPosition += lineHeight;
       pdf.setFont('helvetica', 'bold');
       pdf.text('CUIT:', 20, yPosition);
       pdf.setFont('helvetica', 'normal');
-      const cuit = datosComercio?.nro_cuit || '20084970124';
+      const cuit = datosComercio?.nro_cuit || '-';
       pdf.text(cuit, 20 + labelWidth, yPosition);
 
       yPosition += lineHeight;
@@ -162,8 +162,8 @@ const CertificadosHabilitacion = () => {
       pdf.text('Domicilio Comercial:', 20, yPosition);
       pdf.setFont('helvetica', 'normal');
       const domicilio = datosComercio?.nom_calle
-        ? `Calle ${datosComercio.nom_calle}, nro dom ${datosComercio.nro_dom || ''}.`
-        : 'Calle AV. GOYCOECHEA, nro dom 569.';
+        ? `${datosComercio.nom_calle} ${datosComercio.nro_dom || ''}.`
+        : '-.';
       pdf.text(domicilio, 20 + labelWidth, yPosition);
 
       if (esSucursal) {
