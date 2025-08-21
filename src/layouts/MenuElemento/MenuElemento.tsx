@@ -158,6 +158,13 @@ const MenuElemento = () => {
                 Domicilio Postal
               </Link>
             </li>
+            <li>
+              <Link
+                to={`${elementoIndCom?.legajo}/certificadohabilitacion`}
+              >
+                Certificados de Habilitación
+              </Link>
+            </li>
           </ul>
         </nav>
       </>

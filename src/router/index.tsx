@@ -38,6 +38,7 @@ import DomicilioPostal from "../pages/DomicilioPostal/DomicilioPostal";
 import Sucursales from "../pages/Sucursales/Sucursales";
 import Rubros from "../pages/Rubros/Rubros";
 import Reliquida from "../pages/IndustriaComercio/Reliquida";
+import CertificadosHabilitacion from "../pages/Certificados/CertificadosHabilitacion";
 
 // Componentes
 import Header from "../components/Header/index";
@@ -90,6 +91,7 @@ const RouterContent = () => {
           <Route path="/:legajo/bajacomercial" element={<BajaComercial />} />
           <Route path="/:legajo/concepto" element={<Concepto />} />
           <Route path="/:legajo/domiciliopostal" element={<DomicilioPostal />} />
+          <Route path="/:legajo/certificadohabilitacion" element={<CertificadosHabilitacion />} />
         </Route>
         <Route path="/Cedulon/:nrocedulon" element={<Cedulon />} />
         <Route path="/ResumenCuenta" element={<ResumenCuenta />} />
