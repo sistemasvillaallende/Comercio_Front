@@ -5,6 +5,7 @@ import Lucide from "../../base-components/Lucide"
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { useIndustriaComercioContext } from "../../context/IndustriaComercioProvider";
+import BotonActivo from "../../components/BotonActivo";
 
 type Dato = {
   legajo: number;
@@ -132,6 +133,7 @@ const TablaComercio = () => {
           onChange={(e) => setFiltro(e.target.value)}
           className="mb-4 p-2 border border-gray-300 rounded w-1/3"
         />
+        <BotonActivo to="nuevo" texto="Nuevo" />
       </div>
       <DataTable
         columns={columnas}
