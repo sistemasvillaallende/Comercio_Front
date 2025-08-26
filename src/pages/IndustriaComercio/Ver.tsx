@@ -58,6 +58,9 @@ const ver = () => {
                 <p>Legajo: <strong>{elementoIndustriaComercio?.legajo}</strong></p>
               </div>
               <div className="elementCuadro">
+                <p>Titular: <strong>{elementoIndustriaComercio?.titular}</strong></p>
+              </div>
+              <div className="elementCuadro">
                 <p>Nro. Expediente: <strong>{elementoIndustriaComercio?.nro_exp_mesa_ent}</strong></p>
               </div>
               <div className="elementCuadro">

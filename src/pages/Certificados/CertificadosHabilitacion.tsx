@@ -8,6 +8,7 @@ import QRCode from 'qrcode';
 import Lucide from "../../base-components/Lucide";
 import logo2 from "../../assets/logo2.png";
 import { useIndustriaComercioContext } from "../../context/IndustriaComercioProvider";
+import { useUserContext } from "../../context/UserProvider";
 
 interface CertificadoPrincipal {
   certificado: string;
@@ -34,13 +35,67 @@ interface CertificadoSucursal {
   qr: string;
 }
 
+interface Sucursal {
+  legajo: number;
+  nro_sucursal: number;
+  des_com: string;
+  nom_fantasia: string;
+  cod_calle: number;
+  nom_calle: string;
+  nro_dom: number;
+  cod_barrio: number;
+  nom_barrio: string;
+  ciudad: string;
+  provincia: string;
+  pais: string;
+  cod_postal: string;
+  nro_res: string;
+  fecha_inicio: string;
+  fecha_Baja: string | null;
+  fecha_hab: string;
+  dado_baja: boolean;
+  nro_exp_mesa_ent: string;
+  fecha_alta: string;
+  cod_zona: string;
+  nro_local: string;
+  piso_dpto: string;
+  vto_inscripcion: string;
+}
+
+interface FormularioCertificado {
+  legajo: number;
+  rubro: string;
+  cod_rubro: number;
+  nro_sucursal: number;
+  titular: string;
+  domicilio: string;
+  vencimiento: string;
+  observaciones: string;
+}
+
 const CertificadosHabilitacion = () => {
   const { legajo } = useParams<{ legajo: string }>();
   const { elementoIndCom } = useIndustriaComercioContext();
+  const { user } = useUserContext();
   const [certificadosPrincipal, setCertificadosPrincipal] = useState<CertificadoPrincipal[]>([]);
   const [certificadosSucursal, setCertificadosSucursal] = useState<CertificadoSucursal[]>([]);
   const [cargandoPrincipal, setCargandoPrincipal] = useState<boolean>(true);
   const [cargandoSucursal, setCargandoSucursal] = useState<boolean>(true);
+
+  // Estados para el modal de emitir certificado
+  const [modalEmitir, setModalEmitir] = useState(false);
+  const [sucursales, setSucursales] = useState<Sucursal[]>([]);
+  const [loadingSucursales, setLoadingSucursales] = useState(false);
+  const [formulario, setFormulario] = useState<FormularioCertificado>({
+    legajo: 0,
+    rubro: "",
+    cod_rubro: 0,
+    nro_sucursal: 0,
+    titular: "",
+    domicilio: "",
+    vencimiento: "",
+    observaciones: ""
+  });
 
   const generarPDFCertificado = async (certificado: CertificadoPrincipal | CertificadoSucursal, esSucursal: boolean = false) => {
     try {
@@ -51,8 +106,8 @@ const CertificadosHabilitacion = () => {
       try {
         // Obtener datos del certificado
         const endpointCertificado = esSucursal
-          ? `http://10.0.0.24/webapiiyc24/Certificado_habilitacion/GetSucursalByLegajo?legajo=${certificado.legajo}`
-          : `http://10.0.0.24/webapiiyc24/Certificado_habilitacion/GetPrincipalByLegajo?legajo=${certificado.legajo}`;
+          ? `${import.meta.env.VITE_URL_BASE}Certificado_habilitacion/GetSucursalByLegajo?legajo=${certificado.legajo}`
+          : `${import.meta.env.VITE_URL_BASE}CCertificado_habilitacion/GetPrincipalByLegajo?legajo=${certificado.legajo}`;
 
         const responseCertificado = await axios.get(endpointCertificado);
         const datosCert = responseCertificado.data;
@@ -147,7 +202,7 @@ const CertificadosHabilitacion = () => {
       pdf.setFont('helvetica', 'bold');
       pdf.text('Titular:', 20, yPosition);
       pdf.setFont('helvetica', 'normal');
-      const titular = datosComercio?.titular || '-';
+      const titular = datosComercio?.titular && datosComercio.titular.trim() !== "" ? datosComercio.titular : 'No especificado';
       pdf.text(titular, 20 + labelWidth, yPosition);
 
       yPosition += lineHeight;
@@ -272,13 +327,227 @@ const CertificadosHabilitacion = () => {
         confirmButtonColor: "#27a3cf",
       });
     }
-  }; useEffect(() => {
+  };
+
+  // Función para cargar sucursales
+  const cargarSucursales = async () => {
+    if (!legajo) return;
+
+    setLoadingSucursales(true);
+    try {
+      const response = await axios.get<Sucursal[]>(
+        `${import.meta.env.VITE_URL_BASE}Indycom/GetSucurales?legajo=${legajo}`
+      );
+      setSucursales(response.data);
+    } catch (error) {
+      console.error("Error al cargar sucursales:", error);
+      Swal.fire({
+        title: "Error",
+        text: "No se pudieron cargar las sucursales.",
+        icon: "error",
+        confirmButtonColor: "#27a3cf",
+      });
+    } finally {
+      setLoadingSucursales(false);
+    }
+  };
+
+  // Función para abrir modal de emitir certificado
+  const abrirModalEmitir = async () => {
+    if (!elementoIndCom || !legajo) {
+      Swal.fire({
+        title: "Error",
+        text: "No se pudo obtener la información del comercio.",
+        icon: "error",
+        confirmButtonColor: "#27a3cf",
+      });
+      return;
+    }
+
+    await cargarSucursales();
+
+    setFormulario({
+      legajo: parseInt(legajo),
+      rubro: elementoIndCom.des_com || "",
+      cod_rubro: 0,
+      nro_sucursal: 0,
+      titular: elementoIndCom.titular && elementoIndCom.titular.trim() !== "" ? elementoIndCom.titular : "No especificado",
+      domicilio: `${elementoIndCom.nom_calle || ""} ${elementoIndCom.nro_dom || ""}`.trim(),
+      vencimiento: "",
+      observaciones: ""
+    });
+
+    setModalEmitir(true);
+  };
+
+  // Función para manejar cambios en el formulario
+  const handleInputChange = (field: keyof FormularioCertificado, value: string | number) => {
+    setFormulario(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  // Función para manejar cambio de sucursal
+  const handleSucursalChange = (nroSucursal: number) => {
+    const sucursalSeleccionada = sucursales.find(s => s.nro_sucursal === nroSucursal);
+
+    setFormulario(prev => ({
+      ...prev,
+      nro_sucursal: nroSucursal,
+      rubro: sucursalSeleccionada?.des_com || elementoIndCom?.des_com || prev.rubro,
+      domicilio: sucursalSeleccionada
+        ? `${sucursalSeleccionada.nom_calle} ${sucursalSeleccionada.nro_dom}`.trim()
+        : `${elementoIndCom?.nom_calle || ""} ${elementoIndCom?.nro_dom || ""}`.trim()
+    }));
+  };
+
+  // Función para emitir certificado
+  const emitirCertificado = async () => {
+    // Validaciones
+    if (!formulario.rubro.trim()) {
+      Swal.fire({
+        title: "Error",
+        text: "El rubro es obligatorio.",
+        icon: "error",
+        confirmButtonColor: "#27a3cf",
+      });
+      return;
+    }
+
+    if (!formulario.titular.trim()) {
+      Swal.fire({
+        title: "Error",
+        text: "El titular es obligatorio.",
+        icon: "error",
+        confirmButtonColor: "#27a3cf",
+      });
+      return;
+    }
+
+    if (!formulario.domicilio.trim()) {
+      Swal.fire({
+        title: "Error",
+        text: "El domicilio es obligatorio.",
+        icon: "error",
+        confirmButtonColor: "#27a3cf",
+      });
+      return;
+    }
+
+    if (!formulario.vencimiento) {
+      Swal.fire({
+        title: "Error",
+        text: "La fecha de vencimiento es obligatoria.",
+        icon: "error",
+        confirmButtonColor: "#27a3cf",
+      });
+      return;
+    }
+
+    if (!formulario.observaciones.trim()) {
+      Swal.fire({
+        title: "Error",
+        text: "Las observaciones son obligatorias.",
+        icon: "error",
+        confirmButtonColor: "#27a3cf",
+      });
+      return;
+    }
+
+    // Preparar datos para envío
+    const fechaVencimiento = new Date(formulario.vencimiento);
+    const fechaActual = new Date();
+
+    const datosCertificado = {
+      legajo: formulario.legajo,
+      rubro: formulario.rubro,
+      cod_rubro: formulario.cod_rubro,
+      nro_sucursal: formulario.nro_sucursal,
+      titular: formulario.titular,
+      domicilio: formulario.domicilio,
+      vecimiento: fechaVencimiento.toISOString(), // Formato requerido
+      auditoria: {
+        id_auditoria: 0,
+        fecha: fechaActual.toISOString(),
+        usuario: user?.userName || "Usuario Desconocido",
+        proceso: "Emisión de Certificado de Habilitación",
+        identificacion: `Legajo: ${formulario.legajo}, Sucursal: ${formulario.nro_sucursal}`,
+        autorizaciones: user?.userName || "Sin autorización",
+        observaciones: formulario.observaciones,
+        detalle: `Certificado emitido para ${formulario.titular} - ${formulario.rubro}`,
+        ip: "192.168.1.1" // En producción, obtener IP real
+      }
+    };
+
+    try {
+      // Mostrar datos en consola (para pruebas)
+      console.log("=== DATOS DEL CERTIFICADO A EMITIR ===");
+      console.log(JSON.stringify(datosCertificado, null, 2));
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_URL_BASE}Certificado_habilitacion/InsertHabilitacionComercio`,
+        datosCertificado
+      );
+
+      console.log("=== RESPUESTA DEL SERVIDOR ===");
+      console.log(JSON.stringify(response.data, null, 2));
+
+      Swal.fire({
+        title: "¡Éxito!",
+        text: "El certificado de habilitación ha sido emitido correctamente.",
+        icon: "success",
+        confirmButtonColor: "#27a3cf",
+      });
+
+      setModalEmitir(false);
+
+      // Recargar certificados
+      const fetchCertificadosPrincipal = async () => {
+        if (!legajo) return;
+        try {
+          const response = await axios.get<CertificadoPrincipal[]>(
+            `${import.meta.env.VITE_URL_BASE}Certificado_habilitacion/GetPrincipalByLegajo?legajo=${legajo}`
+          );
+          setCertificadosPrincipal(response.data);
+        } catch (error) {
+          console.error("Error al recargar certificados principales:", error);
+        }
+      };
+
+      const fetchCertificadosSucursal = async () => {
+        if (!legajo) return;
+        try {
+          const response = await axios.get<CertificadoSucursal[]>(
+            `${import.meta.env.VITE_URL_BASE}Certificado_habilitacion/GetSucursalByLegajo?legajo=${legajo}`
+          );
+          setCertificadosSucursal(response.data);
+        } catch (error) {
+          console.error("Error al recargar certificados de sucursales:", error);
+        }
+      };
+
+      fetchCertificadosPrincipal();
+      fetchCertificadosSucursal();
+
+    } catch (error) {
+      console.error("Error al emitir certificado:", error);
+      Swal.fire({
+        title: "Error",
+        text: "No se pudo emitir el certificado. Intente nuevamente.",
+        icon: "error",
+        confirmButtonColor: "#27a3cf",
+      });
+    }
+  };
+
+  useEffect(() => {
     const fetchCertificadosPrincipal = async () => {
       if (!legajo) return;
 
       try {
         const response = await axios.get<CertificadoPrincipal[]>(
-          `http://10.0.0.24/webapiiyc24/Certificado_habilitacion/GetPrincipalByLegajo?legajo=${legajo}`
+          `${import.meta.env.VITE_URL_BASE}Certificado_habilitacion/GetPrincipalByLegajo?legajo=${legajo}`
         );
         setCertificadosPrincipal(response.data);
       } catch (error) {
@@ -299,7 +568,7 @@ const CertificadosHabilitacion = () => {
 
       try {
         const response = await axios.get<CertificadoSucursal[]>(
-          `http://10.0.0.24/webapiiyc24/Certificado_habilitacion/GetSucursalByLegajo?legajo=${legajo}`
+          `${import.meta.env.VITE_URL_BASE}Certificado_habilitacion/GetSucursalByLegajo?legajo=${legajo}`
         );
         setCertificadosSucursal(response.data);
       } catch (error) {
@@ -429,7 +698,18 @@ const CertificadosHabilitacion = () => {
   return (
     <div className="flex flex-col h-full bg-white pt-5">
       <div className="pl-4 pr-4">
-        <h1 className="text-2xl font-bold mb-6">Certificados de Habilitación</h1>
+        <div className="mb-6 flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-gray-800">
+            Certificados de Habilitación - Legajo {legajo}
+          </h1>
+          <button
+            onClick={abrirModalEmitir}
+            className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+          >
+            <Lucide icon="Plus" className="w-4 h-4 mr-2" />
+            Emitir Certificado
+          </button>
+        </div>
 
         {/* Certificados Principales */}
         <div className="mb-8">
@@ -475,6 +755,146 @@ const CertificadosHabilitacion = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal para emitir certificado */}
+      {modalEmitir && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-gray-800">Emitir Certificado de Habilitación</h2>
+              <button
+                onClick={() => setModalEmitir(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <Lucide icon="X" className="w-6 h-6" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {/* Legajo (readonly) */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Legajo
+                </label>
+                <input
+                  type="number"
+                  value={formulario.legajo}
+                  readOnly
+                  className="w-full p-2 border border-gray-300 rounded-md bg-gray-100"
+                />
+              </div>
+
+              {/* Sucursal */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Sucursal
+                </label>
+                <select
+                  value={formulario.nro_sucursal}
+                  onChange={(e) => handleSucursalChange(parseInt(e.target.value))}
+                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  disabled={loadingSucursales}
+                >
+                  <option value={0}>Casa Central</option>
+                  {sucursales.map((sucursal) => (
+                    <option key={sucursal.nro_sucursal} value={sucursal.nro_sucursal}>
+                      Sucursal {sucursal.nro_sucursal} - {sucursal.nom_fantasia}
+                    </option>
+                  ))}
+                </select>
+                {loadingSucursales && (
+                  <p className="text-sm text-gray-500 mt-1">Cargando sucursales...</p>
+                )}
+              </div>
+
+              {/* Rubro */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Rubro *
+                </label>
+                <input
+                  type="text"
+                  value={formulario.rubro}
+                  onChange={(e) => handleInputChange('rubro', e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Ingrese el rubro"
+                />
+              </div>
+
+              {/* Titular */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Titular *
+                </label>
+                <input
+                  type="text"
+                  value={formulario.titular}
+                  onChange={(e) => handleInputChange('titular', e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Nombre del titular"
+                />
+              </div>
+
+              {/* Domicilio */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Domicilio *
+                </label>
+                <input
+                  type="text"
+                  value={formulario.domicilio}
+                  onChange={(e) => handleInputChange('domicilio', e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Dirección del comercio"
+                />
+              </div>
+
+              {/* Fecha de Vencimiento */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Fecha de Vencimiento *
+                </label>
+                <input
+                  type="date"
+                  value={formulario.vencimiento}
+                  onChange={(e) => handleInputChange('vencimiento', e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+
+              {/* Observaciones */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Observaciones de Auditoría *
+                </label>
+                <textarea
+                  value={formulario.observaciones}
+                  onChange={(e) => handleInputChange('observaciones', e.target.value)}
+                  rows={3}
+                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Ingrese las observaciones para la auditoría"
+                />
+              </div>
+            </div>
+
+            {/* Botones */}
+            <div className="flex space-x-3 mt-6">
+              <button
+                onClick={() => setModalEmitir(false)}
+                className="flex-1 px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium rounded-lg transition-colors duration-200"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={emitirCertificado}
+                className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200"
+              >
+                Emitir Certificado
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
