@@ -106,11 +106,13 @@ const CertificadosHabilitacion = () => {
       try {
         // Obtener datos del certificado
         const endpointCertificado = esSucursal
-          ? `${import.meta.env.VITE_URL_BASE}Certificado_habilitacion/GetSucursalByLegajo?legajo=${certificado.legajo}`
-          : `${import.meta.env.VITE_URL_BASE}CCertificado_habilitacion/GetPrincipalByLegajo?legajo=${certificado.legajo}`;
+          ? `${import.meta.env.VITE_URL_BASE}Certificado_habilitacion/GetCertificadoPrincipal?legajo=${certificado.legajo}`
+          : `${import.meta.env.VITE_URL_BASE}Certificado_habilitacion/GetCertificadoPrincipal?legajo=${certificado.legajo}`;
 
+        console.log('Endpoint certificado:', endpointCertificado);
         const responseCertificado = await axios.get(endpointCertificado);
         const datosCert = responseCertificado.data;
+        console.log('Respuesta certificado:', datosCert);
 
         // Buscar el certificado específico en la respuesta
         if (Array.isArray(datosCert)) {
@@ -118,6 +120,8 @@ const CertificadosHabilitacion = () => {
         } else {
           datosCertificado = datosCert;
         }
+
+        console.log('Datos certificado seleccionado:', datosCertificado);
 
         // Obtener datos completos del comercio
         const endpointComercio = `${import.meta.env.VITE_URL_BASE}Indycom/GetIndycomPaginado?buscarPor=legajo&strParametro=${certificado.legajo}&pagina=1&registros_por_pagina=1`;
@@ -195,30 +199,50 @@ const CertificadosHabilitacion = () => {
       pdf.setFont('helvetica', 'bold');
       pdf.text('Nombre de Fantasía:', 20, yPosition);
       pdf.setFont('helvetica', 'normal');
-      const nombreFantasia = datosComercio?.nom_fantasia || '-';
+      const nombreFantasia = datosCertificado?.nom_fantasia || datosComercio?.nom_fantasia || '-';
       pdf.text(nombreFantasia, 20 + labelWidth, yPosition);
 
       yPosition += lineHeight;
       pdf.setFont('helvetica', 'bold');
       pdf.text('Titular:', 20, yPosition);
       pdf.setFont('helvetica', 'normal');
-      const titular = datosComercio?.titular && datosComercio.titular.trim() !== "" ? datosComercio.titular : 'No especificado';
-      pdf.text(titular, 20 + labelWidth, yPosition);
 
-      yPosition += lineHeight;
+      // Construir el nombre completo desde los datos del certificado
+      console.log('datosCertificado en titular:', datosCertificado);
+      console.log('nombre:', datosCertificado?.nombre);
+      console.log('apellido:', datosCertificado?.apellido);
+
+      let titular = 'No especificado';
+      if (datosCertificado?.nombre || datosCertificado?.apellido) {
+        const nombre = (datosCertificado.nombre || '').trim();
+        const apellido = (datosCertificado.apellido || '').trim();
+
+        if (nombre && apellido) {
+          titular = `${nombre} ${apellido}`;
+        } else if (nombre) {
+          titular = nombre;
+        } else if (apellido) {
+          titular = apellido;
+        }
+      }
+
+      console.log('titular final:', titular);
+      pdf.text(titular, 20 + labelWidth, yPosition); yPosition += lineHeight;
       pdf.setFont('helvetica', 'bold');
       pdf.text('CUIT:', 20, yPosition);
       pdf.setFont('helvetica', 'normal');
-      const cuit = datosComercio?.nro_cuit || '-';
+      const cuit = datosCertificado?.nro_cuit || datosComercio?.nro_cuit || '-';
       pdf.text(cuit, 20 + labelWidth, yPosition);
 
       yPosition += lineHeight;
       pdf.setFont('helvetica', 'bold');
       pdf.text('Domicilio Comercial:', 20, yPosition);
       pdf.setFont('helvetica', 'normal');
-      const domicilio = datosComercio?.nom_calle
-        ? `${datosComercio.nom_calle} ${datosComercio.nro_dom || ''}.`
-        : '-.';
+      const domicilio = datosCertificado?.nombre_calle && datosCertificado?.nro_domicilio
+        ? `${datosCertificado.nombre_calle} ${datosCertificado.nro_domicilio}.`
+        : datosComercio?.nom_calle
+          ? `${datosComercio.nom_calle} ${datosComercio.nro_dom || ''}.`
+          : '-.';
       pdf.text(domicilio, 20 + labelWidth, yPosition);
 
       if (esSucursal) {
