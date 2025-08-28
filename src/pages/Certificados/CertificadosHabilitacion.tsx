@@ -607,6 +607,20 @@ const CertificadosHabilitacion = () => {
     return dateString;
   };
 
+  const isCertificadoVencido = (fechaVencimiento: string) => {
+    if (!fechaVencimiento) return false;
+
+    // Convertir la fecha de vencimiento a formato Date
+    const [dia, mes, anio] = fechaVencimiento.split('/');
+    const fechaVto = new Date(parseInt(anio), parseInt(mes) - 1, parseInt(dia));
+
+    // Obtener la fecha actual sin hora
+    const fechaActual = new Date();
+    fechaActual.setHours(0, 0, 0, 0);
+
+    return fechaVto < fechaActual;
+  };
+
   const columnasPrincipal: TableColumn<CertificadoPrincipal>[] = [
     {
       name: 'Certificado',
@@ -639,15 +653,25 @@ const CertificadosHabilitacion = () => {
     },
     {
       name: 'Acciones',
-      cell: (row) => (
-        <button
-          className="inline-flex items-center px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          onClick={() => generarPDFCertificado(row, false)}
-        >
-          <Lucide icon="Download" className="w-4 h-4 mr-1" />
-          Descargar
-        </button>
-      ),
+      cell: (row) => {
+        if (isCertificadoVencido(row.vtoCertificado)) {
+          return (
+            <span className="inline-flex items-center px-3 py-1 bg-red-100 text-red-700 text-sm font-medium rounded border border-red-300">
+              VENCIDO
+            </span>
+          );
+        }
+
+        return (
+          <button
+            className="inline-flex items-center px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onClick={() => generarPDFCertificado(row, false)}
+          >
+            <Lucide icon="Download" className="w-4 h-4 mr-1" />
+            Descargar
+          </button>
+        );
+      },
       maxWidth: "120px",
       ignoreRowClick: true,
       allowOverflow: true,
@@ -693,15 +717,25 @@ const CertificadosHabilitacion = () => {
     },
     {
       name: 'Acciones',
-      cell: (row) => (
-        <button
-          className="inline-flex items-center px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500"
-          onClick={() => generarPDFCertificado(row, true)}
-        >
-          <Lucide icon="Download" className="w-4 h-4 mr-1" />
-          Descargar
-        </button>
-      ),
+      cell: (row) => {
+        if (isCertificadoVencido(row.vtoCertificado)) {
+          return (
+            <span className="inline-flex items-center px-3 py-1 bg-red-100 text-red-700 text-sm font-medium rounded border border-red-300">
+              VENCIDO
+            </span>
+          );
+        }
+
+        return (
+          <button
+            className="inline-flex items-center px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+            onClick={() => generarPDFCertificado(row, true)}
+          >
+            <Lucide icon="Download" className="w-4 h-4 mr-1" />
+            Descargar
+          </button>
+        );
+      },
       maxWidth: "120px",
       ignoreRowClick: true,
       allowOverflow: true,
