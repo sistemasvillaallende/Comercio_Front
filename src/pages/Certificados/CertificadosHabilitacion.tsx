@@ -395,7 +395,7 @@ const CertificadosHabilitacion = () => {
       rubro: elementoIndCom.des_com || "",
       cod_rubro: 0,
       nro_sucursal: 0,
-      titular: elementoIndCom.titular && elementoIndCom.titular.trim() !== "" ? elementoIndCom.titular : "No especificado",
+      titular: "No especificado",
       domicilio: `${elementoIndCom.nom_calle || ""} ${elementoIndCom.nro_dom || ""}`.trim(),
       vencimiento: "",
       observaciones: ""
@@ -433,16 +433,6 @@ const CertificadosHabilitacion = () => {
       Swal.fire({
         title: "Error",
         text: "El rubro es obligatorio.",
-        icon: "error",
-        confirmButtonColor: "#27a3cf",
-      });
-      return;
-    }
-
-    if (!formulario.titular.trim()) {
-      Swal.fire({
-        title: "Error",
-        text: "El titular es obligatorio.",
         icon: "error",
         confirmButtonColor: "#27a3cf",
       });
@@ -842,20 +832,6 @@ const CertificadosHabilitacion = () => {
                   onChange={(e) => handleInputChange('rubro', e.target.value)}
                   className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Ingrese el rubro"
-                />
-              </div>
-
-              {/* Titular */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Titular *
-                </label>
-                <input
-                  type="text"
-                  value={formulario.titular}
-                  onChange={(e) => handleInputChange('titular', e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Nombre del titular"
                 />
               </div>
 
