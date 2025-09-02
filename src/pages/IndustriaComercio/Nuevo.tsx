@@ -44,8 +44,26 @@ const Nuevo = () => {
 
   const navigate = useNavigate();
 
-  const [legajo, setLegajo] = useState<number | null>(null);
   const [nroBad, setNroBad] = useState<number | null>(null);
+
+  // Estados para manejar errores de validación
+  const [errores, setErrores] = useState<{ [key: string]: string }>({});
+
+  // Función para limpiar error de un campo específico
+  const limpiarError = (campo: string) => {
+    if (errores[campo]) {
+      setErrores(prev => {
+        const nuevosErrores = { ...prev };
+        delete nuevosErrores[campo];
+        return nuevosErrores;
+      });
+    }
+  };
+
+  // Debug del estado nroBad
+  useEffect(() => {
+    console.log('nroBad cambió a:', nroBad);
+  }, [nroBad]);
   const [desCom, setDesCom] = useState<string>("");
   const [nomFantasia, setNomFantasia] = useState<string>("");
   const [nroDom, setNroDom] = useState<number | null>(null);
@@ -61,29 +79,34 @@ const Nuevo = () => {
   const [nroExpMesaEnt, setNroExpMesaEnt] = useState<string>("");
   const [nroCuit, setNroCuit] = useState<string>("");
   const [transporte, setTransporte] = useState<boolean>(false);
-  const [fechaAlta, setFechaAlta] = useState<string>("");
+  const [fechaAlta, setFechaAlta] = useState<string>(fechaActual());
   const [nomCalle, setNomCalle] = useState<string>("");
   const [pisoDptoEsp, setPisoDptoEsp] = useState<string>("");
-  const [localEsp, setLocalEsp] = useState<string>("");
-  const [nomBarrioDomEsp, setNomBarrioDomEsp] = useState<string>("");
+  const [localEsp, setLocalEsp] = useState<string>("0");
+  const [nomBarrioDomEsp, setNomBarrioDomEsp] = useState<string>("Cordoba");
   const [emiteCedulon, setEmiteCedulon] = useState<boolean>(false);
-  const [codSituacionJudicial, setCodSituacionJudicial] = useState<number | null>(null);
+  const [codSituacionJudicial, setCodSituacionJudicial] = useState<number | null>(1);
   const [ocupacionVereda, setOcupacionVereda] = useState<boolean>(false);
-  const [codZonaLiquidacion, setCodZonaLiquidacion] = useState<string>("");
+  const [codZonaLiquidacion, setCodZonaLiquidacion] = useState<string>("1");
   const [fechaDdjjAnual, setFechaDdjjAnual] = useState<string>("");
-  const [codCaracter, setCodCaracter] = useState<number | null>(null);
-  const [categoriaIva, setCategoriaIva] = useState<number>(0);
+  const [codCaracter, setCodCaracter] = useState<number | null>(0);
+  const [categoriaIva, setCategoriaIva] = useState<number>(1);
   const [vtoInscripcion, setVtoInscripcion] = useState<string>("");
   const [observacionesAuditoria, setObservacionesAuditoria] = useState<string>("");
   const [fechaAuditoria, setFechaAuditoria] = useState<string>("");
-  const [ciudad, setCiudad] = useState<string>("");
+  const [ciudad, setCiudad] = useState<string>("Córdoba");
 
   useEffect(() => {
     if (elementoIndCom) {
       setElementoIndustriaComercio(undefined);
     }
-    setNroBad(propietarioSeleccionado?.nro_bad || 0)
-    setNroCuit(propietarioSeleccionado?.cuit || "0")
+
+    if (propietarioSeleccionado) {
+      console.log('Propietario seleccionado:', propietarioSeleccionado);
+      console.log('nro_bad del propietario:', propietarioSeleccionado.nro_bad);
+      setNroBad(propietarioSeleccionado.nro_bad || 0);
+      setNroCuit(propietarioSeleccionado.cuit || "0");
+    }
   }, [propietarioSeleccionado]);
 
   const handleAuditoria = async () => {
@@ -107,97 +130,158 @@ const Nuevo = () => {
     }
   }
 
+  const validarCampos = () => {
+    const nuevosErrores: { [key: string]: string } = {};
+
+    // Validaciones de campos requeridos básicos
+    if (!desCom) nuevosErrores.desCom = "La descripción es requerida";
+    if (!nomFantasia) nuevosErrores.nomFantasia = "El nombre de fantasía es requerido";
+    if (!nomCalle) nuevosErrores.nomCalle = "El nombre de la calle es requerido";
+    if (!nroDom) nuevosErrores.nroDom = "El número de domicilio es requerido";
+    if (!ciudad) nuevosErrores.ciudad = "La ciudad es requerida";
+    if (!priPeriodo) nuevosErrores.priPeriodo = "El primer período es requerido";
+    if (!nroExpMesaEnt) nuevosErrores.nroExpMesaEnt = "El número de expediente es requerido";
+    if (!fechaAlta) nuevosErrores.fechaAlta = "La fecha de alta es requerida";
+    if (!localEsp) nuevosErrores.localEsp = "El número de local es requerido";
+    if (!nomBarrioDomEsp) nuevosErrores.nomBarrioDomEsp = "El barrio es requerido";
+    if (!tipoLiquidacionElemento) nuevosErrores.tipoLiquidacionElemento = "El tipo de liquidación es requerido";
+    if (!nroCuit) nuevosErrores.nroCuit = "El CUIT es requerido";
+    if (!fechaInicio) nuevosErrores.fechaInicio = "La fecha de inicio es requerida";
+    if (!fechaHab) nuevosErrores.fechaHab = "La fecha de habilitación es requerida";
+    if (!vtoInscripcion) nuevosErrores.vtoInscripcion = "El vencimiento de inscripción es requerido";
+
+    // Validar formato del primer período
+    if (priPeriodo && !/^\d{4}\/\d{2}$/.test(priPeriodo.trim())) {
+      nuevosErrores.priPeriodo = "El formato debe ser YYYY/MM (ej: 2025/01)";
+    }
+
+    // Validar formato del último período si está presente
+    if (perUlt && !/^\d{4}\/\d{2}$/.test(perUlt.trim())) {
+      nuevosErrores.perUlt = "El formato debe ser YYYY/MM (ej: 2025/01)";
+    }
+
+    setErrores(nuevosErrores);
+    return Object.keys(nuevosErrores).length === 0;
+  };
+
   const actualizarIyC = (auditoria: String) => {
-    const urlApi = `${import.meta.env.VITE_URL_API_IYC}Indycom/InsertDatosGeneral`;
-    const fechaActual = new Date();
+    const urlApi = `${import.meta.env.VITE_URL_BASE || 'http://10.0.0.24/webapiiyc24/'}Indycom/InsertDatosGeneral`;
+    console.log('URL de la API:', urlApi); // Para debugging
+
+    // Validar campos antes de enviar
+    if (!validarCampos()) {
+      return;
+    }
+
+    const fechaActual = new Date().toISOString();
     const requestBody = {
-      "legajo": legajo,
-      "nro_bad": nroBad,
-      "nro_contrib": nroBad,
-      "des_com": desCom,
-      "nom_fantasia": nomFantasia,
+      "legajo": 0, // El legajo se genera automáticamente en el servidor
+      "nro_bad": nroBad || 0,
+      "nro_contrib": nroBad || 0,
+      "des_com": desCom || "",
+      "nom_fantasia": nomFantasia || "",
       "cod_calle": 421,
-      "nro_dom": nroDom,
+      "nro_dom": nroDom || 0,
       "cod_barrio": 10,
       "cod_tipo_per": 1,
-      "cod_zona": codZona,
-      "pri_periodo": priPeriodo,
-      "tipo_liquidacion": tipoLiquidacionElemento,
-      "dado_baja": dadoBaja,
-      "fecha_baja": convertirFechaNuevo(fechaBaja),
-      "exento": exento,
-      "per_ult": perUlt,
-      "fecha_inicio": convertirFechaNuevo(fechaInicio),
-      "fecha_hab": convertirFechaNuevo(fechaHab),
+      "cod_zona": "", // String vacío según el JSON que funciona
+      "pri_periodo": priPeriodo ? `${priPeriodo} ` : "", // Agregar espacio al final
+      "tipo_liquidacion": tipoLiquidacionElemento || 1,
+      "dado_baja": dadoBaja || false,
+      "fecha_baja": fechaBaja ? convertirFechaNuevo(fechaBaja) : null,
+      "exento": exento || false,
+      "per_ult": perUlt || (priPeriodo ? `${priPeriodo.slice(0, 4)}/${String(parseInt(priPeriodo.slice(5, 7)) + 3).padStart(2, '0')}` : ""),
+      "fecha_inicio": fechaInicio ? convertirFechaNuevo(fechaInicio) : null,
+      "fecha_hab": fechaHab ? convertirFechaNuevo(fechaHab) : null,
       "nro_res": "string",
-      "nro_exp_mesa_ent": nroExpMesaEnt,
-      "nro_ing_bruto": nroCuit,
-      "nro_cuit": nroCuit,
-      "transporte": transporte,
-      "fecha_alta": convertirFechaNuevo(fechaAlta),
-      "nom_calle": nomCalle,
-      "nom_barrio": nomBarrioDomEsp,
-      "ciudad": ciudad,
+      "nro_exp_mesa_ent": nroExpMesaEnt || "",
+      "nro_ing_bruto": nroCuit || "",
+      "nro_cuit": nroCuit || "",
+      "transporte": transporte || false,
+      "fecha_alta": fechaAlta ? convertirFechaNuevo(fechaAlta) : fechaActual,
+      "nom_calle": nomCalle || "",
+      "nom_barrio": nomBarrioDomEsp || "Cordoba",
+      "ciudad": ciudad || "Córdoba",
       "provincia": "Cordoba",
       "pais": "ARG",
       "cod_postal": "5105",
       "cod_calle_dom_esp": 123,
-      "nom_calle_dom_esp": nomCalle,
-      "nro_dom_esp": nroDom,
-      "piso_dpto_esp": pisoDptoEsp,
-      "local_esp": localEsp,
+      "nom_calle_dom_esp": nomCalle || "",
+      "nro_dom_esp": nroDom || 0,
+      "piso_dpto_esp": pisoDptoEsp || "",
+      "local_esp": localEsp || "0",
       "cod_barrio_dom_esp": 10,
-      "nom_barrio_dom_esp": nomBarrioDomEsp,
-      "ciudad_dom_esp": ciudad,
+      "nom_barrio_dom_esp": nomBarrioDomEsp || "Cordoba",
+      "ciudad_dom_esp": ciudad || "Córdoba",
       "provincia_dom_esp": "Cordoba",
-      "pais_dom_esp": "Arg",
+      "pais_dom_esp": "Arg", // Cambiar de "ARG" a "Arg"
       "cod_postal_dom_esp": "5105",
-      "emite_cedulon": true,
-      "cod_situacion_judicial": codSituacionJudicial,
+      "emite_cedulon": emiteCedulon || false,
+      "cod_situacion_judicial": codSituacionJudicial || 1,
       "telefono1": "string",
       "telefono2": "string",
       "celular1": "string",
       "celular2": "string",
-      "ocupacion_vereda": false,
-      "cod_zona_liquidacion": "1",
-      "email_envio_cedulon": "jessicacba@live.com.ar",
-      "telefono": "351",
-      "celular": "0351",
+      "ocupacion_vereda": ocupacionVereda || false,
+      "cod_zona_liquidacion": codZonaLiquidacion || "1",
+      "email_envio_cedulon": "",
+      "telefono": "string",
+      "celular": "string",
       "es_agencia": 0,
-      "nro_local": "12",
-      "piso_dpto": "string",
-      "cod_cond_ante_iva": 1,
-      "cod_caracter": 0,
+      "nro_local": localEsp || "0",
+      "piso_dpto": pisoDptoEsp || "string",
+      "cod_cond_ante_iva": categoriaIva || 1,
+      "cod_caracter": codCaracter || 0, // Cambiar de 1 a 0
       "categoria_iva": "F",
       "otra_entidad": "string",
       "convenio_uni": 0,
       "cod_nueva_zona": "Z",
-      "vto_inscripcion": "2023-11-13T16:50:00.066Z",
+      "vto_inscripcion": vtoInscripcion ? convertirFechaNuevo(vtoInscripcion) : null,
       "objAuditoria": {
         "id_auditoria": 0,
         "fecha": fechaActual,
-        "usuario": user?.userName,
-        "proceso": "string",
-        "identificacion": "string",
-        "autorizaciones": "string",
-        "observaciones": "string",
-        "detalle": "string",
-        "ip": "string"
+        "usuario": user?.userName || "Sistema",
+        "proceso": "CREAR_COMERCIO",
+        "identificacion": desCom || "",
+        "autorizaciones": auditoria || "",
+        "observaciones": auditoria || "",
+        "detalle": `Creación de comercio: ${desCom}`,
+        "ip": "127.0.0.1"
       }
     };
-    console.log(requestBody);
+
+    console.log('Request Body:', JSON.stringify(requestBody, null, 2)); // Para debugging
+
     axios
-      .post(urlApi, requestBody)
+      .post(urlApi, requestBody, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      })
       .then((response) => {
         if (response.data) {
+          console.log('Respuesta del servidor:', response.data);
+          const legajoGenerado = response.data.legajo || response.data.id || 'N/A';
+
           Swal.fire({
-            title: "Actualizado",
-            text: "Se guardó correctamente",
+            title: "¡Comercio creado exitosamente!",
+            text: `Se creó correctamente el comercio "${nomFantasia}" con legajo ${legajoGenerado}`,
             icon: "success",
-            confirmButtonText: "Aceptar",
+            showCancelButton: true,
+            confirmButtonText: "Ver Comercio",
+            cancelButtonText: "Ir al Listado",
             confirmButtonColor: "#27a3cf",
+            cancelButtonColor: "#6c757d",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Navegar al comercio recién creado usando el legajo generado
+              navigate(`/${legajoGenerado}/ver`);
+            } else if (result.isDismissed || result.isDenied) {
+              // Navegar al listado de comercios
+              navigate(`/`);
+            }
           });
-          navigate(`/`);
         } else {
           Swal.fire({
             title: "Error al actualizar",
@@ -209,9 +293,30 @@ const Nuevo = () => {
         }
       })
       .catch((error) => {
+        console.error('Error al crear comercio:', error);
+        console.error('Response data:', error.response?.data);
+        console.error('Response status:', error.response?.status);
+        console.error('Response headers:', error.response?.headers);
+
+        let errorMessage = "Hubo un problema al realizar la solicitud.";
+
+        if (error.response?.data) {
+          if (typeof error.response.data === 'string') {
+            errorMessage = error.response.data;
+          } else if (error.response.data.message) {
+            errorMessage = error.response.data.message;
+          } else if (error.response.data.error) {
+            errorMessage = error.response.data.error;
+          } else {
+            errorMessage = `Error del servidor: ${JSON.stringify(error.response.data)}`;
+          }
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+
         Swal.fire({
           title: "Error",
-          text: "Hubo un problema al realizar la solicitud.",
+          text: errorMessage,
           icon: "error",
           confirmButtonText: "Aceptar",
           confirmButtonColor: "#27a3cf",
@@ -235,26 +340,20 @@ const Nuevo = () => {
 
           <div className="grid grid-cols-12 gap-6 mt-3">
 
-            <div className="col-span-12 intro-y lg:col-span-2 mr-2">
-              <FormLabel htmlFor="fomrDominio">Legajo</FormLabel>
-              <FormInput
-                id="forLegajo"
-                type="text"
-                value={legajo?.toString() ?? ''}
-                onChange={(e) => setLegajo(Number(e.target.value))}
-                required
-              />
-            </div>
-
             <div className="col-span-12 intro-y lg:col-span-2">
               <FormLabel htmlFor="formMarca">Nro. Expediente</FormLabel>
               <FormInput
                 id="formExpediente"
                 type="text"
                 value={nroExpMesaEnt}
-                onChange={(e) => setNroExpMesaEnt(e.target.value)}
+                onChange={(e) => {
+                  setNroExpMesaEnt(e.target.value);
+                  limpiarError('nroExpMesaEnt');
+                }}
+                className={errores.nroExpMesaEnt ? 'border-red-500' : ''}
                 required
               />
+              {errores.nroExpMesaEnt && <div className="text-red-500 text-sm mt-1">{errores.nroExpMesaEnt}</div>}
             </div>
 
             <div className="col-span-12 intro-y lg:col-span-2">
@@ -263,9 +362,14 @@ const Nuevo = () => {
                 type="date"
                 id="formFechaDeAlta"
                 value={fechaAlta.slice(0, 10)}
-                onChange={(e) => setFechaAlta(e.target.value)}
+                onChange={(e) => {
+                  setFechaAlta(e.target.value);
+                  limpiarError('fechaAlta');
+                }}
+                className={errores.fechaAlta ? 'border-red-500' : ''}
                 required
               />
+              {errores.fechaAlta && <div className="text-red-500 text-sm mt-1">{errores.fechaAlta}</div>}
             </div>
 
             <div className="col-span-12 intro-y lg:col-span-2">
@@ -274,9 +378,14 @@ const Nuevo = () => {
                 id="formNOmbreDeFantasia"
                 type="text"
                 value={nomFantasia}
-                onChange={(e) => setNomFantasia(e.target.value)}
+                onChange={(e) => {
+                  setNomFantasia(e.target.value);
+                  limpiarError('nomFantasia');
+                }}
+                className={errores.nomFantasia ? 'border-red-500' : ''}
                 required
               />
+              {errores.nomFantasia && <div className="text-red-500 text-sm mt-1">{errores.nomFantasia}</div>}
             </div>
 
             <div className="col-span-12 intro-y lg:col-span-2">
@@ -285,19 +394,25 @@ const Nuevo = () => {
                 id="formDescripcion"
                 type="text"
                 value={desCom}
-                onChange={(e) => setDesCom(e.target.value)}
-
+                onChange={(e) => {
+                  setDesCom(e.target.value);
+                  limpiarError('desCom');
+                }}
+                className={errores.desCom ? 'border-red-500' : ''}
+                required
               />
+              {errores.desCom && <div className="text-red-500 text-sm mt-1">{errores.desCom}</div>}
             </div>
 
             <div className="col-span-12 intro-y lg:col-span-2">
-              <FormLabel htmlFor="formMarca">Badec</FormLabel>
+              <FormLabel htmlFor="formMarca">Badec (opcional)</FormLabel>
               <InputGroup>
                 <FormInput
                   id="formPropietario"
                   type="text"
-                  value={nroBad ?? ''}
+                  value={nroBad?.toString() || ''}
                   readOnly
+                  placeholder="Buscar propietario para obtener CUIT"
                 />
                 <InputGroup.Text
                   id="input-group-price"
@@ -319,9 +434,14 @@ const Nuevo = () => {
                 id="formCalle"
                 type="text"
                 value={nomCalle}
-                onChange={(e) => setNomCalle(e.target.value)}
+                onChange={(e) => {
+                  setNomCalle(e.target.value);
+                  limpiarError('nomCalle');
+                }}
+                className={errores.nomCalle ? 'border-red-500' : ''}
                 required
               />
+              {errores.nomCalle && <div className="text-red-500 text-sm mt-1">{errores.nomCalle}</div>}
             </div>
 
             <div className="col-span-12 intro-y lg:col-span-1">
@@ -330,9 +450,14 @@ const Nuevo = () => {
                 id="formNroDom"
                 type="number"
                 value={nroDom ?? ''}
-                onChange={(e) => setNroDom(Number(e.target.value))}
+                onChange={(e) => {
+                  setNroDom(Number(e.target.value));
+                  limpiarError('nroDom');
+                }}
+                className={errores.nroDom ? 'border-red-500' : ''}
                 required
               />
+              {errores.nroDom && <div className="text-red-500 text-sm mt-1">{errores.nroDom}</div>}
             </div>
 
             <div className="col-span-12 intro-y lg:col-span-1">
@@ -351,9 +476,14 @@ const Nuevo = () => {
                 id="formNroLocal"
                 type="text"
                 value={localEsp}
-                onChange={(e) => setLocalEsp(e.target.value)}
+                onChange={(e) => {
+                  setLocalEsp(e.target.value);
+                  limpiarError('localEsp');
+                }}
+                className={errores.localEsp ? 'border-red-500' : ''}
                 required
               />
+              {errores.localEsp && <div className="text-red-500 text-sm mt-1">{errores.localEsp}</div>}
             </div>
 
             <div className="col-span-12 intro-y lg:col-span-2">
@@ -362,9 +492,14 @@ const Nuevo = () => {
                 id="formBarrio"
                 type="text"
                 value={nomBarrioDomEsp}
-                onChange={(e) => setNomBarrioDomEsp(e.target.value)}
+                onChange={(e) => {
+                  setNomBarrioDomEsp(e.target.value);
+                  limpiarError('nomBarrioDomEsp');
+                }}
+                className={errores.nomBarrioDomEsp ? 'border-red-500' : ''}
                 required
               />
+              {errores.nomBarrioDomEsp && <div className="text-red-500 text-sm mt-1">{errores.nomBarrioDomEsp}</div>}
             </div>
 
             <div className="col-span-12 intro-y lg:col-span-2">
@@ -388,9 +523,14 @@ const Nuevo = () => {
                 id="formCiudad"
                 type="text"
                 value={ciudad}
-                onChange={(e) => setCiudad(e.target.value)}
+                onChange={(e) => {
+                  setCiudad(e.target.value);
+                  limpiarError('ciudad');
+                }}
+                className={errores.ciudad ? 'border-red-500' : ''}
                 required
               />
+              {errores.ciudad && <div className="text-red-500 text-sm mt-1">{errores.ciudad}</div>}
             </div>
 
             <div className="col-span-12 intro-y lg:col-span-12">
@@ -403,9 +543,15 @@ const Nuevo = () => {
                 id="formPrimerPeriodo"
                 type="text"
                 value={priPeriodo}
-                onChange={(e) => setPriPeriodo(e.target.value)}
+                onChange={(e) => {
+                  setPriPeriodo(e.target.value);
+                  limpiarError('priPeriodo');
+                }}
+                className={errores.priPeriodo ? 'border-red-500' : ''}
+                placeholder="YYYY/MM (ej: 2025/01)"
                 required
               />
+              {errores.priPeriodo && <div className="text-red-500 text-sm mt-1">{errores.priPeriodo}</div>}
             </div>
 
             <div className="col-span-12 intro-y lg:col-span-2">
@@ -414,8 +560,14 @@ const Nuevo = () => {
                 id="formUltimoPeriodo"
                 type="text"
                 value={perUlt}
-                onChange={(e) => setPerUlt(e.target.value)}
+                onChange={(e) => {
+                  setPerUlt(e.target.value);
+                  limpiarError('perUlt');
+                }}
+                className={errores.perUlt ? 'border-red-500' : ''}
+                placeholder="YYYY/MM (opcional)"
               />
+              {errores.perUlt && <div className="text-red-500 text-sm mt-1">{errores.perUlt}</div>}
             </div>
 
             <div className="col-span-12 intro-y lg:col-span-4">
@@ -423,7 +575,11 @@ const Nuevo = () => {
               <FormSelect
                 id="formTipoLiquidacion"
                 value={tipoLiquidacionElemento?.toString() ?? ''}
-                onChange={(e) => setTipoLiquidacionElemento(Number(e.target.value))}
+                onChange={(e) => {
+                  setTipoLiquidacionElemento(Number(e.target.value));
+                  limpiarError('tipoLiquidacionElemento');
+                }}
+                className={errores.tipoLiquidacionElemento ? 'border-red-500' : ''}
                 required
               >
                 <option value="">Seleccione un tipo de liquidación</option>
@@ -433,6 +589,7 @@ const Nuevo = () => {
                   </option>
                 ))}
               </FormSelect>
+              {errores.tipoLiquidacionElemento && <div className="text-red-500 text-sm mt-1">{errores.tipoLiquidacionElemento}</div>}
             </div>
 
             <div className="col-span-12 intro-y lg:col-span-2">
@@ -441,9 +598,14 @@ const Nuevo = () => {
                 id="formCUIT"
                 type="text"
                 value={nroCuit}
-                onChange={(e) => setNroCuit(e.target.value)}
+                onChange={(e) => {
+                  setNroCuit(e.target.value);
+                  limpiarError('nroCuit');
+                }}
+                className={errores.nroCuit ? 'border-red-500' : ''}
                 required
               />
+              {errores.nroCuit && <div className="text-red-500 text-sm mt-1">{errores.nroCuit}</div>}
             </div>
 
             <div className="col-span-12 intro-y lg:col-span-2">
@@ -487,7 +649,11 @@ const Nuevo = () => {
               <FormSelect
                 id="formTipoLiquidacion"
                 value={codCaracter?.toString() ?? ''}
-                onChange={(e) => setCodCaracter(Number(e.target.value))}
+                onChange={(e) => {
+                  setCodCaracter(Number(e.target.value));
+                  limpiarError('codCaracter');
+                }}
+                className={errores.codCaracter ? 'border-red-500' : ''}
                 required
               >
                 <option value="">Seleccione un Caracter de la Entidad</option>
@@ -497,6 +663,7 @@ const Nuevo = () => {
                   </option>
                 ))}
               </FormSelect>
+              {errores.codCaracter && <div className="text-red-500 text-sm mt-1">{errores.codCaracter}</div>}
             </div>
 
             <div className="col-span-12 intro-y lg:col-span-4">
@@ -504,7 +671,11 @@ const Nuevo = () => {
               <FormSelect
                 id="formTipoLiquidacion"
                 value={categoriaIva}
-                onChange={(e) => setCategoriaIva(parseInt(e.target.value))}
+                onChange={(e) => {
+                  setCategoriaIva(parseInt(e.target.value));
+                  limpiarError('categoriaIva');
+                }}
+                className={errores.categoriaIva ? 'border-red-500' : ''}
                 required
               >
                 <option value="">Seleccione una Condición Frente al IVA</option>
@@ -514,6 +685,7 @@ const Nuevo = () => {
                   </option>
                 ))}
               </FormSelect>
+              {errores.categoriaIva && <div className="text-red-500 text-sm mt-1">{errores.categoriaIva}</div>}
             </div>
 
             <div className="col-span-12 intro-y lg:col-span-2">
@@ -533,9 +705,14 @@ const Nuevo = () => {
                 type="date"
                 id="formFechaInicio"
                 value={fechaInicio.slice(0, 10)}
-                onChange={(e) => setFechaInicio(e.target.value)}
+                onChange={(e) => {
+                  setFechaInicio(e.target.value);
+                  limpiarError('fechaInicio');
+                }}
+                className={errores.fechaInicio ? 'border-red-500' : ''}
                 required
               />
+              {errores.fechaInicio && <div className="text-red-500 text-sm mt-1">{errores.fechaInicio}</div>}
             </div>
 
             <div className="col-span-12 intro-y lg:col-span-2">
@@ -544,9 +721,14 @@ const Nuevo = () => {
                 type="date"
                 id="formFechaHabilitacion"
                 value={fechaHab.slice(0, 10)}
-                onChange={(e) => setFechaHab(e.target.value)}
+                onChange={(e) => {
+                  setFechaHab(e.target.value);
+                  limpiarError('fechaHab');
+                }}
+                className={errores.fechaHab ? 'border-red-500' : ''}
                 required
               />
+              {errores.fechaHab && <div className="text-red-500 text-sm mt-1">{errores.fechaHab}</div>}
             </div>
 
             <div className="col-span-12 intro-y lg:col-span-2">
@@ -555,9 +737,14 @@ const Nuevo = () => {
                 type="date"
                 id="formvtoInscripcion"
                 value={vtoInscripcion.slice(0, 10)}
-                onChange={(e) => setVtoInscripcion(e.target.value)}
+                onChange={(e) => {
+                  setVtoInscripcion(e.target.value);
+                  limpiarError('vtoInscripcion');
+                }}
+                className={errores.vtoInscripcion ? 'border-red-500' : ''}
                 required
               />
+              {errores.vtoInscripcion && <div className="text-red-500 text-sm mt-1">{errores.vtoInscripcion}</div>}
             </div>
 
             <div className="col-span-12 intro-y lg:col-span-2">
@@ -589,7 +776,11 @@ const Nuevo = () => {
               <FormSelect
                 id="formSituacionJudicial"
                 value={codSituacionJudicial?.toString() ?? ''}
-                onChange={(e) => setCodSituacionJudicial(parseInt(e.target.value))}
+                onChange={(e) => {
+                  setCodSituacionJudicial(parseInt(e.target.value));
+                  limpiarError('codSituacionJudicial');
+                }}
+                className={errores.codSituacionJudicial ? 'border-red-500' : ''}
                 required
               >
                 <option value="">Seleccione una Situación Comercio</option>
@@ -599,6 +790,7 @@ const Nuevo = () => {
                   </option>
                 ))}
               </FormSelect>
+              {errores.codSituacionJudicial && <div className="text-red-500 text-sm mt-1">{errores.codSituacionJudicial}</div>}
             </div>
 
             <div className="col-span-12 intro-y lg:col-span-2">
