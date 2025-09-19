@@ -199,21 +199,27 @@ const CertificadosHabilitacion = () => {
         console.warn('No se pudo cargar el logo:', error);
       }
 
+      // Línea arriba del título principal
+      pdf.setDrawColor(0, 0, 0);
+      pdf.setLineWidth(0.5);
+      pdf.line(30, 50, 267, 50);
+
       // Título principal debajo del logo
-      pdf.setFontSize(14);
+      pdf.setFontSize(16);
       pdf.setFont('helvetica', 'bold');
       pdf.setTextColor(0, 0, 0);
-      pdf.text('DIRECCIÓN DE HABILITACIÓN DE COMERCIOS', 148, 55, { align: 'center' });
-      pdf.text('ESPECTÁCULOS PÚBLICOS Y CARTELERÍA', 148, 65, { align: 'center' });
+      pdf.text('DIRECCIÓN DE HABILITACIÓN DE COMERCIOS', 148, 58, { align: 'center' });
+      pdf.text('ESPECTÁCULOS PÚBLICOS Y CARTELERÍA', 148, 66, { align: 'center' });
 
       // Línea separadora
       pdf.setDrawColor(0, 0, 0);
       pdf.setLineWidth(0.5);
       pdf.line(30, 75, 267, 75);
 
-      // Datos del comercio centrados
+      // Datos del comercio alineados a la izquierda
       let yPosition = 90;
       const lineHeight = 15;
+      const leftMargin = 30;
 
       pdf.setFontSize(12);
       pdf.setFont('helvetica', 'bold');
@@ -221,7 +227,7 @@ const CertificadosHabilitacion = () => {
 
       // Nombre de Fantasía
       const nombreFantasia = datosCertificado?.nom_fantasia || datosComercio?.nom_fantasia || '-';
-      pdf.text(`NOMBRE DE FANTASÍA: ${nombreFantasia}`, 148, yPosition, { align: 'center' });
+      pdf.text(`NOMBRE DE FANTASÍA: ${nombreFantasia}`, leftMargin, yPosition);
 
       yPosition += lineHeight;
       // Titular
@@ -238,7 +244,7 @@ const CertificadosHabilitacion = () => {
           titular = apellido;
         }
       }
-      pdf.text(`TITULAR: ${titular}`, 148, yPosition, { align: 'center' });
+      pdf.text(`TITULAR: ${titular}`, leftMargin, yPosition);
 
       yPosition += lineHeight;
       // Domicilio
@@ -247,33 +253,36 @@ const CertificadosHabilitacion = () => {
         : datosComercio?.nom_calle
           ? `${datosComercio.nom_calle} ${datosComercio.nro_dom || ''}`
           : '-';
-      pdf.text(`DOMICILIO: ${domicilio}`, 148, yPosition, { align: 'center' });
+      pdf.text(`DOMICILIO: ${domicilio}`, leftMargin, yPosition);
 
       yPosition += lineHeight;
       // Rubro
       const rubro = datosCertificado.desCom || certificado.desCom;
-      pdf.text(`RUBRO: ${rubro}`, 148, yPosition, { align: 'center' });
+      pdf.text(`RUBRO: ${rubro}`, leftMargin, yPosition);
 
       yPosition += lineHeight;
       // Legajo
-      pdf.text(`LEGAJO: ${datosCertificado.legajo}`, 148, yPosition, { align: 'center' });
+      pdf.text(`LEGAJO: ${datosCertificado.legajo}`, leftMargin, yPosition);
 
-      // Línea separadora
-      yPosition += 20;
+      // VENCIMIENTO con líneas arriba y abajo
+      yPosition += 25;
+
+      // Línea arriba del vencimiento
       pdf.setDrawColor(0, 0, 0);
+      pdf.setLineWidth(0.5);
       pdf.line(30, yPosition, 267, yPosition);
 
-      // VENCIMIENTO - grande como el título
-      yPosition += 15;
-      pdf.setFontSize(14);
+      yPosition += 12;
+      // VENCIMIENTO con fecha al lado
+      pdf.setFontSize(16);
       pdf.setFont('helvetica', 'bold');
-      pdf.text('VENCIMIENTO', 148, yPosition, { align: 'center' });
+      pdf.setTextColor(0, 0, 0);
+      const fechaVencimiento = datosCertificado.vtoCertificado || certificado.vtoCertificado;
+      pdf.text(`VENCIMIENTO: ${fechaVencimiento}`, 148, yPosition, { align: 'center' });
 
       yPosition += 12;
-      pdf.setFontSize(16);
-      pdf.setTextColor(255, 0, 0); // Rojo para destacar
-      const fechaVencimiento = datosCertificado.vtoCertificado || certificado.vtoCertificado;
-      pdf.text(fechaVencimiento, 148, yPosition, { align: 'center' });
+      // Línea debajo del vencimiento
+      pdf.line(30, yPosition, 267, yPosition);
 
       // Textos en las esquinas inferiores
       pdf.setFontSize(10);
@@ -292,10 +301,6 @@ const CertificadosHabilitacion = () => {
       pdf.setFont('helvetica', 'normal');
       const fechaActual = new Date().toLocaleDateString('es-AR');
       pdf.text(`Documento generado el ${fechaActual}`, 148, 190, { align: 'center' });
-
-      // Información de la municipalidad en el pie
-      pdf.setFontSize(9);
-      pdf.text('Ciudad de Villa Allende - Córdoba', 148, 198, { align: 'center' });
 
       // Descargar el PDF
       const legajoArchivo = datosCertificado?.legajo || certificado.legajo;
