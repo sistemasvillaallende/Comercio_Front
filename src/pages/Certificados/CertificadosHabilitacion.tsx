@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import jsPDF from 'jspdf';
 import QRCode from 'qrcode';
 import Lucide from "../../base-components/Lucide";
-import logo2 from "../../assets/logo2.png";
+import logoMuni from "../../assets/logosecgob.png";
 import { useIndustriaComercioContext } from "../../context/IndustriaComercioProvider";
 import { useUserContext } from "../../context/UserProvider";
 
@@ -141,77 +141,90 @@ const CertificadosHabilitacion = () => {
         datosCertificado = certificado;
       }
 
-      // Crear el PDF
+      // Crear el PDF en formato horizontal
       const pdf = new jsPDF({
-        orientation: 'portrait',
+        orientation: 'landscape', // Cambiar a horizontal
         unit: 'mm',
         format: 'a4'
       });
 
-      // Añadir logo de la municipalidad con proporciones correctas
+      // Generar código QR primero para posicionarlo en la esquina superior derecha
+      const qrData = datosCertificado?.qr || certificado.qr;
+      const urlData = datosCertificado?.url || certificado.url;
+      let qrCodeDataURL = null;
+
+      if (qrData && urlData) {
+        const qrUrl = `${urlData}qr=${qrData}`;
+        try {
+          qrCodeDataURL = await QRCode.toDataURL(qrUrl, {
+            width: 120,
+            margin: 2,
+            color: {
+              dark: '#000000',
+              light: '#FFFFFF'
+            }
+          });
+        } catch (error) {
+          console.warn('Error al generar QR:', error);
+        }
+      }
+
+      // Añadir borde amarillo alrededor de toda la página
+      pdf.setDrawColor(255, 215, 0); // Color amarillo
+      pdf.setLineWidth(2);
+      pdf.rect(5, 5, 287, 200); // Rectángulo que cubre casi toda la página A4 horizontal
+
+      // Posicionar QR en la esquina superior derecha
+      if (qrCodeDataURL) {
+        const qrSize = 30;
+        const qrX = 250; // Esquina superior derecha
+        const qrY = 15;
+        pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
+      }
+
+      // Añadir logo centrado en la parte superior
       try {
         const logoImg = new Image();
-        logoImg.src = logo2;
+        logoImg.src = logoMuni;
         await new Promise((resolve) => {
           logoImg.onload = resolve;
         });
 
-        // Mantener proporciones del logo - asumiendo que es más ancho que alto
-        const logoWidth = 40;
-        const logoHeight = 25; // Ajustar según la proporción real del logo
-        pdf.addImage(logoImg, 'PNG', 20, 15, logoWidth, logoHeight);
+        // Logo centrado en la parte superior
+        const logoWidth = 100;
+        const logoHeight = 28;
+        const logoX = (297 - logoWidth) / 2; // Centrado horizontalmente
+        pdf.addImage(logoImg, 'JPEG', logoX, 15, logoWidth, logoHeight);
       } catch (error) {
         console.warn('No se pudo cargar el logo:', error);
       }
 
-      // Título principal - posicionado al lado del logo
-      pdf.setFontSize(16);
+      // Título principal debajo del logo
+      pdf.setFontSize(14);
       pdf.setFont('helvetica', 'bold');
       pdf.setTextColor(0, 0, 0);
-      pdf.text('CERTIFICADO DE HABILITACIÓN COMERCIAL', 70, 25);
-
-      // Estado - con mejor posicionamiento
-      pdf.setFontSize(12);
-      pdf.setTextColor(0, 128, 0); // Verde
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Estado: CERTIFICADO VIGENTE', 70, 35);
+      pdf.text('DIRECCIÓN DE HABILITACIÓN DE COMERCIOS', 148, 55, { align: 'center' });
+      pdf.text('ESPECTÁCULOS PÚBLICOS Y CARTELERÍA', 148, 65, { align: 'center' });
 
       // Línea separadora
       pdf.setDrawColor(0, 0, 0);
-      pdf.line(20, 50, 190, 50);
+      pdf.setLineWidth(0.5);
+      pdf.line(30, 75, 267, 75);
 
-      // Información del comercio - con mejor espaciado
-      pdf.setFontSize(11);
-      pdf.setTextColor(0, 0, 0); // Negro
-      pdf.setFont('helvetica', 'normal');
+      // Datos del comercio centrados
+      let yPosition = 90;
+      const lineHeight = 15;
 
-      let yPosition = 65;
-      const lineHeight = 10;
-      const labelWidth = 80;
-
-      // Datos básicos usando datos obtenidos del endpoint
+      pdf.setFontSize(12);
       pdf.setFont('helvetica', 'bold');
-      pdf.text('Legajo:', 20, yPosition);
-      pdf.setFont('helvetica', 'normal');
-      pdf.text(datosCertificado.legajo.toString(), 20 + labelWidth, yPosition);
+      pdf.setTextColor(0, 0, 0);
 
-      yPosition += lineHeight;
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Nombre de Fantasía:', 20, yPosition);
-      pdf.setFont('helvetica', 'normal');
+      // Nombre de Fantasía
       const nombreFantasia = datosCertificado?.nom_fantasia || datosComercio?.nom_fantasia || '-';
-      pdf.text(nombreFantasia, 20 + labelWidth, yPosition);
+      pdf.text(`NOMBRE DE FANTASÍA: ${nombreFantasia}`, 148, yPosition, { align: 'center' });
 
       yPosition += lineHeight;
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Titular:', 20, yPosition);
-      pdf.setFont('helvetica', 'normal');
-
-      // Construir el nombre completo desde los datos del certificado
-      console.log('datosCertificado en titular:', datosCertificado);
-      console.log('nombre:', datosCertificado?.nombre);
-      console.log('apellido:', datosCertificado?.apellido);
-
+      // Titular
       let titular = 'No especificado';
       if (datosCertificado?.nombre || datosCertificado?.apellido) {
         const nombre = (datosCertificado.nombre || '').trim();
@@ -225,109 +238,64 @@ const CertificadosHabilitacion = () => {
           titular = apellido;
         }
       }
-
-      console.log('titular final:', titular);
-      pdf.text(titular, 20 + labelWidth, yPosition); yPosition += lineHeight;
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('CUIT:', 20, yPosition);
-      pdf.setFont('helvetica', 'normal');
-      const cuit = datosCertificado?.nro_cuit || datosComercio?.nro_cuit || '-';
-      pdf.text(cuit, 20 + labelWidth, yPosition);
+      pdf.text(`TITULAR: ${titular}`, 148, yPosition, { align: 'center' });
 
       yPosition += lineHeight;
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Domicilio Comercial:', 20, yPosition);
-      pdf.setFont('helvetica', 'normal');
+      // Domicilio
       const domicilio = datosCertificado?.nombre_calle && datosCertificado?.nro_domicilio
-        ? `${datosCertificado.nombre_calle} ${datosCertificado.nro_domicilio}.`
+        ? `${datosCertificado.nombre_calle} ${datosCertificado.nro_domicilio}`
         : datosComercio?.nom_calle
-          ? `${datosComercio.nom_calle} ${datosComercio.nro_dom || ''}.`
-          : '-.';
-      pdf.text(domicilio, 20 + labelWidth, yPosition);
-
-      if (esSucursal) {
-        yPosition += lineHeight;
-        pdf.setFont('helvetica', 'bold');
-        pdf.text('Número de Sucursal:', 20, yPosition);
-        pdf.setFont('helvetica', 'normal');
-        pdf.text((datosCertificado.nroSucursal || (certificado as CertificadoSucursal).nroSucursal).toString(), 20 + labelWidth, yPosition);
-      }
+          ? `${datosComercio.nom_calle} ${datosComercio.nro_dom || ''}`
+          : '-';
+      pdf.text(`DOMICILIO: ${domicilio}`, 148, yPosition, { align: 'center' });
 
       yPosition += lineHeight;
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Descripción Comercial:', 20, yPosition);
-      pdf.setFont('helvetica', 'normal');
-      pdf.text(datosCertificado.desCom || certificado.desCom, 20 + labelWidth, yPosition);
-
-      // Espacio adicional antes de los datos del certificado
-      yPosition += lineHeight * 1.5;
-
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('N° de Resolución de Habilitación:', 20, yPosition);
-      pdf.setFont('helvetica', 'normal');
-      pdf.text('095/2025', 20 + labelWidth, yPosition);
+      // Rubro
+      const rubro = datosCertificado.desCom || certificado.desCom;
+      pdf.text(`RUBRO: ${rubro}`, 148, yPosition, { align: 'center' });
 
       yPosition += lineHeight;
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Certificado de Habilitación:', 20, yPosition);
-      pdf.setFont('helvetica', 'normal');
-      pdf.text(datosCertificado.certificado || certificado.certificado, 20 + labelWidth, yPosition);
+      // Legajo
+      pdf.text(`LEGAJO: ${datosCertificado.legajo}`, 148, yPosition, { align: 'center' });
 
-      yPosition += lineHeight;
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Fecha de Emisión:', 20, yPosition);
-      pdf.setFont('helvetica', 'normal');
-      pdf.text(datosCertificado.emision || certificado.emision, 20 + labelWidth, yPosition);
-
-      yPosition += lineHeight;
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Vencimiento de la Habilitación:', 20, yPosition);
-      pdf.setFont('helvetica', 'normal');
-      pdf.text(datosCertificado.vtoCertificado || certificado.vtoCertificado, 20 + labelWidth, yPosition);
-
-      // Generar código QR en una posición que no interfiera
-      const qrData = datosCertificado?.qr || certificado.qr;
-      const urlData = datosCertificado?.url || certificado.url;
-
-      if (qrData && urlData) {
-        const qrUrl = `${urlData}qr=${qrData}`;
-        try {
-          const qrCodeDataURL = await QRCode.toDataURL(qrUrl, {
-            width: 150,
-            margin: 2,
-            color: {
-              dark: '#000000',
-              light: '#FFFFFF'
-            }
-          });
-
-          // Posicionar QR en la parte inferior derecha
-          const qrSize = 35;
-          const qrX = 150;
-          const qrY = yPosition + 20;
-
-          pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
-
-          // Texto explicativo del QR - debajo del código
-          pdf.setFontSize(9);
-          pdf.setFont('helvetica', 'normal');
-          pdf.text('Escanee para verificar', qrX, qrY + qrSize + 8, { align: 'left' });
-          pdf.text('la autenticidad', qrX, qrY + qrSize + 15, { align: 'left' });
-        } catch (error) {
-          console.warn('Error al generar QR:', error);
-        }
-      }
-
-      // Línea separadora inferior
+      // Línea separadora
+      yPosition += 20;
       pdf.setDrawColor(0, 0, 0);
-      pdf.line(20, 260, 190, 260);
+      pdf.line(30, yPosition, 267, yPosition);
 
-      // Pie de página
-      pdf.setFontSize(9);
+      // VENCIMIENTO - grande como el título
+      yPosition += 15;
+      pdf.setFontSize(14);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('VENCIMIENTO', 148, yPosition, { align: 'center' });
+
+      yPosition += 12;
+      pdf.setFontSize(16);
+      pdf.setTextColor(255, 0, 0); // Rojo para destacar
+      const fechaVencimiento = datosCertificado.vtoCertificado || certificado.vtoCertificado;
+      pdf.text(fechaVencimiento, 148, yPosition, { align: 'center' });
+
+      // Textos en las esquinas inferiores
+      pdf.setFontSize(10);
+      pdf.setFont('helvetica', 'bold');
+      pdf.setTextColor(0, 0, 0);
+
+      // Esquina inferior izquierda
+      pdf.text('CERTIFICADO DE HABILITACIÓN', 30, 185);
+
+      // Esquina inferior derecha
+      pdf.text('DEBE QUEDAR EXHIBIDA EN LUGAR VISIBLE', 267, 185, { align: 'right' });
+
+      // Pie de página - ajustado para formato horizontal
+      pdf.setFontSize(10);
       pdf.setTextColor(128, 128, 128);
       pdf.setFont('helvetica', 'normal');
       const fechaActual = new Date().toLocaleDateString('es-AR');
-      pdf.text(`Documento generado el ${fechaActual}`, 105, 275, { align: 'center' });
+      pdf.text(`Documento generado el ${fechaActual}`, 148, 190, { align: 'center' });
+
+      // Información de la municipalidad en el pie
+      pdf.setFontSize(9);
+      pdf.text('Ciudad de Villa Allende - Córdoba', 148, 198, { align: 'center' });
 
       // Descargar el PDF
       const legajoArchivo = datosCertificado?.legajo || certificado.legajo;
