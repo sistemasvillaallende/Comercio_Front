@@ -191,8 +191,8 @@ const CertificadosHabilitacion = () => {
         });
 
         // Logo centrado en la parte superior
-        const logoWidth = 100;
-        const logoHeight = 28;
+        const logoWidth = 90;
+        const logoHeight = 30;
         const logoX = (297 - logoWidth) / 2; // Centrado horizontalmente
         pdf.addImage(logoImg, 'JPEG', logoX, 15, logoWidth, logoHeight);
       } catch (error) {
@@ -264,25 +264,23 @@ const CertificadosHabilitacion = () => {
       // Legajo
       pdf.text(`LEGAJO: ${datosCertificado.legajo}`, leftMargin, yPosition);
 
-      // VENCIMIENTO con líneas arriba y abajo
-      yPosition += 25;
+      // VENCIMIENTO con líneas arriba y abajo - movido arriba de los textos inferiores
+      const vencimientoY = 160; // Posición arriba de los textos inferiores
 
       // Línea arriba del vencimiento
       pdf.setDrawColor(0, 0, 0);
       pdf.setLineWidth(0.5);
-      pdf.line(30, yPosition, 267, yPosition);
+      pdf.line(30, vencimientoY, 267, vencimientoY);
 
-      yPosition += 12;
-      // VENCIMIENTO con fecha al lado
-      pdf.setFontSize(16);
+      // VENCIMIENTO con fecha al lado - fuente más grande
+      pdf.setFontSize(18);
       pdf.setFont('helvetica', 'bold');
       pdf.setTextColor(0, 0, 0);
       const fechaVencimiento = datosCertificado.vtoCertificado || certificado.vtoCertificado;
-      pdf.text(`VENCIMIENTO: ${fechaVencimiento}`, 148, yPosition, { align: 'center' });
+      pdf.text(`VENCIMIENTO: ${fechaVencimiento}`, 148, vencimientoY + 12, { align: 'center' });
 
-      yPosition += 12;
       // Línea debajo del vencimiento
-      pdf.line(30, yPosition, 267, yPosition);
+      pdf.line(30, vencimientoY + 20, 267, vencimientoY + 20);
 
       // Textos en las esquinas inferiores
       pdf.setFontSize(10);
@@ -293,9 +291,7 @@ const CertificadosHabilitacion = () => {
       pdf.text('CERTIFICADO DE HABILITACIÓN', 30, 185);
 
       // Esquina inferior derecha
-      pdf.text('DEBE QUEDAR EXHIBIDA EN LUGAR VISIBLE', 267, 185, { align: 'right' });
-
-      // Pie de página - ajustado para formato horizontal
+      pdf.text('DEBE QUEDAR EXHIBIDA EN LUGAR VISIBLE', 267, 185, { align: 'right' });      // Pie de página - ajustado para formato horizontal
       pdf.setFontSize(10);
       pdf.setTextColor(128, 128, 128);
       pdf.setFont('helvetica', 'normal');
