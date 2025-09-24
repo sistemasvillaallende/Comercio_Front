@@ -165,6 +165,13 @@ const MenuElemento = () => {
                 Certificados de Habilitación
               </Link>
             </li>
+            <li>
+              <Link
+                to={`${elementoIndCom?.legajo}/habilitacion`}
+              >
+                Habilitación
+              </Link>
+            </li>
           </ul>
         </nav>
       </>
