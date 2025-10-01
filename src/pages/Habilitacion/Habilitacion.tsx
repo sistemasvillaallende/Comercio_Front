@@ -19,7 +19,7 @@ interface Resolution {
   fecha_hab: string;
   transporte: boolean;
   usuario: string;
-  fecha: string;
+  fecha_alta: string;
 }
 
 interface Branch {
@@ -116,7 +116,7 @@ const Habilitacion = () => {
 
       // Sort by date descending (most recent first)
       const sortedResolutions = response.data.sort((a, b) =>
-        new Date(b.fecha).getTime() - new Date(a.fecha).getTime()
+        new Date(b.fecha_alta).getTime() - new Date(a.fecha_alta).getTime()
       );
 
       setResolutions(sortedResolutions);
@@ -302,7 +302,7 @@ const Habilitacion = () => {
     },
     {
       name: "Fecha Creación",
-      selector: (row) => new Date(row.fecha).toLocaleDateString('es-AR'),
+      selector: (row) => new Date(row.fecha_alta).toLocaleDateString('es-AR'),
       sortable: true,
       width: "130px"
     },
