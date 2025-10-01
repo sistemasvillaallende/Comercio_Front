@@ -22,6 +22,31 @@ interface Resolution {
   fecha: string;
 }
 
+interface Branch {
+  legajo: number;
+  nro_sucursal: number;
+  des_com: string;
+  nom_fantasia: string;
+  cod_calle: number;
+  nom_calle: string;
+  nro_dom: number;
+  cod_barrio: number;
+  nom_barrio: string;
+  ciudad: string;
+  provincia: string;
+  pais: string;
+  cod_postal: string;
+  nro_res: string;
+  fecha_inicio: string;
+  fecha_hab: string;
+  nro_exp_mesa_ent: string;
+  fecha_alta: string;
+  cod_zona: string;
+  nro_local: string;
+  piso_dpto: string;
+  vto_inscripcion: string;
+}
+
 interface NewResolutionForm {
   legajo: number;
   nro_sucursal: number;
@@ -38,7 +63,9 @@ const Habilitacion = () => {
   const { elementoIndCom } = useIndustriaComercioContext();
 
   const [resolutions, setResolutions] = useState<Resolution[]>([]);
+  const [branches, setBranches] = useState<Branch[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [loadingBranches, setLoadingBranches] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [formData, setFormData] = useState<NewResolutionForm>({
     legajo: parseInt(legajo || '0'),
@@ -50,10 +77,11 @@ const Habilitacion = () => {
     usuario: user?.userName || ''
   });
 
-  // Load resolutions on component mount
+  // Load resolutions and branches on component mount
   useEffect(() => {
     if (legajo) {
       loadResolutions();
+      loadBranches();
     }
   }, [legajo]);
 
@@ -102,6 +130,27 @@ const Habilitacion = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadBranches = async () => {
+    try {
+      setLoadingBranches(true);
+      const response = await axios.get<Branch[]>(
+        `${import.meta.env.VITE_URL_BASE}Indycom/GetSucurales?legajo=${legajo}`
+      );
+
+      setBranches(response.data);
+    } catch (error) {
+      console.error('Error loading branches:', error);
+      Swal.fire({
+        title: "Error",
+        text: "No se pudieron cargar las sucursales.",
+        icon: "error",
+        confirmButtonColor: "#27a3cf",
+      });
+    } finally {
+      setLoadingBranches(false);
     }
   };
 
@@ -359,13 +408,22 @@ const Habilitacion = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Nº Sucursal
                 </label>
-                <input
-                  type="number"
+                <select
                   value={formData.nro_sucursal}
                   onChange={(e) => handleInputChange('nro_sucursal', parseInt(e.target.value) || 0)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  min="0"
-                />
+                  disabled={loadingBranches}
+                >
+                  <option value={0}>Seleccionar sucursal</option>
+                  {branches.map((branch) => (
+                    <option key={branch.nro_sucursal} value={branch.nro_sucursal}>
+                      {branch.nro_sucursal} - {branch.nom_fantasia} ({branch.nom_calle} {branch.nro_dom})
+                    </option>
+                  ))}
+                </select>
+                {loadingBranches && (
+                  <p className="text-sm text-gray-500 mt-1">Cargando sucursales...</p>
+                )}
               </div>
 
               <div>
