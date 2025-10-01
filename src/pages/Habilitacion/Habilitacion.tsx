@@ -67,6 +67,18 @@ const Habilitacion = () => {
     }
   }, [user]);
 
+  // Reset dates to current when modal opens
+  useEffect(() => {
+    if (showModal) {
+      const currentDate = new Date().toISOString().split('T')[0];
+      setFormData(prev => ({
+        ...prev,
+        fecha_inspeccion: currentDate,
+        fecha_hab: currentDate
+      }));
+    }
+  }, [showModal]);
+
   const loadResolutions = async () => {
     try {
       setLoading(true);
@@ -96,7 +108,7 @@ const Habilitacion = () => {
   const handleDownloadPDF = async (resolution: Resolution) => {
     try {
       const commerceData: CommerceData = {
-        titular: `${user?.nombre || ''} ${user?.apellido || ''}`.trim() || 'TITULAR NO ESPECIFICADO',
+        titular: elementoIndCom?.titular,
         nombre: user?.nombre,
         apellido: user?.apellido,
         cuit_cuil: elementoIndCom?.nro_cuit,
@@ -174,12 +186,13 @@ const Habilitacion = () => {
       });
 
       // Reset form and close modal
+      const currentDate = new Date().toISOString().split('T')[0];
       setFormData({
         legajo: parseInt(legajo || '0'),
         nro_sucursal: 0,
         nro_res: '',
-        fecha_inspeccion: new Date().toISOString().split('T')[0],
-        fecha_hab: new Date().toISOString().split('T')[0],
+        fecha_inspeccion: currentDate,
+        fecha_hab: currentDate,
         transporte: false,
         usuario: user?.userName || ''
       });

@@ -77,7 +77,7 @@ const TablaComercio = () => {
     },
     {
       name: 'Dirección',
-      selector: row => <span>{row.nom_calle} {row.cod_calle_dom_esp.toString()}, {row.nom_barrio}</span >,
+      cell: row => <span>{row.nom_calle} {row.cod_calle_dom_esp?.toString() || ''}, {row.nom_barrio}</span>,
       minWidth: '200px',
     },
     {
@@ -110,8 +110,8 @@ const TablaComercio = () => {
     const filtroLower = filtro.toLowerCase();
     return apiData.filter((dato) => {
       return (
-        dato.legajo.toString().includes(filtroLower) ||
-        dato.nro_contrib.toString().includes(filtroLower) ||
+        (dato.legajo && dato.legajo.toString().includes(filtroLower)) ||
+        (dato.nro_contrib && dato.nro_contrib.toString().includes(filtroLower)) ||
         (dato.des_com && dato.des_com.toLowerCase().includes(filtroLower)) ||
         (dato.nom_fantasia && dato.nom_fantasia.toLowerCase().includes(filtroLower)) ||
         (dato.nro_cuit && dato.nro_cuit.toLowerCase().includes(filtroLower)) ||

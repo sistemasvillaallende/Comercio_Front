@@ -71,10 +71,7 @@ export const generateRegularResolutionPDF = async (
     pdf.setFont('helvetica', 'normal');
     pdf.setFontSize(11);
 
-    const titular = commerceData?.titular ||
-      (commerceData?.nombre && commerceData?.apellido ?
-        `${commerceData.nombre} ${commerceData.apellido}` :
-        'TITULAR NO ESPECIFICADO');
+    const titular = commerceData?.titular || 'TITULAR NO ESPECIFICADO';
 
     const rubro = commerceData?.des_com || 'RUBRO NO ESPECIFICADO';
     const domicilio = commerceData?.nom_calle && commerceData?.nro_dom ?

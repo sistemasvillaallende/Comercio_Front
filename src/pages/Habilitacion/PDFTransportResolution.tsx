@@ -48,20 +48,17 @@ export const generateTransportResolutionPDF = async (
     pdf.setFont('helvetica', 'normal');
     pdf.setFontSize(11);
 
-    const titular = commerceData?.titular ||
-      (commerceData?.nombre && commerceData?.apellido ?
-        `${commerceData.nombre} ${commerceData.apellido}` :
-        'TITULAR NO ESPECIFICADO');
-
+    const nombre = commerceData?.nombre || 'NOMBRE NO ESPECIFICADO';
+    const apellido = commerceData?.apellido || 'APELLIDO NO ESPECIFICADO';
     const rubro = commerceData?.des_com || 'RUBRO NO ESPECIFICADO';
-    const domicilio = commerceData?.nom_calle && commerceData?.nro_dom ?
-      `${commerceData.nom_calle} ${commerceData.nro_dom}` :
-      'DOMICILIO NO ESPECIFICADO';
-    const barrio = commerceData?.nom_barrio || 'BARRIO NO ESPECIFICADO';
+    const fechaAlta = new Date(resolutionData.fecha_alta || resolutionData.fecha_inspeccion).toLocaleDateString('es-AR');
+    const nroExpediente = resolutionData.nro_expediente_mesa_ent || 'N° EXPEDIENTE NO ESPECIFICADO';
+    const marcaVehiculo = commerceData?.marca_vehiculo || 'MARCA NO ESPECIFICADA';
+    const modeloVehiculo = commerceData?.modelo_vehiculo || 'MODELO NO ESPECIFICADO';
+    const anioVehiculo = commerceData?.anio_vehiculo || 'AÑO NO ESPECIFICADO';
+    const dominioVehiculo = commerceData?.dominio_vehiculo || 'DOMINIO NO ESPECIFICADO';
 
-    const fechaInspeccion = new Date(resolutionData.fecha_inspeccion).toLocaleDateString('es-AR');
-
-    const vistoText = `La solicitud presentada por ${titular} para la habilitación de servicio de transporte bajo el rubro: ${rubro}, con domicilio en ${domicilio} de barrio ${barrio} de esta ciudad.`;
+    const vistoText = `La nota de fecha ${fechaAlta} en expediente ${nroExpediente}, presentada por ${nombre} ${apellido} solicitando autorización para la explotación de ${rubro} y la habilitación a tal efecto del vehículo marca: ${marcaVehiculo} ${modeloVehiculo} / ${anioVehiculo} dominio: ${dominioVehiculo}.`;
 
     const vistoLines = pdf.splitTextToSize(vistoText, 170);
     pdf.text(vistoLines, 20, yPosition);
@@ -100,9 +97,10 @@ export const generateTransportResolutionPDF = async (
     pdf.setFont('helvetica', 'normal');
     pdf.setFontSize(11);
 
-    const cuitCuil = commerceData?.cuit_cuil || 'CUIT/CUIL NO ESPECIFICADO';
+    const cuitCuil = commerceData?.cuit_cuil || commerceData?.cuit_cuil || 'CUIT/CUIL NO ESPECIFICADO';
+    const nombreContribuyente = `${nombre} ${apellido}`;
 
-    const art1Text = `Art 1º: OTORGAR la habilitación de transporte solicitada por: ${titular} CUIT/CUIL: ${cuitCuil}, registrando lo resuelto en la oficina de Transporte Municipal.`;
+    const art1Text = `ART. 1º: Habilitar al Sr/a: ${nombreContribuyente} CUIT/CUIL: ${cuitCuil} a prestar ${rubro}, autorizando a este efecto el vehículo marca: ${marcaVehiculo} ${modeloVehiculo} / ${anioVehiculo} dominio: ${dominioVehiculo}.`;
     const art1Lines = pdf.splitTextToSize(art1Text, 170);
     pdf.text(art1Lines, 20, yPosition);
     yPosition += art1Lines.length * 6 + 10;
@@ -121,7 +119,7 @@ export const generateTransportResolutionPDF = async (
     pdf.setFontSize(12);
     pdf.text(`RESOLUCIÓN: ${resolutionData.nro_res}.`, 20, yPosition);
     yPosition += 8;
-    pdf.text(`INSCRIPCIÓN MUNICIPAL N.º: ${resolutionData.legajo}.`, 20, yPosition);
+    pdf.text(`INSCRIPCIÓN MUNICIPAL Nº: ${resolutionData.legajo}.`, 20, yPosition);
 
     // Save PDF
     const fileName = `Resolucion_Transporte_${resolutionData.legajo}_${resolutionData.nro_res.replace(/\//g, '_')}.pdf`;
